@@ -1,0 +1,34 @@
+import {
+  Splash,
+  Splash2,
+  Login,
+  ForgotPassword,
+  EnterCode,
+  UpdatePassword,
+  SignUp,
+  AddProfileImage,
+  Subscribe,
+} from '../../screens';
+import React from 'react';
+import {createStackNavigator} from '@react-navigation/stack';
+
+const AuthStack = createStackNavigator();
+const AuthApp = () => {
+  return (
+    <AuthStack.Navigator
+      screenOptions={{headerShown: false}}
+      initialRouteName={'Splash'}>
+      <AuthStack.Screen name={'Splash'} component={Splash} />
+      <AuthStack.Screen name={'Splash2'} component={Splash2} />
+      <AuthStack.Screen name={'Login'} component={Login} />
+      <AuthStack.Screen name={'ForgotPassword'} component={ForgotPassword} />
+      <AuthStack.Screen name={'EnterCode'} component={EnterCode} />
+      <AuthStack.Screen name={'UpdatePassword'} component={UpdatePassword} />
+      <AuthStack.Screen name={'SignUp'} component={SignUp} />
+      <AuthStack.Screen name={'AddProfileImage'} component={AddProfileImage} />
+      <AuthStack.Screen name={'Subscribe'} component={Subscribe} />
+    </AuthStack.Navigator>
+  );
+};
+
+export default AuthApp;
