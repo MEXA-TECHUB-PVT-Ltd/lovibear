@@ -84,12 +84,12 @@ const PlayScreen = props => {
         <Image
           source={item.image}
           resizeMode="contain"
-          style={{width: responsiveWidth(6), height: responsiveWidth(6)}}
+          style={{width: responsiveWidth(5), height: responsiveWidth(5)}}
         />
         <Text
           style={{
             color: '#9D9D9D',
-            fontFamily: fontFamily.Touche_Regular,
+            fontFamily: fontFamily.Baskerville_Old_Face,
             fontSize: responsiveFontSize(2),
             marginLeft: responsiveWidth(4),
           }}>
@@ -137,36 +137,41 @@ const PlayScreen = props => {
       swiperRef.current.swipeLeft();
     }, 300);
   };
-  const fadeOut = () => {
-    // Will change fadeAnim value to 0 in 3 seconds
+  const fadeInTop = async () => {
+    setButtonDirection('top');
+    await Animated.timing(fadeAnim, {
+      useNativeDriver: false,
+      toValue: 1,
+      duration: 350,
+    }).start();
+    await setTimeout(() => {
+      console.log('HERE');
+      Animated.timing(fadeAnim, {
+        useNativeDriver: false,
+        toValue: 0,
+        duration: 80,
+      }).start();
+      swiperRef.current.swipeTop();
+    }, 350);
   };
 
-  const myswiper = () => {
-    if (buttondirection == 'right') {
-      swiperRef.current.swipeRight();
-    } else if (buttondirection == 'left') {
-      swiperRef.current.swipeLeft();
-    } else if (buttondirection == 'top') {
-      swiperRef.current.swipeTop();
-    }
-  };
   const swiperRef = useRef();
   const Card = item => {
     return (
       <View style={styles.mycard}>
-        <Image source={appImages.girlimg} style={styles.cardimage} />
+        <Image source={item.img} style={styles.cardimage} />
 
         <LinearGradient
-          colors={['rgba(80, 80, 80,0.01)', 'rgba(234, 51, 77, 0.9)']}
+          colors={['rgba(255, 255, 255,1)', 'rgba(255, 255, 255,1)']}
           style={{
             alignItems: 'center',
             position: 'absolute',
             bottom: responsiveWidth(-0.1),
             width: responsiveWidth(100),
-            paddingBottom: responsiveHeight(5),
-            paddingTop: responsiveHeight(12),
+            paddingBottom: responsiveHeight(1.5),
+            paddingTop: responsiveHeight(1.5),
           }}>
-          <Text style={styles.txt1}>Emma, 22</Text>
+          <Text style={styles.txt1}>{item.name}, 22</Text>
           <Text style={styles.txt2}>72 km, Lawyer</Text>
         </LinearGradient>
       </View>
@@ -190,62 +195,8 @@ const PlayScreen = props => {
           barStyle={'dark-content'}
         />
 
-        <MyHeart
-          type={'red'}
-          myStyles={{
-            top: responsiveHeight(12),
-            left: responsiveWidth(4),
-          }}
-        />
-        <MyHeart
-          type={'red'}
-          myStyles={{
-            top: responsiveHeight(10),
-            right: responsiveWidth(-4.7),
-          }}
-          shadow={false}
-        />
-        <MyHeart
-          type={'red'}
-          myStyles={{
-            top: responsiveHeight(30),
-            left: responsiveWidth(-3),
-          }}
-        />
-        <MyHeart
-          type={'red'}
-          scaleX={1}
-          shadow={false}
-          myStyles={{
-            top: responsiveHeight(50),
-            left: responsiveWidth(4),
-          }}
-          width={responsiveWidth(4)}
-          height={responsiveWidth(4)}
-        />
-        <MyHeart
-          type={'red'}
-          // scaleX={1}
-          myStyles={{
-            bottom: responsiveHeight(5),
-            left: responsiveWidth(-1.4),
-          }}
-          shadow={false}
-          width={responsiveWidth(4)}
-          height={responsiveWidth(4)}
-        />
-        <MyHeart
-          type={'red'}
-          scaleX={1}
-          myStyles={{
-            bottom: responsiveHeight(3),
-            right: responsiveWidth(-6),
-          }}
-          width={responsiveWidth(13)}
-          height={responsiveWidth(13)}
-        />
         <View style={styles.header}>
-          <Text style={styles.headertxt}>Play</Text>
+          <Text style={styles.headertxt}>Play Game</Text>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <TouchableOpacity
               activeOpacity={0.7}
@@ -254,9 +205,9 @@ const PlayScreen = props => {
                 source={appImages.searchicon}
                 resizeMode="contain"
                 style={{
-                  width: responsiveWidth(6),
-                  height: responsiveWidth(6),
-                  marginRight: responsiveWidth(8),
+                  width: responsiveWidth(5),
+                  height: responsiveWidth(5),
+                  marginRight: responsiveWidth(7),
                 }}
               />
             </TouchableOpacity>
@@ -267,8 +218,8 @@ const PlayScreen = props => {
                 source={appImages.filtericon}
                 resizeMode="contain"
                 style={{
-                  width: responsiveWidth(7),
-                  height: responsiveWidth(7),
+                  width: responsiveWidth(6),
+                  height: responsiveWidth(6),
                 }}
               />
             </TouchableOpacity>
@@ -396,7 +347,58 @@ const PlayScreen = props => {
             // infinite={true}
             backgroundColor="transparent"
             cardStyle={{height: responsiveHeight(62)}}
-            cards={['DO', 'MORE', 'OF', 'WHAT', 'MAKES', 'YOU', 'HAPPY']}
+            cards={[
+              {
+                id: 1,
+                img: appImages.img3,
+                name: 'Alisa',
+              },
+              {
+                id: 2,
+                img: appImages.img4,
+                name: 'Jennifer',
+              },
+              {
+                id: 3,
+                img: appImages.img5,
+                name: 'Katrina',
+              },
+              {
+                id: 4,
+                img: appImages.img6,
+                name: 'Tobey Maguire',
+              },
+              {
+                id: 5,
+                img: appImages.img7,
+                name: 'Delta',
+              },
+              {
+                id: 6,
+                img: appImages.girlimg,
+                name: 'Christie',
+              },
+              {
+                id: 7,
+                img: appImages.img8,
+                name: 'Scarlet',
+              },
+              {
+                id: 8,
+                img: appImages.img9,
+                name: 'Jimmy',
+              },
+              {
+                id: 9,
+                img: appImages.img10,
+                name: 'Anakin',
+              },
+              {
+                id: 10,
+                img: appImages.img2,
+                name: 'Chan the man',
+              },
+            ]}
             cardIndex={0}
             horizontalSwipe={true}
             swipeAnimationDuration={300}
@@ -409,7 +411,22 @@ const PlayScreen = props => {
           />
         </View>
         <View style={styles.buttonsparent}>
-          <TouchableOpacity style={styles.buttonview1} activeOpacity={0.7}>
+          <TouchableOpacity
+            onPress={() => {
+              fadeInLeft();
+            }}
+            style={styles.buttonview3}
+            activeOpacity={0.7}>
+            <Image
+              style={styles.cardicon}
+              resizeMode="contain"
+              source={appImages.leftcard}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonview3}
+            activeOpacity={0.7}
+            onPress={() => props.navigation.navigate('SubscribeInApp')}>
             <Image
               style={styles.cardicon}
               resizeMode="contain"
@@ -430,14 +447,14 @@ const PlayScreen = props => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              fadeInLeft();
+              fadeInTop();
             }}
             style={styles.buttonview3}
             activeOpacity={0.7}>
             <Image
-              style={styles.cardicon}
+              style={styles.cardicon2}
               resizeMode="contain"
-              source={appImages.leftcard}
+              source={appImages.supericon}
             />
           </TouchableOpacity>
         </View>
@@ -503,9 +520,9 @@ const styles = StyleSheet.create({
     marginBottom: responsiveHeight(1.5),
   },
   headertxt: {
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: appColor.appColorMain,
-    fontSize: responsiveFontSize(3.5),
+    fontSize: responsiveFontSize(3.2),
   },
   mycard: {
     height: responsiveHeight(62),
@@ -519,12 +536,12 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 8,
+      height: 3,
     },
-    shadowOpacity: 0.44,
-    shadowRadius: 10.32,
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
 
-    elevation: 16,
+    elevation: 7,
   },
   swipercontainer: {
     height: responsiveHeight(65),
@@ -537,21 +554,21 @@ const styles = StyleSheet.create({
     height: responsiveHeight(62),
   },
   txt1: {
-    color: '#fff',
-    fontSize: responsiveFontSize(4),
-    fontFamily: fontFamily.Touche_Bold,
+    color: '#000',
+    fontSize: responsiveFontSize(3.3),
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
   txt2: {
-    color: '#fff',
-    fontSize: responsiveFontSize(2.3),
-    fontFamily: fontFamily.Touche_Bold,
+    color: '#000',
+    fontSize: responsiveFontSize(2),
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
   buttonsparent: {
-    width: responsiveWidth(90),
+    width: responsiveWidth(100),
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: responsiveWidth(12),
+    paddingHorizontal: responsiveWidth(9),
     marginBottom: responsiveHeight(2),
     marginTop: responsiveHeight(4.5),
   },
@@ -601,13 +618,17 @@ const styles = StyleSheet.create({
     width: responsiveWidth(6),
     height: responsiveWidth(6),
   },
+  cardicon2: {
+    width: responsiveWidth(7),
+    height: responsiveWidth(7),
+  },
   selectcategorytxt: {
     color: appColor.appColorMain,
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     fontSize: responsiveFontSize(2.4),
   },
   sicon2: {
-    width: responsiveWidth(6),
-    height: responsiveWidth(6),
+    width: responsiveWidth(5),
+    height: responsiveWidth(5),
   },
 });

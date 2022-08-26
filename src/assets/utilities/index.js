@@ -64,6 +64,17 @@ const appImages = {
   biooption: require(IMAGES_DIR + 'biooption.png'),
   ageoption: require(IMAGES_DIR + 'ageoption.png'),
   alert: require(IMAGES_DIR + 'alert.png'),
+  img2: require(IMAGES_DIR + 'img2.png'),
+  img3: require(IMAGES_DIR + 'img3.png'),
+  img4: require(IMAGES_DIR + 'img4.png'),
+  img5: require(IMAGES_DIR + 'img5.png'),
+  img6: require(IMAGES_DIR + 'img6.png'),
+  img7: require(IMAGES_DIR + 'img7.png'),
+  img8: require(IMAGES_DIR + 'img8.png'),
+  img9: require(IMAGES_DIR + 'img9.png'),
+  img10: require(IMAGES_DIR + 'img10.png'),
+  supericon: require(IMAGES_DIR + 'supericon.png'),
+  musicplay: require(IMAGES_DIR + 'musicplay.png'),
 };
 const appColor = {
   appColorMain: '#FF0047',

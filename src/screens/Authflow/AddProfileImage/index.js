@@ -32,8 +32,8 @@ const AddProfileImage = props => {
   const [myimage, setMyimage] = useState('');
   const imageTakeFromGallery = () => {
     ImagePicker.openPicker({
-      cropping: true,
-      compressImageQuality: 1,
+      cropping: false,
+      // compressImageQuality: 1,
     }).then(image => {
       console.log(image.path);
       setMyimage(image.path);
@@ -42,8 +42,7 @@ const AddProfileImage = props => {
   const images = [myimage == '' ? appImages.userimage : {uri: myimage}];
   const imageTakeFromCamera = () => {
     ImagePicker.openCamera({
-      cropping: true,
-      compressImageQuality: 1,
+      cropping: false,
     }).then(image => {
       console.log(image.path);
       setMyimage(image.path);
@@ -146,8 +145,8 @@ const AddProfileImage = props => {
           activeOpacity={0.85}
           onPress={() => setImagevisible(true)}
           style={{
-            width: responsiveWidth(47),
-            height: responsiveWidth(47),
+            width: responsiveWidth(44),
+            height: responsiveWidth(44),
             alignSelf: 'center',
             marginTop: responsiveHeight(15),
           }}>
@@ -156,14 +155,14 @@ const AddProfileImage = props => {
               borderRadius: responsiveWidth(9.5),
               overflow: 'hidden',
               alignSelf: 'center',
-              width: responsiveWidth(47),
-              height: responsiveWidth(47),
+              width: responsiveWidth(44),
+              height: responsiveWidth(44),
             }}>
             <Image
               source={myimage == '' ? appImages.userimage : {uri: myimage}}
               style={{
-                width: responsiveWidth(47),
-                height: responsiveWidth(47),
+                width: responsiveWidth(44),
+                height: responsiveWidth(44),
                 resizeMode: 'cover',
               }}
             />
@@ -202,7 +201,7 @@ const AddProfileImage = props => {
         onRequestClose={() => handleCancel()}>
         <Dialog.Title
           style={{
-            fontFamily: fontFamily.Touche_Bold,
+            fontFamily: fontFamily.Baskerville_Old_Face,
             alignSelf: 'center',
             color: '#080808',
           }}>
@@ -213,7 +212,7 @@ const AddProfileImage = props => {
           </Dialog.Description> */}
         <Dialog.Button
           style={{
-            fontFamily: fontFamily.Touche_SemiBold,
+            fontFamily: fontFamily.Baskerville_Old_Face,
             alignSelf: 'center',
           }}
           label="Take a Photo"
@@ -225,7 +224,7 @@ const AddProfileImage = props => {
         />
         <Dialog.Button
           style={{
-            fontFamily: fontFamily.Touche_SemiBold,
+            fontFamily: fontFamily.Baskerville_Old_Face,
             alignSelf: 'center',
           }}
           label="Choose from Gallery"
@@ -237,7 +236,7 @@ const AddProfileImage = props => {
         />
         <Dialog.Button
           style={{
-            fontFamily: fontFamily.Touche_SemiBold,
+            fontFamily: fontFamily.Baskerville_Old_Face,
 
             alignSelf: 'center',
           }}

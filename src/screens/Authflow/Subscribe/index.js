@@ -65,7 +65,7 @@ const Subscribe = props => {
         />
         <Text
           style={{
-            fontFamily: fontFamily.Touche_Regular,
+            fontFamily: fontFamily.Baskerville_Old_Face,
 
             fontSize: responsiveFontSize(1.8),
             color: '#8D8D8D',
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(3.5),
     // fontSize: 30,
     alignSelf: 'center',
-    fontFamily: fontFamily.Touche_Bold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     marginTop: responsiveHeight(6),
   },
   buttonstyle: {
@@ -221,14 +221,14 @@ const styles = StyleSheet.create({
     borderRadius: responsiveWidth(4),
   },
   packagetxt: {
-    fontFamily: fontFamily.Touche_Bold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
 
     fontWeight: 'bold',
     fontSize: responsiveFontSize(2.1),
     color: '#080808',
   },
   pricetxt: {
-    fontFamily: fontFamily.Touche_Bold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     fontSize: responsiveFontSize(3.3),
     color: '#000',
     alignSelf: 'center',

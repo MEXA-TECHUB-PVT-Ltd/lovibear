@@ -31,7 +31,7 @@ const MyHeart = props => {
           height:
             props.height == undefined ? responsiveWidth(8) : props.height - 2,
           position: 'absolute',
-          zIndex: 1,
+          zIndex: props.zIndex == undefined ? 1 : props.zIndex,
           borderRadius: responsiveWidth(100),
           alignItems: 'center',
           // justifyContent: 'center',

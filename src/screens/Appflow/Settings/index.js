@@ -92,7 +92,7 @@ const Settings = props => {
         <Text
           style={{
             color: '#9D9D9D',
-            fontFamily: fontFamily.Touche_Regular,
+            fontFamily: fontFamily.Baskerville_Old_Face,
             fontSize: responsiveFontSize(2.3),
             marginLeft: responsiveWidth(4),
           }}>
@@ -109,7 +109,7 @@ const Settings = props => {
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          marginTop: responsiveHeight(5),
+          marginTop: responsiveHeight(4),
         }}>
         <Image
           style={{width: responsiveWidth(5), height: responsiveWidth(5)}}
@@ -119,7 +119,7 @@ const Settings = props => {
         <Text
           style={{
             color: '#080808',
-            fontFamily: fontFamily.Touche_Regular,
+            fontFamily: fontFamily.Baskerville_Old_Face,
             fontSize: responsiveFontSize(2),
             marginLeft: responsiveWidth(4),
           }}>
@@ -157,8 +157,8 @@ const Settings = props => {
               source={appImages.backicon2}
               resizeMode="contain"
               style={{
-                width: responsiveWidth(5),
-                height: responsiveWidth(5),
+                width: responsiveWidth(4.5),
+                height: responsiveWidth(4.5),
               }}
             />
           </TouchableOpacity>
@@ -240,14 +240,14 @@ export default Settings;
 
 const styles = StyleSheet.create({
   txt1: {
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: appColor.appColorMain,
-    fontSize: responsiveFontSize(3.5),
+    fontSize: responsiveFontSize(3.2),
     marginLeft: responsiveWidth(2),
   },
   selectcategorytxt: {
     color: '#080808',
-    fontFamily: fontFamily.Touche_Bold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     fontSize: responsiveFontSize(3.2),
   },
   sicon2: {

@@ -17,6 +17,10 @@ import Settings from './Appflow/Settings';
 import Search from './Appflow/Search';
 import EditProfile from './Appflow/EditProfile';
 import AddPhoto from './Appflow/AddPhoto';
+import SubscribeInApp from './Appflow/SubscribeInApp';
+import Bingo from './Appflow/Bingo';
+import VideoScreen from './Appflow/VideoScreen';
+
 export {
   PlayScreen,
   Post,
@@ -28,6 +32,9 @@ export {
   Search,
   EditProfile,
   AddPhoto,
+  SubscribeInApp,
+  Bingo,
+  VideoScreen,
 };
 export {
   Splash,

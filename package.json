@@ -28,6 +28,7 @@
     "react-native-image-crop-picker": "^0.38.0",
     "react-native-image-viewing": "^0.2.2",
     "react-native-linear-gradient": "^2.6.2",
+    "react-native-media-console": "^1.2.9",
     "react-native-modal-datetime-picker": "^13.1.2",
     "react-native-paper": "^4.12.4",
     "react-native-raw-bottom-sheet": "^2.2.0",
@@ -39,6 +40,8 @@
     "react-native-svg": "^12.4.4",
     "react-native-swiper": "^1.6.0",
     "react-native-vector-icons": "^9.2.0",
+    "react-native-video": "^5.2.0",
+    "react-native-video-player": "^0.12.0",
     "react-redux": "^8.0.2",
     "redux": "^4.2.0",
     "redux-thunk": "^2.4.1"

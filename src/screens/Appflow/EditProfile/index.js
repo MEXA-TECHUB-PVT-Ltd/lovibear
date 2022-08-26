@@ -29,7 +29,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import {useFocusEffect} from '@react-navigation/native';
 import EyeIcon from 'react-native-vector-icons/Ionicons';
 import {DateSelect} from '../../../components/dateTimePicker/dateTimePicker';
-
+import ImagePicker from 'react-native-image-crop-picker';
 import {MyButton} from '../../../components/MyButton';
 import {MyButton2} from '../../../components/MyButton2';
 const EditProfile = props => {
@@ -47,8 +47,7 @@ const EditProfile = props => {
   const [myimage, setMyimage] = useState('');
   const imageTakeFromGallery = () => {
     ImagePicker.openPicker({
-      cropping: true,
-      compressImageQuality: 1,
+      cropping: false,
     }).then(image => {
       console.log(image.path);
       setMyimage(image.path);
@@ -57,8 +56,7 @@ const EditProfile = props => {
   const images = [myimage == '' ? appImages.userimage : {uri: myimage}];
   const imageTakeFromCamera = () => {
     ImagePicker.openCamera({
-      cropping: true,
-      compressImageQuality: 1,
+      cropping: false,
     }).then(image => {
       console.log(image.path);
       setMyimage(image.path);
@@ -106,8 +104,8 @@ const EditProfile = props => {
                 source={appImages.backicon2}
                 resizeMode="contain"
                 style={{
-                  width: responsiveWidth(5),
-                  height: responsiveWidth(5),
+                  width: responsiveWidth(4.5),
+                  height: responsiveWidth(4.5),
                 }}
               />
             </TouchableOpacity>
@@ -117,8 +115,8 @@ const EditProfile = props => {
             activeOpacity={0.85}
             onPress={() => setImagevisible(true)}
             style={{
-              width: responsiveWidth(47),
-              height: responsiveWidth(47),
+              width: responsiveWidth(44),
+              height: responsiveWidth(44),
               alignSelf: 'center',
               marginTop: responsiveHeight(3),
             }}>
@@ -127,14 +125,14 @@ const EditProfile = props => {
                 borderRadius: responsiveWidth(9.5),
                 overflow: 'hidden',
                 alignSelf: 'center',
-                width: responsiveWidth(47),
-                height: responsiveWidth(47),
+                width: responsiveWidth(44),
+                height: responsiveWidth(44),
               }}>
               <Image
                 source={myimage == '' ? appImages.userimage : {uri: myimage}}
                 style={{
-                  width: responsiveWidth(47),
-                  height: responsiveWidth(47),
+                  width: responsiveWidth(44),
+                  height: responsiveWidth(44),
                   resizeMode: 'cover',
                 }}
               />
@@ -170,8 +168,8 @@ const EditProfile = props => {
                 source={appImages.user}
                 resizeMode="contain"
                 style={{
-                  width: responsiveWidth(6.5),
-                  height: responsiveWidth(6.5),
+                  width: responsiveWidth(5.5),
+                  height: responsiveWidth(5.5),
                   // backgroundColor: 'red',
                   marginLeft: responsiveWidth(5),
                 }}
@@ -203,8 +201,8 @@ const EditProfile = props => {
                 source={appImages.email}
                 resizeMode="contain"
                 style={{
-                  width: responsiveWidth(6.5),
-                  height: responsiveWidth(6.5),
+                  width: responsiveWidth(5.5),
+                  height: responsiveWidth(5.5),
                   // backgroundColor: 'red',
                   marginLeft: responsiveWidth(5),
                 }}
@@ -235,8 +233,8 @@ const EditProfile = props => {
                 source={appImages.password}
                 resizeMode="contain"
                 style={{
-                  width: responsiveWidth(6.5),
-                  height: responsiveWidth(6.5),
+                  width: responsiveWidth(5.5),
+                  height: responsiveWidth(5.5),
                   // backgroundColor: 'red',
                   marginLeft: responsiveWidth(5),
                 }}
@@ -252,7 +250,7 @@ const EditProfile = props => {
                 ref={passwordinputref}
               />
               <EyeIcon
-                style={{fontSize: responsiveFontSize(3.7), color: 'lightgray'}}
+                style={{fontSize: responsiveFontSize(3.3), color: 'lightgray'}}
                 name={securepassword ? 'eye-off' : 'eye'}
                 onPress={() => setSecurepassword(!securepassword)}
               />
@@ -261,7 +259,7 @@ const EditProfile = props => {
           </View>
         </View>
         <MyButton
-          // onPress={() => props.navigation.navigate('Auth', {screen: 'Login'})}
+          onPress={() => props.navigation.navigate('PlayScreen')}
           myStyles={{
             width: responsiveWidth(80),
             backgroundColor: appColor.appColorMain,
@@ -281,7 +279,7 @@ const EditProfile = props => {
           onRequestClose={() => handleCancel()}>
           <Dialog.Title
             style={{
-              fontFamily: fontFamily.Touche_Bold,
+              fontFamily: fontFamily.Baskerville_Old_Face,
               alignSelf: 'center',
               color: '#080808',
             }}>
@@ -292,7 +290,7 @@ const EditProfile = props => {
           </Dialog.Description> */}
           <Dialog.Button
             style={{
-              fontFamily: fontFamily.Touche_SemiBold,
+              fontFamily: fontFamily.Baskerville_Old_Face,
               alignSelf: 'center',
             }}
             label="Take a Photo"
@@ -304,7 +302,7 @@ const EditProfile = props => {
           />
           <Dialog.Button
             style={{
-              fontFamily: fontFamily.Touche_SemiBold,
+              fontFamily: fontFamily.Baskerville_Old_Face,
               alignSelf: 'center',
             }}
             label="Choose from Gallery"
@@ -316,7 +314,7 @@ const EditProfile = props => {
           />
           <Dialog.Button
             style={{
-              fontFamily: fontFamily.Touche_SemiBold,
+              fontFamily: fontFamily.Baskerville_Old_Face,
 
               alignSelf: 'center',
             }}
@@ -340,14 +338,14 @@ export default EditProfile;
 
 const styles = StyleSheet.create({
   txt1: {
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: appColor.appColorMain,
-    fontSize: responsiveFontSize(3.5),
+    fontSize: responsiveFontSize(3.2),
     marginLeft: responsiveWidth(2),
   },
   selectcategorytxt: {
     color: '#080808',
-    fontFamily: fontFamily.Touche_Bold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     fontSize: responsiveFontSize(3.2),
   },
   sicon2: {
@@ -358,7 +356,7 @@ const styles = StyleSheet.create({
     color: appColor.appColorMain,
     fontSize: responsiveFontSize(3.5),
     alignSelf: 'center',
-    fontFamily: fontFamily.Touche_Bold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     marginTop: responsiveHeight(-0.8),
   },
   emailparent: {
@@ -387,14 +385,14 @@ const styles = StyleSheet.create({
     width: responsiveWidth(70),
     paddingLeft: responsiveWidth(3),
     color: '#080808',
-    fontFamily: fontFamily.Touche_Regular,
-    fontSize: responsiveFontSize(1.95),
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(2),
   },
   txtinputpassword: {
     width: responsiveWidth(59.5),
     paddingLeft: responsiveWidth(3),
     color: '#080808',
-    fontFamily: fontFamily.Touche_Regular,
-    fontSize: responsiveFontSize(1.95),
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(2),
   },
 });

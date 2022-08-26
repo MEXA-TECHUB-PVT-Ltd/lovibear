@@ -23,6 +23,7 @@ const fontFamily = {
   Touche_Bold: 'Touche-Bold',
   Touche_Regular: 'Touche-Regular',
   Touche_SemiBold: 'Touche-Semibold',
+  Baskerville_Old_Face: 'Baskerville-Old-Face',
 };
 
 export {fontFamily};

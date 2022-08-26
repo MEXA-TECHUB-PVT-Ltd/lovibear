@@ -45,15 +45,48 @@ import {
   Message,
   Actions,
 } from 'react-native-gifted-chat';
+import {MyButton} from '../../../components/MyButton';
+
 import {useFocusEffect} from '@react-navigation/native';
 const Messaging = props => {
+  const [myindex, setMyindex] = useState();
   const [messageinput, setMessageinput] = useState('');
   const messagesRef = useRef();
   const imageTakeFromGallery = () => {
     ImagePicker.openPicker({
       mediaType: 'any',
-      // cropping: true,
-      compressImageQuality: 1,
+    }).then(async image => {
+      if (image.duration == undefined) {
+        console.log('CHECKING DURATION', image);
+        console.log(image.path);
+        setMyimage(image.path);
+        let myarr = [...messages];
+        await myarr.push({
+          user: 0,
+          time: '12:31',
+          media: image.path,
+        });
+        await setMessages(myarr);
+      } else {
+        console.log('CHECKING DURATION', image);
+        console.log(image.path);
+        setMyimage(image.path);
+        let myarr = [...messages];
+        await myarr.push({
+          user: 0,
+          time: '12:31',
+          media: image.path,
+          duration: image.duration,
+        });
+        await setMessages(myarr);
+      }
+    });
+  };
+  const imageTakeFromCamera = () => {
+    ImagePicker.openCamera({
+      cropping: false,
+      width: 300,
+      height: 400,
     }).then(async image => {
       console.log(image.path);
       setMyimage(image.path);
@@ -64,15 +97,6 @@ const Messaging = props => {
         media: image.path,
       });
       await setMessages(myarr);
-    });
-  };
-  const imageTakeFromCamera = () => {
-    ImagePicker.openCamera({
-      compressImageQuality: 1,
-      cropping: true,
-    }).then(image => {
-      console.log(image.path);
-      setMyimage(image.path);
     });
   };
   const [visible, setVisible] = useState(false);
@@ -109,34 +133,92 @@ const Messaging = props => {
       content: 'Hello ???',
     },
   ]);
+  const refContainer = useRef();
+
   const [selectedImage, setSelectedImage] = useState('');
   const images = [{uri: selectedImage}];
   const renderItemMessages = ({item, index}) => {
     return (
-      <View style={item.user == 0 ? styles.rightmessage : styles.leftmessage}>
+      <>
         {item.media == undefined ? (
-          <Text style={item.user == 0 ? styles.righttxt : styles.lefttxt}>
-            {item.content}
-          </Text>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onLongPress={() => {
+              if (item.user == 0) {
+                setMyindex(index);
+                refContainer.current.open();
+              } else {
+                null;
+              }
+            }}
+            style={item.user == 0 ? styles.rightmessage : styles.leftmessage}>
+            <Text style={item.user == 0 ? styles.righttxt : styles.lefttxt}>
+              {item.content}
+            </Text>
+          </TouchableOpacity>
         ) : (
           <TouchableOpacity
-            activeOpacity={0.8}
+            onLongPress={() => {
+              if (item.user == 0) {
+                setMyindex(index);
+                refContainer.current.open();
+              } else {
+                null;
+              }
+            }}
+            activeOpacity={0.7}
+            style={item.user == 0 ? styles.rightcontent : styles.leftcontent}
             onPress={() => {
-              setSelectedImage(item.media);
-              setImagevisible(true);
-              console.log(selectedImage);
+              if (item.duration == undefined) {
+                setSelectedImage(item.media);
+                setImagevisible(true);
+                console.log(selectedImage);
+              } else {
+                props.navigation.navigate('VideoScreen', {
+                  mysource: item.media,
+                });
+              }
             }}>
             <Image
               source={{uri: item.media}}
               style={{
-                width: responsiveWidth(40),
-                height: responsiveWidth(40),
-                resizeMode: 'contain',
+                resizeMode: 'cover',
+                width: responsiveWidth(59),
+                height: responsiveWidth(71),
               }}
+              borderRadius={responsiveWidth(2)}
             />
+            {item.duration == undefined ? null : (
+              <View
+                style={{
+                  width: responsiveWidth(60.5),
+                  height: responsiveWidth(72.5),
+                  position: 'absolute',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <View
+                  style={{
+                    width: responsiveWidth(10),
+                    height: responsiveWidth(10),
+                    backgroundColor: appColor.appColorMain,
+                    borderRadius: responsiveWidth(100),
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={appImages.musicplay}
+                    style={{
+                      width: responsiveWidth(13),
+                      height: responsiveWidth(13),
+                    }}
+                  />
+                </View>
+              </View>
+            )}
           </TouchableOpacity>
         )}
-      </View>
+      </>
     );
   };
   const [inputText, setinputText] = useState('');
@@ -194,7 +276,7 @@ const Messaging = props => {
             <Image
               source={appImages.backicon2}
               resizeMode="contain"
-              style={{width: responsiveWidth(6), height: responsiveWidth(6)}}
+              style={{width: responsiveWidth(5), height: responsiveWidth(5)}}
             />
           </TouchableOpacity>
           <View
@@ -348,7 +430,7 @@ const Messaging = props => {
         onRequestClose={() => handleCancel()}>
         <Dialog.Title
           style={{
-            fontFamily: fontFamily.Touche_Bold,
+            fontFamily: fontFamily.Baskerville_Old_Face,
             alignSelf: 'center',
             color: '#080808',
           }}>
@@ -359,7 +441,7 @@ const Messaging = props => {
           </Dialog.Description> */}
         <Dialog.Button
           style={{
-            fontFamily: fontFamily.Touche_SemiBold,
+            fontFamily: fontFamily.Baskerville_Old_Face,
             alignSelf: 'center',
           }}
           label="Take a Photo"
@@ -371,7 +453,7 @@ const Messaging = props => {
         />
         <Dialog.Button
           style={{
-            fontFamily: fontFamily.Touche_SemiBold,
+            fontFamily: fontFamily.Baskerville_Old_Face,
             alignSelf: 'center',
           }}
           label="Choose from Gallery"
@@ -383,7 +465,7 @@ const Messaging = props => {
         />
         <Dialog.Button
           style={{
-            fontFamily: fontFamily.Touche_SemiBold,
+            fontFamily: fontFamily.Baskerville_Old_Face,
 
             alignSelf: 'center',
           }}
@@ -398,6 +480,96 @@ const Messaging = props => {
         visible={imagevisible}
         onRequestClose={() => setImagevisible(false)}
       />
+      <RBSheet
+        ref={refContainer}
+        openDuration={250}
+        animationType="fade"
+        customStyles={{
+          container: {
+            // height: responsiveHeight(50),
+            borderTopRightRadius: responsiveWidth(7),
+            borderTopLeftRadius: responsiveWidth(7),
+          },
+        }}>
+        <ScrollView
+          contentContainerStyle={{
+            flex: 1,
+            justifyContent: 'space-between',
+          }}>
+          <Image
+            source={appImages.alert}
+            style={{
+              width: responsiveWidth(18),
+              height: responsiveWidth(18),
+              alignSelf: 'center',
+              marginTop: responsiveHeight(2.8),
+            }}
+          />
+          <View>
+            <Text
+              style={{
+                alignSelf: 'center',
+                color: appColor.appColorMain,
+                fontFamily: fontFamily.Baskerville_Old_Face,
+                fontSize: responsiveFontSize(2.3),
+                textAlign: 'center',
+                width: responsiveWidth(90),
+                marginBottom: responsiveHeight(1.5),
+              }}>
+              Delete message
+            </Text>
+            <Text
+              style={{
+                alignSelf: 'center',
+                color: appColor.appColorMain,
+                fontFamily: fontFamily.Baskerville_Old_Face,
+                fontSize: responsiveFontSize(1.8),
+                textAlign: 'center',
+                width: responsiveWidth(90),
+                marginBottom: responsiveHeight(2),
+              }}>
+              Are you Sure you wanna Delete this sms?
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginBottom: responsiveHeight(2.8),
+              justifyContent: 'space-between',
+              width: responsiveWidth(82),
+              alignSelf: 'center',
+            }}>
+            <MyButton
+              myStyles={{
+                width: responsiveWidth(39),
+                backgroundColor: appColor.appColorMain,
+              }}
+              title={'Yes'}
+              itsTextstyle={{
+                color: '#fff',
+              }}
+              onPress={() => {
+                let arr = [...messages];
+                arr.splice(myindex, 1);
+                console.log(arr);
+                setMessages([...arr]);
+                refContainer.current.close();
+              }}
+            />
+            <MyButton
+              myStyles={{
+                width: responsiveWidth(39),
+                backgroundColor: appColor.appColorMain,
+              }}
+              title={'No'}
+              itsTextstyle={{
+                color: '#fff',
+              }}
+              onPress={() => refContainer.current.close()}
+            />
+          </View>
+        </ScrollView>
+      </RBSheet>
     </SafeAreaView>
   );
 };
@@ -406,12 +578,12 @@ export default Messaging;
 
 const styles = StyleSheet.create({
   txt1: {
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: appColor.appColorMain,
     fontSize: responsiveFontSize(2.6),
   },
   txt2: {
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: appColor.appColorMain,
     fontSize: responsiveFontSize(2.1),
     marginTop: responsiveHeight(0.4),
@@ -448,7 +620,7 @@ const styles = StyleSheet.create({
   txtemoji: {
     fontSize: responsiveFontSize(2.9),
     color: '#fff',
-    // fontFamily: fontFamily.Touche_Regular,
+    // fontFamily: fontFamily.Baskerville_Old_Face,
   },
   rightmessage: {
     backgroundColor: appColor.appColorMain,
@@ -456,7 +628,6 @@ const styles = StyleSheet.create({
     borderRadius: responsiveWidth(3),
     borderBottomRightRadius: responsiveWidth(3),
     borderTopRightRadius: responsiveWidth(3),
-    marginBottom: responsiveHeight(1),
     alignSelf: 'flex-end',
     paddingVertical: responsiveHeight(1.6),
     marginBottom: responsiveHeight(1.5),
@@ -468,20 +639,38 @@ const styles = StyleSheet.create({
     borderRadius: responsiveWidth(3),
     borderBottomRightRadius: responsiveWidth(3),
     borderTopRightRadius: responsiveWidth(3),
-    marginBottom: responsiveHeight(1),
     alignSelf: 'flex-start',
     marginBottom: responsiveHeight(1.5),
   },
+  rightcontent: {
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: responsiveHeight(1.5),
+    width: responsiveWidth(60.5),
+    height: responsiveWidth(72.5),
+    borderRadius: responsiveWidth(3),
+    backgroundColor: appColor.appColorMain,
+    overflow: 'hidden',
+  },
+  leftcontent: {
+    alignSelf: 'flex-start',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: responsiveHeight(1.5),
+    width: responsiveWidth(55),
+    height: responsiveWidth(70),
+  },
   righttxt: {
     color: '#fff',
-    fontFamily: fontFamily.Touche_Regular,
-    fontSize: responsiveFontSize(1.85),
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(2),
   },
   lefttxt: {
     color: '#000',
     opacity: 0.6,
-    fontFamily: fontFamily.Touche_Regular,
-    fontSize: responsiveFontSize(1.85),
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(2),
   },
   txtinputview: {
     backgroundColor: appColor.appColorMain,
@@ -496,7 +685,7 @@ const styles = StyleSheet.create({
   txtinputstyle: {
     // backgroundColor: 'red',
     width: responsiveWidth(53),
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: '#fff',
     fontSize: responsiveFontSize(2),
     maxHeight: responsiveHeight(20),

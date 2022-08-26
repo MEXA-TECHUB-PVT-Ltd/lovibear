@@ -274,19 +274,20 @@ const styles = StyleSheet.create({
   txt4: {
     textAlign: 'center',
     color: '#fff',
-    fontFamily: fontFamily.Touche_SemiBold,
-    fontSize: responsiveFontSize(1.75),
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(1.8),
   },
   headertxt: {
     fontSize: responsiveFontSize(4.5),
     color: '#fff',
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
   maintxt: {
     color: appColor.appColorMain,
-    fontSize: responsiveFontSize(3.5),
+    fontSize: responsiveFontSize(3.2),
+
     alignSelf: 'center',
-    fontFamily: fontFamily.Touche_Bold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     marginTop: responsiveHeight(-0.8),
   },
   emailparent: {
@@ -315,15 +316,15 @@ const styles = StyleSheet.create({
     width: responsiveWidth(70),
     paddingLeft: responsiveWidth(3),
     color: '#080808',
-    fontFamily: fontFamily.Touche_Regular,
-    fontSize: responsiveFontSize(1.95),
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(2),
   },
   txtinputpassword: {
     width: responsiveWidth(59.5),
     paddingLeft: responsiveWidth(3),
     color: '#080808',
-    fontFamily: fontFamily.Touche_Regular,
-    fontSize: responsiveFontSize(1.95),
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(2),
   },
   forgetview: {
     marginTop: responsiveHeight(2.5),
@@ -333,7 +334,7 @@ const styles = StyleSheet.create({
   },
   forgettxt: {
     color: '#000000',
-    fontFamily: fontFamily.Touche_SemiBold,
-    fontSize: responsiveFontSize(1.75),
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(1.8),
   },
 });

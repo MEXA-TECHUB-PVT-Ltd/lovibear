@@ -69,8 +69,8 @@ const DateSelect = props => {
         source={appImages.dateicon}
         resizeMode="contain"
         style={{
-          width: responsiveWidth(6.5),
-          height: responsiveWidth(6.5),
+          width: responsiveWidth(5.5),
+          height: responsiveWidth(5.5),
           // backgroundColor: 'red',
           marginLeft: responsiveWidth(5),
         }}
@@ -84,7 +84,7 @@ const DateSelect = props => {
           width: responsiveWidth(70),
           paddingLeft: responsiveWidth(3),
           color: '#080808',
-          fontFamily: fontFamily.Touche_Regular,
+          fontFamily: fontFamily.Baskerville_Old_Face,
           fontSize: responsiveFontSize(1.95),
         }}
         defaultValue={props.value}

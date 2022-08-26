@@ -31,42 +31,52 @@ const Search = props => {
     setFilteredlist(list);
   }, []);
   const [filteredlist, setFilteredlist] = useState([]);
+  const [myfocus, setMyfocus] = useState('search');
   const [list, setList] = useState([
     {
       id: 1,
       name: 'Emma',
+      img: appImages.img10,
     },
     {
       id: 2,
       name: 'Jennifer',
+      img: appImages.img2,
     },
     {
       id: 3,
       name: 'John Doe',
+      img: appImages.img4,
     },
     {
       id: 4,
       name: 'Mike',
+      img: appImages.img3,
     },
     {
       id: 5,
       name: 'Ryu',
+      img: appImages.img5,
     },
     {
       id: 6,
       name: 'Ken',
+      img: appImages.img6,
     },
     {
       id: 7,
       name: 'Tobey Maguire',
+      img: appImages.img7,
     },
     {
       id: 8,
       name: 'Jacob',
+      img: appImages.img8,
     },
     {
       id: 9,
       name: 'Mickey',
+      img: appImages.img9,
     },
   ]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -101,7 +111,7 @@ const Search = props => {
           justifyContent: 'center',
         }}>
         <Image
-          source={appImages.girlimg}
+          source={item.img}
           style={{
             width: responsiveWidth(42),
             height: responsiveWidth(50),
@@ -223,10 +233,19 @@ const Search = props => {
               }}
             />
           </TouchableOpacity>
-          <View style={styles.inputview}>
+          <View
+            style={[
+              styles.inputview,
+              {
+                borderColor:
+                  myfocus == 'search' ? appColor.appColorMain : '#C7C7C7',
+              },
+            ]}>
             <TextInput
               style={styles.inputstyle}
               placeholder={'Search'}
+              onFocus={() => setMyfocus('search')}
+              onSubmitEditing={() => setMyfocus('')}
               placeholderTextColor={'#8D8D8D'}
               onChangeText={text => {
                 search(text);
@@ -261,19 +280,19 @@ export default Search;
 
 const styles = StyleSheet.create({
   txt1: {
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: appColor.appColorMain,
     fontSize: responsiveFontSize(3.5),
   },
 
   nametxt: {
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: '#080808',
     fontSize: responsiveFontSize(2.3),
     marginTop: responsiveHeight(-0.4),
   },
   worktxt: {
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: '#080808',
     opacity: 0.3,
     fontSize: responsiveFontSize(1.7),
@@ -281,14 +300,14 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(1),
   },
   companytxt: {
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: '#080808',
     opacity: 0.3,
     fontSize: responsiveFontSize(1.8),
   },
   timetxt: {
     textAlign: 'right',
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: '#000',
     opacity: 0.55,
     fontSize: responsiveFontSize(1.7),
@@ -296,7 +315,7 @@ const styles = StyleSheet.create({
   },
   answertxt: {
     textAlign: 'right',
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: '#000',
     opacity: 0.55,
     fontSize: responsiveFontSize(1.7),
@@ -304,7 +323,7 @@ const styles = StyleSheet.create({
   },
   selectcategorytxt: {
     color: '#080808',
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     fontSize: responsiveFontSize(3.2),
   },
   sicon2: {
@@ -313,18 +332,17 @@ const styles = StyleSheet.create({
   },
   info1: {
     color: '#fff',
-    fontSize: responsiveFontSize(2.6),
-    fontFamily: fontFamily.Touche_Bold,
+    fontSize: responsiveFontSize(2.7),
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
   info2: {
     color: '#fff',
-    fontSize: responsiveFontSize(1.45),
-    fontFamily: fontFamily.Touche_Bold,
+    fontSize: responsiveFontSize(1.6),
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
   inputview: {
     width: responsiveWidth(80),
     borderWidth: responsiveWidth(0.2),
-    borderColor: '#C7C7C7',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -333,7 +351,7 @@ const styles = StyleSheet.create({
     borderRadius: responsiveWidth(4),
   },
   inputstyle: {
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: '#000',
     fontSize: responsiveFontSize(2),
     width: responsiveWidth(65),

@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "D:\\lovibear\\lovibear\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-de\\values-de.xml",
+            "outputFile": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-de\\values-de.xml",
             "map": [
                 {
                     "source": "C:\\Users\\INFOTECH\\.gradle\\caches\\transforms-3\\2fe4c7b1fbcb41e9424181fd749ff51c\\transformed\\jetified-ucrop-2.2.6-native\\res\\values-de\\values-de.xml",

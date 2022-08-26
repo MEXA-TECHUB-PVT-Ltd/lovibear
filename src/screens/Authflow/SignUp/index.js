@@ -28,10 +28,9 @@ import FastImage from 'react-native-fast-image';
 import {MyButton} from '../../../components/MyButton';
 import {DateSelect} from '../../../components/dateTimePicker/dateTimePicker';
 import {fontFamily} from '../../../constants/fonts';
-
+import moment from 'moment';
 const SignUp = props => {
   const refContainer = useRef();
-
   const [myfocus, setMyfocus] = useState('');
   const [securepassword, setSecurepassword] = useState(true);
   const passwordinputref = useRef();
@@ -43,7 +42,6 @@ const SignUp = props => {
   useFocusEffect(
     React.useCallback(() => {
       setSoftinput(true);
-      refContainer.current.open();
     }, []),
   );
   return (
@@ -112,8 +110,8 @@ const SignUp = props => {
               source={appImages.user}
               resizeMode="contain"
               style={{
-                width: responsiveWidth(6.5),
-                height: responsiveWidth(6.5),
+                width: responsiveWidth(5.5),
+                height: responsiveWidth(5.5),
                 // backgroundColor: 'red',
                 marginLeft: responsiveWidth(5),
               }}
@@ -145,8 +143,8 @@ const SignUp = props => {
               source={appImages.email}
               resizeMode="contain"
               style={{
-                width: responsiveWidth(6.5),
-                height: responsiveWidth(6.5),
+                width: responsiveWidth(5.5),
+                height: responsiveWidth(5.5),
                 // backgroundColor: 'red',
                 marginLeft: responsiveWidth(5),
               }}
@@ -177,8 +175,8 @@ const SignUp = props => {
               source={appImages.password}
               resizeMode="contain"
               style={{
-                width: responsiveWidth(6.5),
-                height: responsiveWidth(6.5),
+                width: responsiveWidth(5.5),
+                height: responsiveWidth(5.5),
                 // backgroundColor: 'red',
                 marginLeft: responsiveWidth(5),
               }}
@@ -261,7 +259,15 @@ const SignUp = props => {
           }}>
           <MyButton
             title={'SIGN UP'}
-            onPress={() => props.navigation.navigate('AddProfileImage')}
+            onPress={() => {
+              if (moment().diff(moment(mydate, 'DD-MM-YYYY'), 'years') < 18) {
+                refContainer.current.open();
+              } else if (mydate == '') {
+                refContainer.current.open();
+              } else {
+                props.navigation.navigate('AddProfileImage');
+              }
+            }}
           />
           <View style={{flexDirection: 'row', marginTop: responsiveHeight(4)}}>
             <Text style={styles.txt4}>Already Have an Account ? </Text>
@@ -307,7 +313,6 @@ const SignUp = props => {
         <ScrollView
           contentContainerStyle={{
             flex: 1,
-            marginTop: responsiveHeight(2),
             justifyContent: 'space-between',
           }}>
           <Image
@@ -316,23 +321,25 @@ const SignUp = props => {
               width: responsiveWidth(18),
               height: responsiveWidth(18),
               alignSelf: 'center',
+              marginTop: responsiveHeight(2.8),
             }}
           />
           <Text
             style={{
               alignSelf: 'center',
               color: appColor.appColorMain,
-              fontFamily: fontFamily.Touche_SemiBold,
-              fontSize: responsiveFontSize(2.6),
+              fontFamily: fontFamily.Baskerville_Old_Face,
+              fontSize: responsiveFontSize(2.3),
               textAlign: 'center',
-              width: responsiveWidth(80),
+              width: responsiveWidth(90),
+              marginBottom: responsiveHeight(2),
             }}>
-            You Should Be 18+ To Use the App
+            You Should Be 18+ To Use this App
           </Text>
           <MyButton
             myStyles={{
               backgroundColor: appColor.appColorMain,
-              marginBottom: responsiveHeight(2.5),
+              marginBottom: responsiveHeight(2.8),
             }}
             title={'OK'}
             itsTextstyle={{
@@ -352,19 +359,19 @@ const styles = StyleSheet.create({
   txt4: {
     textAlign: 'center',
     color: '#fff',
-    fontFamily: fontFamily.Touche_SemiBold,
-    fontSize: responsiveFontSize(1.75),
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(1.8),
   },
   headertxt: {
     fontSize: responsiveFontSize(4.5),
     color: '#fff',
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
   maintxt: {
     color: appColor.appColorMain,
-    fontSize: responsiveFontSize(3.5),
+    fontSize: responsiveFontSize(3.2),
     alignSelf: 'center',
-    fontFamily: fontFamily.Touche_Bold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     marginTop: responsiveHeight(-0.8),
   },
   emailparent: {
@@ -393,15 +400,15 @@ const styles = StyleSheet.create({
     width: responsiveWidth(70),
     paddingLeft: responsiveWidth(3),
     color: '#080808',
-    fontFamily: fontFamily.Touche_Regular,
-    fontSize: responsiveFontSize(1.95),
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(2),
   },
   txtinputpassword: {
     width: responsiveWidth(59.5),
     paddingLeft: responsiveWidth(3),
     color: '#080808',
-    fontFamily: fontFamily.Touche_Regular,
-    fontSize: responsiveFontSize(1.95),
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(2),
   },
   forgetview: {
     marginTop: responsiveHeight(2.5),
@@ -411,8 +418,8 @@ const styles = StyleSheet.create({
   },
   forgettxt: {
     color: '#000000',
-    fontFamily: fontFamily.Touche_SemiBold,
-    fontSize: responsiveFontSize(1.75),
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(1.8),
   },
   forgetview: {
     marginTop: responsiveHeight(2.5),

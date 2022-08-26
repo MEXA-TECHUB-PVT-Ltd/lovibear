@@ -30,30 +30,39 @@ const Post = props => {
   const [list, setList] = useState([
     {
       id: 1,
+      img: appImages.img2,
     },
     {
       id: 2,
+      img: appImages.img3,
     },
     {
       id: 3,
+      img: appImages.img4,
     },
     {
       id: 4,
+      img: appImages.img5,
     },
     {
       id: 5,
+      img: appImages.img6,
     },
     {
       id: 6,
+      img: appImages.img7,
     },
     {
       id: 7,
+      img: appImages.img8,
     },
     {
       id: 8,
+      img: appImages.img9,
     },
     {
       id: 9,
+      img: appImages.img10,
     },
   ]);
   const renderItem = ({item}) => {
@@ -71,7 +80,7 @@ const Post = props => {
           justifyContent: 'center',
         }}>
         <Image
-          source={appImages.girlimg}
+          source={item.img}
           style={{
             width: responsiveWidth(42),
             height: responsiveWidth(50),
@@ -99,12 +108,6 @@ const Post = props => {
 
   return (
     <SafeAreaView style={STYLES.container}>
-      <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} />
-      <StatusBar
-        hidden={false}
-        backgroundColor={appColor.appColorMain}
-        barStyle={'light-content'}
-      />
       <MyHeart
         type={'red'}
         myStyles={{
@@ -159,12 +162,18 @@ const Post = props => {
         width={responsiveWidth(13)}
         height={responsiveWidth(13)}
       />
-      <View
+
+      <StatusBar
+        hidden={false}
+        backgroundColor={appColor.appColorMain}
+        barStyle={'light-content'}
+      />
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
         style={{
-          flex: 1,
           backgroundColor: 'transparent',
           // paddingHorizontal: responsiveWidth(5),
-          width: responsiveWidth(90),
           alignSelf: 'center',
           zIndex: 1,
         }}>
@@ -229,8 +238,8 @@ const Post = props => {
           </View>
           <View
             style={{
-              width: responsiveWidth(35.5),
-              height: responsiveWidth(35.5),
+              width: responsiveWidth(33.5),
+              height: responsiveWidth(33.5),
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: responsiveWidth(100),
@@ -241,8 +250,8 @@ const Post = props => {
             }}>
             <Image
               style={{
-                width: responsiveWidth(32.5),
-                height: responsiveWidth(32.5),
+                width: responsiveWidth(30.5),
+                height: responsiveWidth(30.5),
                 borderRadius: responsiveWidth(100),
               }}
               source={appImages.girlimg}
@@ -252,14 +261,14 @@ const Post = props => {
             style={{
               alignSelf: 'center',
               paddingRight: responsiveWidth(13),
-              paddingTop: responsiveHeight(0.5),
+              paddingTop: responsiveHeight(1.1),
               alignItems: 'flex-end',
             }}>
             <Text
               style={{
                 color: '#fff',
-                fontFamily: fontFamily.Touche_SemiBold,
-                fontSize: responsiveFontSize(2.3),
+                fontFamily: fontFamily.Baskerville_Old_Face,
+                fontSize: responsiveFontSize(2.5),
                 marginBottom: responsiveHeight(0.5),
               }}>
               Lorem Ipsum
@@ -267,7 +276,7 @@ const Post = props => {
             <Text
               style={{
                 color: '#fff',
-                fontFamily: fontFamily.Touche_Regular,
+                fontFamily: fontFamily.Baskerville_Old_Face,
                 fontSize: responsiveFontSize(2),
               }}>
               25.15 miles
@@ -279,12 +288,15 @@ const Post = props => {
           renderItem={renderItem}
           contentContainerStyle={{}}
           numColumns={2}
+          scrollEnabled={false}
           showsVerticalScrollIndicator={false}
           columnWrapperStyle={{
             justifyContent: 'space-between',
+            width: responsiveWidth(90),
+            alignSelf: 'center',
           }}
         />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -293,19 +305,19 @@ export default Post;
 
 const styles = StyleSheet.create({
   txt1: {
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: appColor.appColorMain,
     fontSize: responsiveFontSize(3.5),
   },
 
   nametxt: {
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: '#080808',
     fontSize: responsiveFontSize(2.3),
     marginTop: responsiveHeight(-0.4),
   },
   worktxt: {
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: '#080808',
     opacity: 0.3,
     fontSize: responsiveFontSize(1.7),
@@ -313,14 +325,14 @@ const styles = StyleSheet.create({
     marginTop: responsiveHeight(1),
   },
   companytxt: {
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: '#080808',
     opacity: 0.3,
     fontSize: responsiveFontSize(1.8),
   },
   timetxt: {
     textAlign: 'right',
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: '#000',
     opacity: 0.55,
     fontSize: responsiveFontSize(1.7),
@@ -328,7 +340,7 @@ const styles = StyleSheet.create({
   },
   answertxt: {
     textAlign: 'right',
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: '#000',
     opacity: 0.55,
     fontSize: responsiveFontSize(1.7),
@@ -336,7 +348,7 @@ const styles = StyleSheet.create({
   },
   selectcategorytxt: {
     color: '#080808',
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     fontSize: responsiveFontSize(3.2),
   },
   sicon2: {
@@ -345,12 +357,12 @@ const styles = StyleSheet.create({
   },
   info1: {
     color: '#fff',
-    fontSize: responsiveFontSize(2.6),
-    fontFamily: fontFamily.Touche_Bold,
+    fontSize: responsiveFontSize(2.7),
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
   info2: {
     color: '#fff',
     fontSize: responsiveFontSize(1.45),
-    fontFamily: fontFamily.Touche_Bold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
 });

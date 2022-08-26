@@ -203,8 +203,9 @@ const Splash2 = props => {
               <Text
                 style={{
                   color: '#000000',
-                  fontSize: responsiveFontSize(1.7),
-                  fontFamily: fontFamily.Touche_Regular,
+                  fontSize: responsiveFontSize(1.8),
+
+                  fontFamily: fontFamily.Baskerville_Old_Face,
                 }}>
                 {' '}
                 Login Now
@@ -222,8 +223,8 @@ export default Splash2;
 const styles = StyleSheet.create({
   txt1: {
     color: '#fff',
-    fontSize: responsiveFontSize(2.1),
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontSize: responsiveFontSize(2.35),
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
   button1: {
     backgroundColor: '#0093FF',
@@ -239,9 +240,9 @@ const styles = StyleSheet.create({
   },
   txt2: {
     color: '#909090',
-    fontSize: responsiveFontSize(2.1),
+    fontSize: responsiveFontSize(2.35),
 
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
   button2: {
     borderColor: '#0093FF',
@@ -260,21 +261,21 @@ const styles = StyleSheet.create({
   },
 
   txt4: {
-    fontSize: responsiveFontSize(1.7),
+    fontSize: responsiveFontSize(1.8),
     textAlign: 'center',
     color: '#000000',
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
   txt5: {
-    fontSize: responsiveFontSize(1.7),
+    fontSize: responsiveFontSize(1.8),
     color: '#000000',
     textDecorationLine: 'underline',
     textAlign: 'center',
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
   headertxt: {
     fontSize: responsiveFontSize(6),
     color: '#fff',
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
 });

@@ -1,8 +1,25 @@
 {
     "logs": [
         {
-            "outputFile": "D:\\lovibear\\lovibear\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-fi\\values-fi.xml",
+            "outputFile": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-fi\\values-fi.xml",
             "map": [
+                {
+                    "source": "D:\\GitHub\\lovibear\\node_modules\\react-native-date-picker\\android\\build\\intermediates\\packaged_res\\debug\\values-fi\\values-fi.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,114,178,236,295,339,404,453,516,572,618",
+                        "endColumns": "58,63,57,58,43,64,48,62,55,45,58",
+                        "endOffsets": "109,173,231,290,334,399,448,511,567,613,672"
+                    },
+                    "to": {
+                        "startLines": "29,30,31,32,33,34,35,36,37,40,45",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "2775,2834,2898,2956,3015,3059,3124,3173,3236,3474,3807",
+                        "endColumns": "58,63,57,58,43,64,48,62,55,45,58",
+                        "endOffsets": "2829,2893,2951,3010,3054,3119,3168,3231,3287,3515,3861"
+                    }
+                },
                 {
                     "source": "C:\\Users\\INFOTECH\\.gradle\\caches\\transforms-3\\5c61d7afbc1bcd99cb491da6ba2ee6c1\\transformed\\core-1.6.0\\res\\values-fi\\values-fi.xml",
                     "from": {
@@ -52,23 +69,6 @@
                         "startOffsets": "3520,3643,3708,3758",
                         "endColumns": "122,64,49,48",
                         "endOffsets": "3638,3703,3753,3802"
-                    }
-                },
-                {
-                    "source": "D:\\lovibear\\lovibear\\node_modules\\react-native-date-picker\\android\\build\\intermediates\\packaged_res\\debug\\values-fi\\values-fi.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,114,178,236,295,339,404,453,516,572,618",
-                        "endColumns": "58,63,57,58,43,64,48,62,55,45,58",
-                        "endOffsets": "109,173,231,290,334,399,448,511,567,613,672"
-                    },
-                    "to": {
-                        "startLines": "29,30,31,32,33,34,35,36,37,40,45",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "2775,2834,2898,2956,3015,3059,3124,3173,3236,3474,3807",
-                        "endColumns": "58,63,57,58,43,64,48,62,55,45,58",
-                        "endOffsets": "2829,2893,2951,3010,3054,3119,3168,3231,3287,3515,3861"
                     }
                 }
             ]

@@ -9,6 +9,9 @@ import {
   Search,
   EditProfile,
   AddPhoto,
+  SubscribeInApp,
+  Bingo,
+  VideoScreen,
 } from '../../screens';
 import {appColor, appImages} from '../../assets/utilities';
 import {StyleSheet, View, Text, Image} from 'react-native';
@@ -273,6 +276,9 @@ const App = () => {
       <AppStack.Screen name={'Search'} component={Search} />
       <AppStack.Screen name={'EditProfile'} component={EditProfile} />
       <AppStack.Screen name={'AddPhoto'} component={AddPhoto} />
+      <AppStack.Screen name={'SubscribeInApp'} component={SubscribeInApp} />
+      <AppStack.Screen name={'Bingo'} component={Bingo} />
+      <AppStack.Screen name={'VideoScreen'} component={VideoScreen} />
     </AppStack.Navigator>
   );
 };

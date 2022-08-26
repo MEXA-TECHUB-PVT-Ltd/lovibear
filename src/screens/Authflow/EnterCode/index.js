@@ -91,7 +91,7 @@ const EnterCode = props => {
               fontSize: responsiveFontSize(1.8),
 
               textAlign: 'center',
-              fontFamily: fontFamily.Touche_Regular,
+              fontFamily: fontFamily.Baskerville_Old_Face,
               lineHeight: responsiveHeight(3),
             }}>
             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
@@ -227,19 +227,19 @@ const styles = StyleSheet.create({
   txt4: {
     textAlign: 'center',
     color: '#fff',
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     fontSize: responsiveFontSize(1.75),
   },
   headertxt: {
     fontSize: responsiveFontSize(4.5),
     color: '#fff',
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
   maintxt: {
     color: appColor.appColorMain,
     fontSize: responsiveFontSize(3.5),
     alignSelf: 'center',
-    fontFamily: fontFamily.Touche_Bold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     marginTop: responsiveHeight(-0.8),
   },
   emailparent: {
@@ -268,14 +268,14 @@ const styles = StyleSheet.create({
     width: responsiveWidth(70),
     paddingLeft: responsiveWidth(3),
     color: '#080808',
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     fontSize: responsiveFontSize(1.95),
   },
   txtinputpassword: {
     width: responsiveWidth(59.5),
     paddingLeft: responsiveWidth(3),
     color: '#080808',
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     fontSize: responsiveFontSize(1.95),
   },
 
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
   },
   textstyle: {
     fontSize: responsiveFontSize(3.5),
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
   focusCell: {
     borderColor: appColor.appColorMain,

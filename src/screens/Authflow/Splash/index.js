@@ -207,8 +207,9 @@ const Splash = props => {
               <Text
                 style={{
                   color: '#000000',
-                  fontSize: responsiveFontSize(1.7),
-                  fontFamily: fontFamily.Touche_Regular,
+                  fontSize: responsiveFontSize(1.8),
+
+                  fontFamily: fontFamily.Baskerville_Old_Face,
                 }}>
                 {' '}
                 Create Account
@@ -226,8 +227,9 @@ export default Splash;
 const styles = StyleSheet.create({
   txt1: {
     color: '#fff',
-    fontSize: responsiveFontSize(2.55),
-    fontFamily: fontFamily.Touche_Regular,
+    fontSize: responsiveFontSize(2.3),
+
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
   button1: {
     backgroundColor: appColor.appColorMain,
@@ -235,13 +237,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     // paddingHorizontal: responsiveWidth(1),
-    paddingVertical: responsiveHeight(1.5),
+    paddingVertical: responsiveHeight(1.7),
     borderRadius: responsiveWidth(100),
   },
   txt2: {
     color: '#fff',
-    fontSize: responsiveFontSize(1.9),
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontSize: responsiveFontSize(2.3),
+
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
   button2: {
     backgroundColor: '#3B5998',
@@ -255,8 +258,8 @@ const styles = StyleSheet.create({
   },
   txt3: {
     color: '#909090',
-    fontFamily: fontFamily.Touche_SemiBold,
-    fontSize: responsiveFontSize(1.9),
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(2.3),
   },
   button3: {
     backgroundColor: '#fff',
@@ -271,22 +274,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   txt4: {
-    fontSize: responsiveFontSize(1.7),
+    fontSize: responsiveFontSize(1.8),
+
     textAlign: 'center',
     color: '#000000',
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
   txt5: {
-    fontSize: responsiveFontSize(1.7),
+    fontSize: responsiveFontSize(1.8),
+
     textDecorationLine: 'underline',
     textAlign: 'center',
     color: '#000000',
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
   headertxt: {
     fontSize: responsiveFontSize(6),
     color: '#fff',
 
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
 });

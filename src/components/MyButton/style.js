@@ -31,7 +31,7 @@ export default StyleSheet.create({
   title: {
     color: appColor.appColorMain,
     fontSize: responsiveFontSize(2.6),
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     // marginBottom: responsiveHeight(0.8),
   },
   IconCon: {

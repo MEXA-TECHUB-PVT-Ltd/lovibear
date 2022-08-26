@@ -15,7 +15,6 @@ import React, {useState, useEffect, useRef} from 'react';
 import Right from 'react-native-vector-icons/FontAwesome';
 import FastImage from 'react-native-fast-image';
 import ImagePicker from 'react-native-image-crop-picker';
-
 import STYLES from '../../STYLES';
 import {appColor, appImages} from '../../../assets/utilities';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -26,18 +25,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import Carousel from 'react-native-snap-carousel';
 import {fontFamily} from '../../../constants/fonts';
-
 const AddPhoto = props => {
-  const imageTakeFromCamera = () => {
-    ImagePicker.openCamera({
-      cropping: true,
-      compressImageQuality: 1,
-    }).then(image => {
-      console.log(image.path);
-      setMyimage(image.path);
-    });
-  };
-
   const refContainer = useRef();
   const [categorylist, setCategorylist] = useState([
     {
@@ -75,7 +63,7 @@ const AddPhoto = props => {
         <Text
           style={{
             color: '#9D9D9D',
-            fontFamily: fontFamily.Touche_Regular,
+            fontFamily: fontFamily.Baskerville_Old_Face,
             fontSize: responsiveFontSize(2),
             marginLeft: responsiveWidth(4),
           }}>
@@ -92,8 +80,7 @@ const AddPhoto = props => {
   const [myimage, setMyimage] = useState('');
   const imageTakeFromGallery = () => {
     ImagePicker.openPicker({
-      cropping: true,
-      compressImageQuality: 1,
+      cropping: false,
     }).then(async image => {
       let arr = mylist;
       await arr.unshift({
@@ -111,7 +98,26 @@ const AddPhoto = props => {
       }
     });
   };
-
+  const imageTakeFromCamera = () => {
+    ImagePicker.openCamera({
+      cropping: false,
+    }).then(async image => {
+      let arr = mylist;
+      await arr.unshift({
+        image: image.path,
+      });
+      await setMylist([...arr]);
+      await console.log('MY LIST==============', mylist);
+      await refContainer.current.close();
+      console.log('ARR LENGTH', arr.length);
+      if (arr.length > 9) {
+        console.log('FOR POP===========');
+        let arr = mylist;
+        await arr.pop();
+        setMylist([...arr]);
+      }
+    });
+  };
   const renderItem = ({item, index}) => {
     return (
       <TouchableOpacity
@@ -191,7 +197,7 @@ const AddPhoto = props => {
             color: '#707070',
             fontSize: responsiveFontSize(1.8),
             textAlign: 'center',
-            fontFamily: fontFamily.Touche_SemiBold,
+            fontFamily: fontFamily.Baskerville_Old_Face,
             lineHeight: responsiveHeight(3),
           }}>
           Lorem Ipsum Dolor Sit Amet, Consetetur Sadipscing Elitr, Sed Diam
@@ -258,18 +264,18 @@ export default AddPhoto;
 
 const styles = StyleSheet.create({
   txt1: {
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: appColor.appColorMain,
     fontSize: responsiveFontSize(3.2),
   },
   nametxt: {
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: '#080808',
     fontSize: responsiveFontSize(2.3),
     marginTop: responsiveHeight(-0.4),
   },
   worktxt: {
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: '#080808',
     marginLeft: responsiveWidth(2.5),
     fontSize: responsiveFontSize(1.7),
@@ -277,14 +283,14 @@ const styles = StyleSheet.create({
     lineHeight: responsiveHeight(2.7),
   },
   companytxt: {
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: '#080808',
     opacity: 0.3,
     fontSize: responsiveFontSize(1.8),
   },
   timetxt: {
     textAlign: 'right',
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: '#000',
     opacity: 0.55,
     fontSize: responsiveFontSize(1.7),
@@ -292,7 +298,7 @@ const styles = StyleSheet.create({
   },
   answertxt: {
     textAlign: 'right',
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     color: '#000',
     opacity: 0.55,
     fontSize: responsiveFontSize(1.8),
@@ -300,7 +306,7 @@ const styles = StyleSheet.create({
   },
   selectcategorytxt: {
     color: appColor.appColorMain,
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     fontSize: responsiveFontSize(2.7),
   },
   sicon2: {

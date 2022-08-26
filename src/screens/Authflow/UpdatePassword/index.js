@@ -86,7 +86,7 @@ const UpdatePassword = props => {
               fontSize: responsiveFontSize(1.8),
 
               textAlign: 'center',
-              fontFamily: fontFamily.Touche_Regular,
+              fontFamily: fontFamily.Baskerville_Old_Face,
               lineHeight: responsiveHeight(3),
               marginBottom: responsiveHeight(2),
             }}>
@@ -187,7 +187,7 @@ const UpdatePassword = props => {
             justifyContent: 'center',
             width: responsiveWidth(100),
           }}>
-          <Text style={styles.headertxt}>lovibear</Text>
+          <Text style={styles.headertxt}>LoviBear</Text>
           <MyHeart
             myStyles={{
               left: responsiveWidth(4.5),
@@ -277,19 +277,19 @@ const styles = StyleSheet.create({
   txt4: {
     textAlign: 'center',
     color: '#fff',
-    fontFamily: fontFamily.Touche_SemiBold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     fontSize: responsiveFontSize(1.75),
   },
   headertxt: {
     fontSize: responsiveFontSize(4.5),
     color: '#fff',
-    fontFamily: fontFamily.Touche_Regular,
+    fontFamily: fontFamily.Baskerville_Old_Face,
   },
   maintxt: {
     color: appColor.appColorMain,
-    fontSize: responsiveFontSize(2.8),
+    fontSize: responsiveFontSize(3.2),
     alignSelf: 'center',
-    fontFamily: fontFamily.Touche_Bold,
+    fontFamily: fontFamily.Baskerville_Old_Face,
     marginTop: responsiveHeight(-0.8),
   },
   emailparent: {
@@ -318,14 +318,14 @@ const styles = StyleSheet.create({
     width: responsiveWidth(70),
     paddingLeft: responsiveWidth(3),
     color: '#080808',
-    fontFamily: fontFamily.Touche_Regular,
-    fontSize: responsiveFontSize(1.95),
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(2),
   },
   txtinputpassword: {
     width: responsiveWidth(59.5),
     paddingLeft: responsiveWidth(3),
     color: '#080808',
-    fontFamily: fontFamily.Touche_Regular,
-    fontSize: responsiveFontSize(1.95),
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(2),
   },
 });
