@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "917693716335",
+    "project_id": "lovibear-34ca9",
+    "storage_bucket": "lovibear-34ca9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:917693716335:android:38f38d7e5b74b853617a9a",
+        "android_client_info": {
+          "package_name": "com.lovibear"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "917693716335-mh7jfbflr22uh6t15qsuk1707523loqo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lovibear",
+            "certificate_hash": "c3ac91f219268508cbe0cca80f49e6df0410aca1"
+          }
+        },
+        {
+          "client_id": "917693716335-akkikc9dteji3n751qgrdm4g2ugtkisd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsoW4nbSuvso7JSHGN8dRhg9X4HcoGyf4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "917693716335-akkikc9dteji3n751qgrdm4g2ugtkisd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

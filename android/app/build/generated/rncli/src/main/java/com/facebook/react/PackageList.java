@@ -15,10 +15,14 @@ import java.util.ArrayList;
 import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
 // @react-native-community/slider
 import com.reactnativecommunity.slider.ReactSliderPackage;
+// @react-native-google-signin/google-signin
+import com.reactnativegooglesignin.RNGoogleSigninPackage;
 // react-native-date-picker
 import com.henninghall.date_picker.DatePickerPackage;
 // react-native-fast-image
 import com.dylanvann.fastimage.FastImageViewPackage;
+// react-native-geolocation-service
+import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
 // react-native-gesture-handler
 import com.swmansion.gesturehandler.RNGestureHandlerPackage;
 // react-native-image-crop-picker
@@ -84,8 +88,10 @@ public class PackageList {
       new MainReactPackage(mConfig),
       new RNDateTimePickerPackage(),
       new ReactSliderPackage(),
+      new RNGoogleSigninPackage(),
       new DatePickerPackage(),
       new FastImageViewPackage(),
+      new RNFusedLocationPackage(),
       new RNGestureHandlerPackage(),
       new PickerPackage(),
       new LinearGradientPackage(),

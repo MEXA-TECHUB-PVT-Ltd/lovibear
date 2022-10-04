@@ -9,6 +9,7 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  PermissionsAndroid,
 } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
@@ -28,6 +29,8 @@ import FastImage from 'react-native-fast-image';
 import {MyButton} from '../../../components/MyButton';
 import {DateSelect} from '../../../components/dateTimePicker/dateTimePicker';
 import {fontFamily} from '../../../constants/fonts';
+import Geolocation from 'react-native-geolocation-service';
+
 import moment from 'moment';
 const SignUp = props => {
   const refContainer = useRef();
@@ -38,12 +41,130 @@ const SignUp = props => {
   const [softinput, setSoftinput] = useState(false);
   const [mydate, setMydate] = useState('');
   const [isVisible, setisVisible] = useState(false);
+  const [checkemail, setCheckemail] = useState(false);
+  const [checkpassword, setCheckpassword] = useState(false);
+  const [checkusername, setCheckusername] = useState(false);
+  const [emailerror, setEmailerror] = useState('');
+  const [passworderror, setPassworderror] = useState('');
+  const [usernameerror, setUsernameerror] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [firstchar, setFirstChar] = useState('');
+  const [apiformatdate, setApiFormatDate] = useState('');
+  const [mylat, setMylat] = useState();
+  const [mylong, setMylong] = useState();
+  let regchecknumber = /^[0-9]*$/;
+  let reg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w\w+)+$/;
+  let regphone =
+    /\+(9[976]\d|8[987530]\d|6[987]\d|5[90]\d|42\d|3[875]\d|2[98654321]\d|9[8543210]|8[6421]|6[6543210]|5[87654321]|4[987654310]|3[9643210]|2[70]|7|1)\d{1,14}$/;
   console.log('MYDATE==================', mydate);
   useFocusEffect(
     React.useCallback(() => {
       setSoftinput(true);
     }, []),
   );
+
+  useEffect(() => {
+    getLocation();
+  }, []);
+
+  const getLocation = async () => {
+    if (Platform.OS === 'ios') {
+      Geolocation.requestAuthorization();
+      Geolocation.setRNConfiguration({
+        skipPermissionRequests: false,
+        authorizationLevel: 'whenInUse',
+      });
+    }
+
+    if (Platform.OS === 'android') {
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+    }
+
+    await Geolocation.getCurrentPosition(
+      position => {
+        console.log(position);
+        setMylat(position.coords.latitude);
+        setMylong(position.coords.longitude);
+      },
+      error => {
+        // See error code charts below.
+        console.log(error.code, error.message);
+        getLocation();
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    );
+  };
+
+  const Validations = () => {
+    if (username == '') {
+      setCheckusername(true);
+      setUsernameerror('Enter Username');
+      return false;
+    }
+    if (email == '') {
+      setCheckemail(true);
+      setEmailerror('Enter Valid Email');
+      return false;
+    }
+
+    if (regphone.test(firstchar + email) == false) {
+      console.log('IN FIRST');
+      if (regchecknumber.test(email)) {
+        console.log(' IN NUMBER CHECK ');
+        console.log(firstchar + email);
+        setCheckemail(true);
+        setEmailerror('Enter Valid Phone Number');
+        return false;
+      } else if (reg.test(email) == false) {
+        setCheckemail(true);
+        setEmailerror('Enter Valid Email');
+        return false;
+      }
+    }
+
+    if (password == '') {
+      setCheckpassword(true);
+      setPassworderror('Enter Valid Password');
+      return false;
+    }
+    if (moment().diff(moment(mydate, 'DD-MM-YYYY'), 'years') < 18) {
+      refContainer.current.open();
+      return false;
+    }
+    if (mydate == '') {
+      refContainer.current.open();
+      return false;
+    }
+
+    if (
+      checkpassword == false &&
+      checkemail == false &&
+      checkusername == false &&
+      mydate !== '' &&
+      moment().diff(moment(mydate, 'DD-MM-YYYY'), 'years') > 18
+    ) {
+      let signuptype;
+      if (regchecknumber.test(email)) {
+        signuptype = 'phoneNumber';
+      } else {
+        signuptype = 'email';
+      }
+      props.navigation.navigate('AddProfileImage', {
+        username: username,
+        email: email,
+        password: password,
+        apiformatdate: apiformatdate,
+        signuptype: signuptype,
+        mylat: mylat,
+        mylong: mylong,
+      });
+    }
+  };
+
   return (
     <SafeAreaView style={STYLES.container}>
       <StatusBar
@@ -120,9 +241,14 @@ const SignUp = props => {
               placeholderTextColor={'#8D8D8D'}
               showSoftInputOnFocus={softinput}
               autoFocus
+              value={username}
+              onChangeText={text => {
+                setUsername(text);
+                setCheckusername(false);
+              }}
               selectionColor={appColor.appColorMain}
               placeholder="Username"
-              style={styles.txtinputemail}
+              style={styles.txtinputusername}
               onFocus={() => setMyfocus('username')}
               onBlur={() => setMyfocus('')}
               onSubmitEditing={() => emailinputref.current.focus()}
@@ -130,6 +256,9 @@ const SignUp = props => {
               returnKeyType={'next'}
             />
           </View>
+          {checkusername ? (
+            <Text style={styles.errortxt}>{usernameerror}</Text>
+          ) : null}
           <View
             style={[
               styles.emailparent,
@@ -149,10 +278,30 @@ const SignUp = props => {
                 marginLeft: responsiveWidth(5),
               }}
             />
+            <Text
+              style={{
+                paddingLeft: responsiveWidth(3),
+                color: '#080808',
+                fontFamily: fontFamily.Baskerville_Old_Face,
+                fontSize: responsiveFontSize(2),
+              }}>
+              {firstchar}
+            </Text>
+
             <TextInput
+              value={email}
+              onChangeText={text => {
+                setEmail(text);
+                setCheckemail(false);
+                if (text !== '' && regchecknumber.test(text)) {
+                  setFirstChar('+');
+                } else {
+                  setFirstChar('');
+                }
+              }}
               placeholderTextColor={'#8D8D8D'}
               selectionColor={appColor.appColorMain}
-              placeholder="Email Address / Phone No"
+              placeholder="Email Address / Phone No With CC"
               style={styles.txtinputemail}
               onFocus={() => setMyfocus('email')}
               onBlur={() => setMyfocus('')}
@@ -163,6 +312,9 @@ const SignUp = props => {
               ref={emailinputref}
             />
           </View>
+          {checkemail ? (
+            <Text style={styles.errortxt}>{emailerror}</Text>
+          ) : null}
           <View
             style={[
               styles.passwordparent,
@@ -182,6 +334,11 @@ const SignUp = props => {
               }}
             />
             <TextInput
+              value={password}
+              onChangeText={text => {
+                setPassword(text);
+                setCheckpassword(false);
+              }}
               placeholderTextColor={'#8D8D8D'}
               selectionColor={appColor.appColorMain}
               placeholder="Password"
@@ -197,7 +354,14 @@ const SignUp = props => {
               onPress={() => setSecurepassword(!securepassword)}
             />
           </View>
-          <DateSelect getDate={date => setMydate(date)} value={mydate} />
+          {checkpassword ? (
+            <Text style={styles.errortxt}>{passworderror}</Text>
+          ) : null}
+          <DateSelect
+            getDate={date => setMydate(date)}
+            getApiDate={date => setApiFormatDate(date)}
+            value={mydate}
+          />
         </View>
 
         <View
@@ -260,13 +424,7 @@ const SignUp = props => {
           <MyButton
             title={'SIGN UP'}
             onPress={() => {
-              if (moment().diff(moment(mydate, 'DD-MM-YYYY'), 'years') < 18) {
-                refContainer.current.open();
-              } else if (mydate == '') {
-                refContainer.current.open();
-              } else {
-                props.navigation.navigate('AddProfileImage');
-              }
+              Validations();
             }}
           />
           <View style={{flexDirection: 'row', marginTop: responsiveHeight(4)}}>
@@ -398,10 +556,24 @@ const styles = StyleSheet.create({
   },
   txtinputemail: {
     width: responsiveWidth(70),
+    color: '#080808',
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(2),
+  },
+  txtinputusername: {
+    width: responsiveWidth(70),
     paddingLeft: responsiveWidth(3),
     color: '#080808',
     fontFamily: fontFamily.Baskerville_Old_Face,
     fontSize: responsiveFontSize(2),
+  },
+  errortxt: {
+    width: responsiveWidth(83),
+    alignSelf: 'center',
+    color: 'red',
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(2),
+    marginTop: responsiveHeight(1),
   },
   txtinputpassword: {
     width: responsiveWidth(59.5),

@@ -33,6 +33,7 @@ const DateSelect = props => {
     setDatePickerVisibility(false);
     setDate(moment(date).format('DD-MM-YYYY'));
     props.getDate(moment(date).format('DD-MM-YYYY'));
+    props.getApiDate(moment(date).format('MM-DD-YYYY'));
   };
   return (
     <TouchableOpacity

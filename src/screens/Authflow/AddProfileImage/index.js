@@ -25,20 +25,34 @@ import {
 import MyHeart from '../../../components/MyHeart';
 import {useFocusEffect} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
-import {MyButton} from '../../../components/MyButton';
+import {MyButton, MyButtonLoader} from '../../../components/MyButton';
 import {fontFamily} from '../../../constants/fonts';
+import {Base_URL} from '../../../Base_URL';
 
-const AddProfileImage = props => {
+const AddProfileImage = ({route, navigation}) => {
+  const [pfplink, setPfpLink] = useState('');
   const [myimage, setMyimage] = useState('');
+  const {username, email, password, apiformatdate, signuptype, mylat, mylong} =
+    route.params;
+  console.log(username, email, password, apiformatdate, signuptype);
+  const [selectedImage, setSelectedImage] = useState();
+  const [loading, setLoading] = useState(false);
   const imageTakeFromGallery = () => {
     ImagePicker.openPicker({
       cropping: false,
       // compressImageQuality: 1,
     }).then(image => {
-      console.log(image.path);
+      console.log(image);
       setMyimage(image.path);
+      const filename = image.path.substring(image.path.lastIndexOf('/') + 1);
+      setSelectedImage({
+        uri: image.path,
+        type: image.mime,
+        name: filename,
+      });
     });
   };
+
   const images = [myimage == '' ? appImages.userimage : {uri: myimage}];
   const imageTakeFromCamera = () => {
     ImagePicker.openCamera({
@@ -46,6 +60,12 @@ const AddProfileImage = props => {
     }).then(image => {
       console.log(image.path);
       setMyimage(image.path);
+      const filename = image.path.substring(image.path.lastIndexOf('/') + 1);
+      setSelectedImage({
+        uri: image.path,
+        type: image.mime,
+        name: filename,
+      });
     });
   };
 
@@ -58,6 +78,74 @@ const AddProfileImage = props => {
     setVisible(false);
   };
   const [imagevisible, setImagevisible] = useState(false);
+
+  const UploadToCloudinary = image => {
+    if (myimage !== '') {
+      setLoading(true);
+
+      const data = new FormData();
+      data.append('file', selectedImage);
+      data.append('upload_preset', 'lovibearApp');
+      data.append('cloud_name', 'dzyxgcils');
+
+      fetch('https://api.cloudinary.com/v1_1/dzyxgcils/image/upload', {
+        method: 'post',
+        body: data,
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log('THE DATA===========', data);
+          SignUpApi(data.url);
+        });
+    }
+  };
+  const SignUpApi = async image => {
+    var axios = require('axios');
+    if (signuptype == 'phoneNumber') {
+      var data = JSON.stringify({
+        userName: username,
+        password: password,
+        phoneNumber: '+' + email,
+        signupType: signuptype,
+        dateOfBirth: apiformatdate,
+        profileImage: image,
+        location: {
+          coordinates: [mylong, mylat],
+        },
+      });
+    } else {
+      var data = JSON.stringify({
+        userName: username,
+        password: password,
+        signupType: signuptype,
+        dateOfBirth: apiformatdate,
+        profileImage: image,
+        email: email,
+        location: {
+          coordinates: [mylong, mylat],
+        },
+      });
+    }
+
+    var config = {
+      method: 'post',
+      url: Base_URL + '/user/register',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        setLoading(false);
+      })
+      .catch(function (error) {
+        console.log(error.response.data);
+        setLoading(false);
+      });
+  };
   return (
     <SafeAreaView style={STYLES.containerJustify}>
       <StatusBar
@@ -187,14 +275,22 @@ const AddProfileImage = props => {
         </TouchableOpacity>
       </View>
 
-      <MyButton
-        myStyles={styles.buttonstyle}
-        title={'Add'}
-        onPress={() => props.navigation.navigate('Subscribe')}
-        itsTextstyle={{
-          color: '#fff',
-        }}
-      />
+      {loading ? (
+        <MyButtonLoader myStyles={styles.buttonstyle} title={'Add'} />
+      ) : (
+        <MyButton
+          myStyles={styles.buttonstyle}
+          title={'Add'}
+          onPress={() => {
+            UploadToCloudinary();
+            // props.navigation.navigate('Subscribe')
+          }}
+          itsTextstyle={{
+            color: '#fff',
+          }}
+        />
+      )}
+
       <Dialog.Container
         visible={visible}
         verticalButtons={true}

@@ -23,20 +23,197 @@ import EyeIcon from 'react-native-vector-icons/Ionicons';
 import MyHeart from '../../../components/MyHeart';
 import {useFocusEffect} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
-import {MyButton} from '../../../components/MyButton';
+import {MyButton, MyButtonLoader} from '../../../components/MyButton';
 import {fontFamily} from '../../../constants/fonts';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import {Base_URL} from '../../../Base_URL';
 const Login = props => {
+  let regchecknumber = /^[0-9]*$/;
+  let reg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w\w+)+$/;
+  let regphone =
+    /\+(9[976]\d|8[987530]\d|6[987]\d|5[90]\d|42\d|3[875]\d|2[98654321]\d|9[8543210]|8[6421]|6[6543210]|5[87654321]|4[987654310]|3[9643210]|2[70]|7|1)\d{1,14}$/;
   const [myfocus, setMyfocus] = useState('');
   const [securepassword, setSecurepassword] = useState(true);
   const passwordinputref = useRef();
+  const [gettingLoginStatus, setGettingLoginStatus] = useState(true);
+
   const emailinputref = useRef();
   const [softinput, setSoftinput] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [emailerror, setEmailerror] = useState('');
+  const [passworderror, setPassworderror] = useState('');
+  const [checkemail, setCheckemail] = useState(false);
+  const [checkpassword, setCheckpassword] = useState(false);
+  const [firstchar, setFirstChar] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
       setSoftinput(true);
     }, []),
   );
+
+  useEffect(() => {
+    GoogleSignin.configure();
+    _isSignedIn();
+  }, []);
+  const _isSignedIn = async () => {
+    const isSignedIn = await GoogleSignin.isSignedIn();
+    if (isSignedIn) {
+      alert('User is already signed in');
+      // Set User Info if user is already signed in
+      _getCurrentUserInfo();
+    } else {
+      console.log('Please Login');
+    }
+    setGettingLoginStatus(false);
+  };
+  const _getCurrentUserInfo = async () => {
+    try {
+      let info = await GoogleSignin.signInSilently();
+      console.log('User Info --> ', info);
+      setUserInfo(info);
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_REQUIRED) {
+        alert('User has not signed in yet');
+        console.log('User has not signed in yet');
+      } else {
+        alert("Unable to get user's info");
+        console.log("Unable to get user's info");
+      }
+    }
+  };
+  const _signIn = async () => {
+    // It will prompt google Signin Widget
+    try {
+      await GoogleSignin.hasPlayServices({
+        // Check if device has Google Play Services installed
+        // Always resolves to true on iOS
+        showPlayServicesUpdateDialog: true,
+      });
+      const userInfo = await GoogleSignin.signIn();
+      console.log('User Info --> ', userInfo);
+      setUserInfo(userInfo);
+    } catch (error) {
+      console.log('Message', JSON.stringify(error));
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        alert('User Cancelled the Login Flow');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        alert('Signing In');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        alert('Play Services Not Available or Outdated');
+      } else {
+        alert(error.message);
+      }
+    }
+  };
+  const _signOut = async () => {
+    setGettingLoginStatus(true);
+    // Remove user session from the device.
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      // Removing user Info
+      setUserInfo(null);
+    } catch (error) {
+      console.error(error);
+    }
+    setGettingLoginStatus(false);
+  };
+  const Validations = () => {
+    if (email == '') {
+      setCheckemail(true);
+      setEmailerror('Enter Valid Email');
+      return false;
+    }
+
+    if (regphone.test(firstchar + email) == false) {
+      console.log('IN FIRST');
+      if (regchecknumber.test(email)) {
+        console.log(' IN NUMBER CHECK ');
+        console.log(firstchar + email);
+        setCheckemail(true);
+        setEmailerror('Enter Valid Phone Number');
+        return false;
+      } else if (reg.test(email) == false) {
+        setCheckemail(true);
+        setEmailerror('Enter Valid Email');
+        return false;
+      }
+    }
+    if (password == '') {
+      setCheckpassword(true);
+      setPassworderror('Enter Valid Password');
+      return false;
+    }
+    if (checkpassword == false && checkemail == false) {
+      let signuptype;
+      if (regchecknumber.test(email)) {
+        signuptype = 'phoneNumber';
+      } else {
+        signuptype = 'email';
+      }
+      // props.navigation.navigate('App', {screen: 'PlayScreenScreens'})
+      var axios = require('axios');
+      if (signuptype == 'phoneNumber') {
+        var data = JSON.stringify({
+          phoneNumber: '+' + email,
+          password: password,
+        });
+      } else {
+        var data = JSON.stringify({
+          email: email,
+          password: password,
+        });
+      }
+
+      var config = {
+        method: 'post',
+        url: Base_URL + '/user/login',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: data,
+      };
+      setLoading(true);
+
+      axios(config)
+        .then(function (response) {
+          console.log('MY LOADER=======', loading);
+          console.log(JSON.stringify(response.data));
+          if (response.data.message == 'Logged in successfully') {
+            props.navigation.navigate('App');
+            console.log('MY LOADER=======', loading);
+
+            setLoading(false);
+          }
+          setLoading(false);
+        })
+        .catch(function (error) {
+          console.log(error.response.data);
+          if (error.response.data == 'phoneNumber or password is wrong') {
+            setCheckpassword(true);
+            setPassworderror('Wrong phone number or password');
+            setLoading(false);
+          } else if (error.response.data == 'Email or password is wrong') {
+            setCheckpassword(true);
+            setPassworderror('Wrong Email or password');
+            setLoading(false);
+          } else if ('"password" length must be at least 6 characters long') {
+            setCheckpassword(true);
+            setPassworderror('Wrong Length');
+            setLoading(false);
+          }
+          setLoading(false);
+        });
+    }
+  };
+
   return (
     <SafeAreaView style={STYLES.container}>
       <StatusBar
@@ -108,7 +285,27 @@ const Login = props => {
                 marginLeft: responsiveWidth(5),
               }}
             />
+            <Text
+              style={{
+                paddingLeft: responsiveWidth(3),
+                color: '#080808',
+                fontFamily: fontFamily.Baskerville_Old_Face,
+                fontSize: responsiveFontSize(2),
+              }}>
+              {firstchar}
+            </Text>
+
             <TextInput
+              value={email}
+              onChangeText={text => {
+                setEmail(text);
+                setCheckemail(false);
+                if (text !== '' && regchecknumber.test(text)) {
+                  setFirstChar('+');
+                } else {
+                  setFirstChar('');
+                }
+              }}
               placeholderTextColor={'#8D8D8D'}
               showSoftInputOnFocus={softinput}
               autoFocus
@@ -123,6 +320,9 @@ const Login = props => {
               returnKeyType={'next'}
             />
           </View>
+          {checkemail ? (
+            <Text style={styles.errortxt}>{emailerror}</Text>
+          ) : null}
           <View
             style={[
               styles.passwordparent,
@@ -142,6 +342,11 @@ const Login = props => {
               }}
             />
             <TextInput
+              value={password}
+              onChangeText={text => {
+                setPassword(text);
+                setCheckpassword(false);
+              }}
               placeholderTextColor={'#8D8D8D'}
               selectionColor={appColor.appColorMain}
               placeholder="Password"
@@ -157,6 +362,9 @@ const Login = props => {
               onPress={() => setSecurepassword(!securepassword)}
             />
           </View>
+          {checkpassword ? (
+            <Text style={styles.errortxt}>{passworderror}</Text>
+          ) : null}
           <TouchableOpacity
             style={styles.forgetview}
             activeOpacity={0.6}
@@ -222,12 +430,14 @@ const Login = props => {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <MyButton
-            title={'LOGIN'}
-            onPress={() =>
-              props.navigation.navigate('App', {screen: 'PlayScreenScreens'})
-            }
-          />
+          {loading ? (
+            <MyButtonLoader
+              title={'LOGIN'}
+              buttonColor={appColor.appColorMain}
+            />
+          ) : (
+            <MyButton title={'LOGIN'} onPress={() => Validations()} />
+          )}
           <View
             style={{
               flexDirection: 'row',
@@ -314,7 +524,6 @@ const styles = StyleSheet.create({
   },
   txtinputemail: {
     width: responsiveWidth(70),
-    paddingLeft: responsiveWidth(3),
     color: '#080808',
     fontFamily: fontFamily.Baskerville_Old_Face,
     fontSize: responsiveFontSize(2),
@@ -336,5 +545,13 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontFamily: fontFamily.Baskerville_Old_Face,
     fontSize: responsiveFontSize(1.8),
+  },
+  errortxt: {
+    width: responsiveWidth(83),
+    alignSelf: 'center',
+    color: 'red',
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(2),
+    marginTop: responsiveHeight(1),
   },
 });

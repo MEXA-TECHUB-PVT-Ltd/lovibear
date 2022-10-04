@@ -1,5 +1,6 @@
 import React from 'react';
 import {Text, TouchableOpacity, View, Image} from 'react-native';
+import {ActivityIndicator} from 'react-native-paper';
 
 import {
   responsiveFontSize,
@@ -53,6 +54,49 @@ export const MyButton = props => {
       {customimg && (
         <Image source={customimg} style={[styles.imgstyle, imageStyle]} />
       )}
+    </TouchableOpacity>
+  );
+};
+
+export const MyButtonLoader = props => {
+  const {
+    onPress,
+    title,
+    myStyles,
+    iconName,
+    iconType,
+    itsTextstyle,
+    iconColor,
+    iconSize,
+    customimg,
+    imageStyle,
+    buttonColor,
+  } = props;
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      disabled={true}
+      activeOpacity={0.8}
+      style={[
+        styles.container,
+        myStyles,
+        {flexDirection: 'row', alignItems: 'center', justifyContent: 'center'},
+      ]}>
+      {title && (
+        <Text style={[styles.title, itsTextstyle]}>
+          {'  '}
+          {title}
+          {'  '}
+        </Text>
+      )}
+      <ActivityIndicator
+        size={'small'}
+        style={{
+          marginLeft: responsiveWidth(4),
+        }}
+        color={
+          buttonColor == undefined ? '#fff' : buttonColor
+        }></ActivityIndicator>
     </TouchableOpacity>
   );
 };
