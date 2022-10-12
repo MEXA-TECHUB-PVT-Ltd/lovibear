@@ -4,7 +4,7 @@
             "outputFile": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-watch-v20\\values-watch-v20.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\INFOTECH\\.gradle\\caches\\transforms-3\\3872bc365fe87f1c2655273e7fafc583\\transformed\\appcompat-1.3.0\\res\\values-watch-v20\\values-watch-v20.xml",
+                    "source": "C:\\Users\\INFOTECH\\.gradle\\caches\\transforms-3\\0053320326b333f4fbc8458c8fa08484\\transformed\\appcompat-1.3.0\\res\\values-watch-v20\\values-watch-v20.xml",
                     "from": {
                         "startLines": "2,5,8",
                         "startColumns": "4,4,4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\INFOTECH\\.gradle\\caches\\transforms-3\\5ba6869c1b9d3a18d7e3a5c0849c9177\\transformed\\jetified-play-services-auth-19.2.0\\res\\values-watch-v20\\values.xml",
+                    "source": "C:\\Users\\INFOTECH\\.gradle\\caches\\transforms-3\\99d6af3551c548a835a89d5604649c2d\\transformed\\jetified-play-services-auth-19.2.0\\res\\values-watch-v20\\values.xml",
                     "from": {
                         "startLines": "4,5,6,7,8,9,10,11",
                         "startColumns": "0,0,0,0,0,0,0,0",

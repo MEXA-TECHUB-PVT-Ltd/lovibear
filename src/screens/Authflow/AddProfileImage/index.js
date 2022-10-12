@@ -32,9 +32,26 @@ import {Base_URL} from '../../../Base_URL';
 const AddProfileImage = ({route, navigation}) => {
   const [pfplink, setPfpLink] = useState('');
   const [myimage, setMyimage] = useState('');
-  const {username, email, password, apiformatdate, signuptype, mylat, mylong} =
-    route.params;
-  console.log(username, email, password, apiformatdate, signuptype);
+  const {
+    username,
+    email,
+    password,
+    apiformatdate,
+    signuptype,
+    mylat,
+    mylong,
+    gender,
+    profession,
+  } = route.params;
+  console.log(
+    username,
+    email,
+    password,
+    apiformatdate,
+    signuptype,
+    gender,
+    profession,
+  );
   const [selectedImage, setSelectedImage] = useState();
   const [loading, setLoading] = useState(false);
   const imageTakeFromGallery = () => {
@@ -112,6 +129,8 @@ const AddProfileImage = ({route, navigation}) => {
         location: {
           coordinates: [mylong, mylat],
         },
+        gender: gender,
+        profession: profession,
       });
     } else {
       var data = JSON.stringify({
@@ -124,6 +143,8 @@ const AddProfileImage = ({route, navigation}) => {
         location: {
           coordinates: [mylong, mylat],
         },
+        gender: gender,
+        profession: profession,
       });
     }
 
@@ -139,10 +160,11 @@ const AddProfileImage = ({route, navigation}) => {
     await axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
+        navigation.navigate('Login');
         setLoading(false);
       })
       .catch(function (error) {
-        console.log(error.response.data);
+        console.log(error.response);
         setLoading(false);
       });
   };

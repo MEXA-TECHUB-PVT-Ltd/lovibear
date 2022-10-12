@@ -806,16 +806,16 @@
     <string name="common_signin_button_text_long">Sign in with Google</string>
     <string name="date_description">Select Date</string>
     <string name="day_description">Select Day</string>
-    <string name="default_web_client_id" translatable="false">917693716335-akkikc9dteji3n751qgrdm4g2ugtkisd.apps.googleusercontent.com</string>
+    <string name="default_web_client_id" translatable="false">463886686975-ndbfquueo6s01aa8lh4j5vlc3a9a2vo3.apps.googleusercontent.com</string>
     <string name="error_icon_content_description">Error</string>
     <string name="exposed_dropdown_menu_content_description">Show dropdown menu</string>
     <string name="fab_transformation_scrim_behavior" translatable="false">com.google.android.material.transformation.FabTransformationScrimBehavior</string>
     <string name="fab_transformation_sheet_behavior" translatable="false">com.google.android.material.transformation.FabTransformationSheetBehavior</string>
-    <string name="gcm_defaultSenderId" translatable="false">917693716335</string>
-    <string name="google_api_key" translatable="false">AIzaSyBsoW4nbSuvso7JSHGN8dRhg9X4HcoGyf4</string>
-    <string name="google_app_id" translatable="false">1:917693716335:android:38f38d7e5b74b853617a9a</string>
-    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBsoW4nbSuvso7JSHGN8dRhg9X4HcoGyf4</string>
-    <string name="google_storage_bucket" translatable="false">lovibear-34ca9.appspot.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">463886686975</string>
+    <string name="google_api_key" translatable="false">AIzaSyAQJAJ_RVgauXxZo9kpPtjFavzGuvTP4rk</string>
+    <string name="google_app_id" translatable="false">1:463886686975:android:4ea31a6a9bee505a058aca</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAQJAJ_RVgauXxZo9kpPtjFavzGuvTP4rk</string>
+    <string name="google_storage_bucket" translatable="false">lovibear-7c3f4.appspot.com</string>
     <string name="header_description" translatable="false">Heading</string>
     <string name="hide_bottom_view_on_scroll_behavior" translatable="false">com.google.android.material.behavior.HideBottomViewOnScrollBehavior</string>
     <string name="hour_description">Select Hour</string>
@@ -871,7 +871,7 @@
     <string name="path_password_eye_mask_visible" translatable="false">M2,4.27 L2,4.27 L4.54,1.73 L4.54,1.73 L4.54,1 L23,1 L23,23 L1,23 L1,4.27 Z</string>
     <string name="path_password_strike_through" translatable="false">M3.27,4.27 L19.74,20.74</string>
     <string name="progressbar_description" translatable="false">Progress Bar</string>
-    <string name="project_id" translatable="false">lovibear-34ca9</string>
+    <string name="project_id" translatable="false">lovibear-7c3f4</string>
     <string name="radiogroup_description" translatable="false">Radio Group</string>
     <string name="rn_tab_description" translatable="false">Tab</string>
     <string name="scrollbar_description" translatable="false">Scroll Bar</string>

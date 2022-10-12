@@ -4,7 +4,7 @@
             "outputFile": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-small-v4\\values-small-v4.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\INFOTECH\\.gradle\\caches\\transforms-3\\0ff1e4888fd7eba473ee58a30b602b04\\transformed\\material-1.1.0\\res\\values-small-v4\\values-small-v4.xml",
+                    "source": "C:\\Users\\INFOTECH\\.gradle\\caches\\transforms-3\\2a78e74343195b3d3c54727167858876\\transformed\\material-1.1.0\\res\\values-small-v4\\values-small-v4.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",

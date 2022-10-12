@@ -31,6 +31,7 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import {Base_URL} from '../../../Base_URL';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Login = props => {
   let regchecknumber = /^[0-9]*$/;
   let reg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w\w+)+$/;
@@ -59,8 +60,8 @@ const Login = props => {
   );
 
   useEffect(() => {
-    GoogleSignin.configure();
-    _isSignedIn();
+    // GoogleSignin.configure();
+    // _isSignedIn();
   }, []);
   const _isSignedIn = async () => {
     const isSignedIn = await GoogleSignin.isSignedIn();
@@ -183,19 +184,21 @@ const Login = props => {
       setLoading(true);
 
       axios(config)
-        .then(function (response) {
+        .then(async function (response) {
           console.log('MY LOADER=======', loading);
           console.log(JSON.stringify(response.data));
+
           if (response.data.message == 'Logged in successfully') {
+            // console.log('THE USER ID==========', response.data);
+            await AsyncStorage.setItem('userid', response.data.Data._id);
             props.navigation.navigate('App');
             console.log('MY LOADER=======', loading);
-
             setLoading(false);
           }
           setLoading(false);
         })
-        .catch(function (error) {
-          console.log(error.response.data);
+        .catch(async function (error) {
+          console.log('THE ERROR=========', error.response);
           if (error.response.data == 'phoneNumber or password is wrong') {
             setCheckpassword(true);
             setPassworderror('Wrong phone number or password');

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="default_web_client_id" translatable="false">917693716335-akkikc9dteji3n751qgrdm4g2ugtkisd.apps.googleusercontent.com</string>
-    <string name="gcm_defaultSenderId" translatable="false">917693716335</string>
-    <string name="google_api_key" translatable="false">AIzaSyBsoW4nbSuvso7JSHGN8dRhg9X4HcoGyf4</string>
-    <string name="google_app_id" translatable="false">1:917693716335:android:38f38d7e5b74b853617a9a</string>
-    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBsoW4nbSuvso7JSHGN8dRhg9X4HcoGyf4</string>
-    <string name="google_storage_bucket" translatable="false">lovibear-34ca9.appspot.com</string>
-    <string name="project_id" translatable="false">lovibear-34ca9</string>
+    <string name="default_web_client_id" translatable="false">463886686975-ndbfquueo6s01aa8lh4j5vlc3a9a2vo3.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">463886686975</string>
+    <string name="google_api_key" translatable="false">AIzaSyAQJAJ_RVgauXxZo9kpPtjFavzGuvTP4rk</string>
+    <string name="google_app_id" translatable="false">1:463886686975:android:4ea31a6a9bee505a058aca</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAQJAJ_RVgauXxZo9kpPtjFavzGuvTP4rk</string>
+    <string name="google_storage_bucket" translatable="false">lovibear-7c3f4.appspot.com</string>
+    <string name="project_id" translatable="false">lovibear-7c3f4</string>
 </resources>

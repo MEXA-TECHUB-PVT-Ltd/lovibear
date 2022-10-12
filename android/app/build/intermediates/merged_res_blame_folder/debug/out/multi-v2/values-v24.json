@@ -4,7 +4,7 @@
             "outputFile": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v24\\values-v24.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\INFOTECH\\.gradle\\caches\\transforms-3\\3872bc365fe87f1c2655273e7fafc583\\transformed\\appcompat-1.3.0\\res\\values-v24\\values-v24.xml",
+                    "source": "C:\\Users\\INFOTECH\\.gradle\\caches\\transforms-3\\0053320326b333f4fbc8458c8fa08484\\transformed\\appcompat-1.3.0\\res\\values-v24\\values-v24.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",

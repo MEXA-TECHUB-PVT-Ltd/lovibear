@@ -274,6 +274,7 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 implementation platform('com.google.firebase:firebase-bom:30.4.1')
+implementation 'com.google.firebase:firebase-analytics:18.0.2'
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 

@@ -11,6 +11,10 @@ import {
   ScrollView,
   FlatList,
   Animated,
+  RefreshControl,
+  Platform,
+  PermissionsAndroid,
+  Alert,
 } from 'react-native';
 import ImageView from 'react-native-image-viewing';
 import Dialog from 'react-native-dialog';
@@ -32,9 +36,226 @@ import Swiper from 'react-native-deck-swiper';
 import LinearGradient from 'react-native-linear-gradient';
 import {fontFamily} from '../../../constants/fonts';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import {Base_URL} from '../../../Base_URL';
+import {ActivityIndicator} from 'react-native-paper';
+import Geolocation from 'react-native-geolocation-service';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PlayScreen = props => {
+  useEffect(() => {
+    getLocation();
+    // Filter();
+  }, []);
+
+  const [mylat, setMylat] = useState(0);
+  const [mylong, setMylong] = useState(0);
+  const [gettinglocation, setGettinglocation] = useState(true);
+  const [swipeduser, setSwipedUser] = useState();
+  const [undostatus, setUndoStatus] = useState(false);
+
+  const getLocation = async () => {
+    if (Platform.OS === 'ios') {
+      Geolocation.requestAuthorization();
+      Geolocation.setRNConfiguration({
+        skipPermissionRequests: false,
+        authorizationLevel: 'whenInUse',
+      });
+    }
+    if (Platform.OS === 'android') {
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+    }
+    await Geolocation.getCurrentPosition(
+      position => {
+        console.log(position);
+        setMylat(position.coords.latitude);
+        setMylong(position.coords.longitude);
+        setTimeout(() => {
+          Filter(position.coords.latitude, position.coords.longitude);
+        }, 1000);
+      },
+      error => {
+        // See error code charts below.
+        console.log(error.code, error.message);
+        Alert.alert('Enable Location', 'Your location is required to proceed', [
+          // {
+          //   text: 'Cancel',
+          //   onPress: () => console.log('Cancel Pressed'),
+          //   style: 'cancel',
+          // },
+          {
+            text: 'OK',
+            onPress: () => {
+              getLocation();
+            },
+          },
+        ]);
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    );
+  };
+  // APIS CALLS BELOW
+
+  const RightSwipeApi = async rightswipedid => {
+    console.log('RIGHT SWIPED USER ID============', rightswipedid);
+    const userid = await AsyncStorage.getItem('userid');
+    var axios = require('axios');
+    var data = JSON.stringify({
+      swipedBy: userid,
+      swipedUser: rightswipedid,
+    });
+
+    var config = {
+      method: 'put',
+      url: Base_URL + '/swipe/rightSwipeUser',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        if (response.data.result.matchFound == true) {
+          props.navigation.navigate('Bingo');
+        }
+        console.log(
+          'API RESPONSE AFTER RIGHT SWIPING============',
+          response.data,
+        );
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const LeftSwipeApi = async leftswipedid => {
+    console.log('LEFT SWIPED USER ID============', leftswipedid);
+    const userid = await AsyncStorage.getItem('userid');
+    var axios = require('axios');
+    var data = JSON.stringify({
+      swipedBy: userid,
+      swipedUser: leftswipedid,
+    });
+
+    var config = {
+      method: 'put',
+      url: Base_URL + '/swipe/leftSwipeUser',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        console.log(
+          'API RESPONSE AFTER LEFT SWIPING============',
+          response.data,
+        );
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const RewindCardApi = async () => {
+    const userid = await AsyncStorage.getItem('userid');
+
+    var axios = require('axios');
+    var config = {
+      method: 'delete',
+      url:
+        Base_URL +
+        '/swipe/deleteSwipeByUsers_id/?swipedBy=' +
+        userid +
+        '&swipedUser=' +
+        swipeduser,
+      headers: {},
+    };
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log('THE ERROR ON REWIND====', error.response);
+        console.log(error);
+      });
+  };
+
+  const Filter = async (customlat, customlong) => {
+    console.log('HERE AT FILTER FUNCTION');
+    var axios = require('axios');
+    console.log('MY CUSTOM LAT AND LONG==========', mylat, mylong);
+    var data = JSON.stringify({
+      long: customlong,
+      lat: customlat,
+      radiusInKm: myradius,
+    });
+
+    var config = {
+      method: 'post',
+      url:
+        Base_URL +
+        '/user/usersInRadius/?page=' +
+        pagination +
+        '&limit=10' +
+        '&gender=' +
+        gender +
+        bypost +
+        '&byPosts=' +
+        bypost +
+        '&min_age=' +
+        minage +
+        '&max_age=' +
+        maxage,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify('THE CARD LIST============', response.data));
+        if (response.data.message == 'No user found with this query') {
+          console.log('No Results Found');
+          setLoading(false);
+          setEmpty(true);
+        } else {
+          setCardsList(response.data.users);
+          console.log('THE CARD LIST================', CardsList);
+          setLoading(false);
+          setEmpty(false);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+        console.log(error.response.data);
+        if (error.response.data.message == 'No user found with this query') {
+          console.log('No Results Found');
+          setLoading(false);
+          setEmpty(true);
+        }
+      });
+  };
+
+  // API CALLS ABOVE
+
+  const [pagination, setPagination] = useState(1);
+  const [bypost, setByPost] = useState('');
+  const [minage, setMinAge] = useState(0);
+  const [maxage, setMaxAge] = useState(100);
+  const [myradius, setMyRadius] = useState(5000);
+  const [loading, setLoading] = useState(true);
+  const [empty, setEmpty] = useState(false);
+  const [gender, setGender] = useState('');
+  const [CardsList, setCardsList] = useState([]);
   const refContainer = useRef();
+  const [cardIndex, setCardIndex] = useState(0);
   const [categorylist, setCategorylist] = useState([
     {
       id: 1,
@@ -58,12 +279,6 @@ const PlayScreen = props => {
       id: 4,
       title: 'Age',
       image: appImages.ageoption,
-      onPress: () => refContainer.current.close(),
-    },
-    {
-      id: 5,
-      title: 'Profile Photo',
-      image: appImages.photooption,
       onPress: () => refContainer.current.close(),
     },
   ]);
@@ -102,6 +317,7 @@ const PlayScreen = props => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [myvalue, setMyvalue] = useState(0);
   const [buttondirection, setButtonDirection] = useState('');
+  const [processing, setProcessing] = useState(false);
   const fadeInRight = async () => {
     setButtonDirection('right');
     await Animated.timing(fadeAnim, {
@@ -118,10 +334,12 @@ const PlayScreen = props => {
       }).start();
       swiperRef.current.swipeRight();
     }, 300);
+    // await setTimeout(() => {
+    //   RightSwipeApi();
+    // }, 850);
   };
   const fadeInLeft = async () => {
     setButtonDirection('left');
-
     await Animated.timing(fadeAnim, {
       useNativeDriver: false,
       toValue: 1,
@@ -137,29 +355,35 @@ const PlayScreen = props => {
       swiperRef.current.swipeLeft();
     }, 300);
   };
-  const fadeInTop = async () => {
-    setButtonDirection('top');
-    await Animated.timing(fadeAnim, {
-      useNativeDriver: false,
-      toValue: 1,
-      duration: 350,
-    }).start();
-    await setTimeout(() => {
-      console.log('HERE');
-      Animated.timing(fadeAnim, {
-        useNativeDriver: false,
-        toValue: 0,
-        duration: 80,
-      }).start();
-      swiperRef.current.swipeTop();
-    }, 350);
-  };
+  // const fadeInTop = async () => {
+  //   setProcessing(true);
+
+  //   setButtonDirection('top');
+  //   await Animated.timing(fadeAnim, {
+  //     useNativeDriver: false,
+  //     toValue: 1,
+  //     duration: 350,
+  //   }).start();
+  //   await setTimeout(() => {
+  //     console.log('HERE');
+  //     Animated.timing(fadeAnim, {
+  //       useNativeDriver: false,
+  //       toValue: 0,
+  //       duration: 80,
+  //     }).start();
+  //     swiperRef.current.swipeTop();
+  //     setProcessing(false);
+  //   }, 350);
+  // };
 
   const swiperRef = useRef();
   const Card = item => {
     return (
       <View style={styles.mycard}>
-        <Image source={item.img} style={styles.cardimage} />
+        <Image
+          source={{uri: item.document.profileImage}}
+          style={styles.cardimage}
+        />
 
         <LinearGradient
           colors={['rgba(255, 255, 255,1)', 'rgba(255, 255, 255,1)']}
@@ -171,8 +395,11 @@ const PlayScreen = props => {
             paddingBottom: responsiveHeight(1.5),
             paddingTop: responsiveHeight(1.5),
           }}>
-          <Text style={styles.txt1}>{item.name}, 22</Text>
-          <Text style={styles.txt2}>72 km, Lawyer</Text>
+          <Text style={styles.txt1}>{item.document.userName}, 22</Text>
+          <Text style={styles.txt2}>
+            {item.document.dist.distance_km.toFixed(2)} km,
+            {' ' + item.document.profession}
+          </Text>
         </LinearGradient>
       </View>
     );
@@ -200,7 +427,10 @@ const PlayScreen = props => {
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <TouchableOpacity
               activeOpacity={0.7}
-              onPress={() => props.navigation.navigate('Search')}>
+              disabled={loading ? true : false}
+              onPress={() =>
+                props.navigation.navigate('Search', {routeArray: CardsList})
+              }>
               <FastImage
                 source={appImages.searchicon}
                 resizeMode="contain"
@@ -212,6 +442,7 @@ const PlayScreen = props => {
               />
             </TouchableOpacity>
             <TouchableOpacity
+              disabled={loading ? true : false}
               activeOpacity={0.6}
               onPress={() => refContainer.current.open()}>
               <FastImage
@@ -227,7 +458,6 @@ const PlayScreen = props => {
         </View>
         <View style={styles.swipercontainer}>
           <View
-            pointerEvents="none"
             style={{
               position: 'absolute',
               flex: 1,
@@ -270,150 +500,163 @@ const PlayScreen = props => {
               </Animated.View>
             ) : null}
           </View>
-          <Swiper
-            animateOverlayLabelsOpacity
-            stackSize={3}
-            stackScale={6}
-            stackSeparation={24}
-            showSecondCard={true}
-            infinite
-            disableBottomSwipe={true}
-            overlayLabels={{
-              right: {
-                element: (
-                  <View
-                    style={{
-                      flex: 1,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: 'transparent',
-                    }}>
-                    <Image
-                      source={appImages.yeplabel}
+
+          {loading ? (
+            <View
+              style={{
+                height: responsiveHeight(55),
+                width: responsiveWidth(80),
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <ActivityIndicator size={'large'} color={appColor.appColorMain} />
+            </View>
+          ) : empty ? (
+            <View
+              style={{
+                height: responsiveHeight(57),
+                width: responsiveWidth(80),
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text style={styles.headertxt}>End Of Results</Text>
+            </View>
+          ) : (
+            <Swiper
+              animateOverlayLabelsOpacity
+              stackSize={3}
+              stackScale={6}
+              stackSeparation={24}
+              showSecondCard={true}
+              verticalSwipe={false}
+              overlayLabels={{
+                right: {
+                  element: (
+                    <View
                       style={{
-                        width: responsiveWidth(40),
-                        height: responsiveWidth(40),
-                        resizeMode: 'contain',
-                      }}
-                    />
-                  </View>
-                ),
-              },
-              left: {
-                element: (
-                  <View
-                    style={{
-                      backgroundColor: 'transparent',
-                      flex: 1,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <Image
-                      source={appImages.nopelabel}
+                        flex: 1,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'transparent',
+                      }}>
+                      <Image
+                        source={appImages.yeplabel}
+                        style={{
+                          width: responsiveWidth(40),
+                          height: responsiveWidth(40),
+                          resizeMode: 'contain',
+                        }}
+                      />
+                    </View>
+                  ),
+                },
+                left: {
+                  element: (
+                    <View
                       style={{
-                        width: responsiveWidth(40),
-                        height: responsiveWidth(40),
-                        resizeMode: 'contain',
-                      }}
-                    />
-                  </View>
-                ),
-              },
-              top: {
-                element: (
-                  <View
-                    style={{
-                      flex: 1,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: 'transparent',
-                    }}>
-                    <Image
-                      source={appImages.superlabel}
+                        backgroundColor: 'transparent',
+                        flex: 1,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <Image
+                        source={appImages.nopelabel}
+                        style={{
+                          width: responsiveWidth(40),
+                          height: responsiveWidth(40),
+                          resizeMode: 'contain',
+                        }}
+                      />
+                    </View>
+                  ),
+                },
+                top: {
+                  element: (
+                    <View
                       style={{
-                        width: responsiveWidth(90),
-                        height: responsiveWidth(90),
-                        resizeMode: 'contain',
-                      }}
-                    />
-                  </View>
-                ),
-              },
-            }}
-            containerStyle={{
-              height: responsiveHeight(62),
-            }}
-            cardVerticalMargin={0}
-            // infinite={true}
-            backgroundColor="transparent"
-            cardStyle={{height: responsiveHeight(62)}}
-            cards={[
-              {
-                id: 1,
-                img: appImages.img3,
-                name: 'Alisa',
-              },
-              {
-                id: 2,
-                img: appImages.img4,
-                name: 'Jennifer',
-              },
-              {
-                id: 3,
-                img: appImages.img5,
-                name: 'Katrina',
-              },
-              {
-                id: 4,
-                img: appImages.img6,
-                name: 'Tobey Maguire',
-              },
-              {
-                id: 5,
-                img: appImages.img7,
-                name: 'Delta',
-              },
-              {
-                id: 6,
-                img: appImages.girlimg,
-                name: 'Christie',
-              },
-              {
-                id: 7,
-                img: appImages.img8,
-                name: 'Scarlet',
-              },
-              {
-                id: 8,
-                img: appImages.img9,
-                name: 'Jimmy',
-              },
-              {
-                id: 9,
-                img: appImages.img10,
-                name: 'Anakin',
-              },
-              {
-                id: 10,
-                img: appImages.img2,
-                name: 'Chan the man',
-              },
-            ]}
-            cardIndex={0}
-            horizontalSwipe={true}
-            swipeAnimationDuration={300}
-            onSwiped={cardIndex => {
-              console.log('Swiped');
-              swiperRef.current.state.pan.setOffset({x: 0, y: 0});
-            }}
-            renderCard={item => Card(item)}
-            ref={swiperRef}
-          />
+                        flex: 1,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'transparent',
+                      }}>
+                      <Image
+                        source={appImages.superlabel}
+                        style={{
+                          width: responsiveWidth(90),
+                          height: responsiveWidth(90),
+                          resizeMode: 'contain',
+                        }}
+                      />
+                    </View>
+                  ),
+                },
+              }}
+              containerStyle={{
+                height: responsiveHeight(62),
+              }}
+              cardVerticalMargin={0}
+              // infinite={true}
+              backgroundColor="transparent"
+              cardStyle={{height: responsiveHeight(62)}}
+              cards={CardsList}
+              cardIndex={cardIndex}
+              // cardIndex={0}
+              horizontalSwipe={true}
+              swipeAnimationDuration={300}
+              onSwipedRight={cardIndex => {
+                let arr = CardsList.filter((item, index) => {
+                  return index == cardIndex;
+                });
+                RightSwipeApi(arr[0]._id);
+                setSwipedUser(arr[0]._id);
+                setProcessing(false);
+              }}
+              onSwiped={cardIndex => {
+                setTimeout(() => {
+                  setUndoStatus(true);
+                }, 850);
+                setCardIndex(cardIndex);
+                console.log('Swiped');
+                swiperRef.current.state.pan.setOffset({x: 0, y: 0});
+                console.log('THE LIST AFTER SWIPING===========', CardsList);
+              }}
+              onSwiping={item => {
+                console.log('ITS SWIPING CONTINOUS===========', item);
+                setProcessing(true);
+              }}
+              onSwipedAborted={item => {
+                console.log('SWIPED ABORTED============', item);
+                setProcessing(false);
+              }}
+              onSwipedLeft={cardIndex => {
+                let arr = CardsList.filter((item, index) => {
+                  return index == cardIndex;
+                });
+                LeftSwipeApi(arr[0]._id);
+                setSwipedUser(arr[0]._id);
+                setProcessing(false);
+              }}
+              renderCard={item => Card(item)}
+              ref={swiperRef}
+              onSwipedAll={() => {
+                setEmpty(true);
+              }}
+            />
+          )}
         </View>
         <View style={styles.buttonsparent}>
           <TouchableOpacity
+            disabled={
+              processing == true || loading == true || empty == true
+                ? true
+                : false
+            }
             onPress={() => {
+              setProcessing(true);
               fadeInLeft();
+              setTimeout(() => {
+                setProcessing(false);
+              }, 850);
             }}
             style={styles.buttonview3}
             activeOpacity={0.7}>
@@ -424,9 +667,27 @@ const PlayScreen = props => {
             />
           </TouchableOpacity>
           <TouchableOpacity
+            disabled={
+              processing == true || loading == true || undostatus == false
+                ? true
+                : false
+            }
             style={styles.buttonview3}
             activeOpacity={0.7}
-            onPress={() => props.navigation.navigate('SubscribeInApp')}>
+            onPress={() => {
+              if (undostatus == true) {
+                console.log('HERE AT UNDO BUTTON PRESS');
+
+                setLoading(true);
+                RewindCardApi();
+                setTimeout(() => {
+                  setEmpty(false);
+                  setCardIndex(cardIndex + 1 - 1);
+                  setLoading(false);
+                }, 500);
+                setUndoStatus(false);
+              }
+            }}>
             <Image
               style={styles.cardicon}
               resizeMode="contain"
@@ -434,8 +695,18 @@ const PlayScreen = props => {
             />
           </TouchableOpacity>
           <TouchableOpacity
+            disabled={
+              processing == true || loading == true || empty == true
+                ? true
+                : false
+            }
             onPress={() => {
+              setProcessing(true);
+
               fadeInRight();
+              setTimeout(() => {
+                setProcessing(false);
+              }, 850);
             }}
             style={styles.buttonview2}
             activeOpacity={0.7}>
@@ -443,18 +714,6 @@ const PlayScreen = props => {
               style={styles.cardicon}
               resizeMode="contain"
               source={appImages.rightcard}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              fadeInTop();
-            }}
-            style={styles.buttonview3}
-            activeOpacity={0.7}>
-            <Image
-              style={styles.cardicon2}
-              resizeMode="contain"
-              source={appImages.supericon}
             />
           </TouchableOpacity>
         </View>
@@ -564,7 +823,7 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.Baskerville_Old_Face,
   },
   buttonsparent: {
-    width: responsiveWidth(100),
+    width: responsiveWidth(80),
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',

@@ -11,6 +11,8 @@ import com.facebook.react.shell.MainReactPackage;
 import java.util.Arrays;
 import java.util.ArrayList;
 
+// @react-native-async-storage/async-storage
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 // @react-native-community/datetimepicker
 import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
 // @react-native-community/slider
@@ -19,6 +21,8 @@ import com.reactnativecommunity.slider.ReactSliderPackage;
 import com.reactnativegooglesignin.RNGoogleSigninPackage;
 // react-native-date-picker
 import com.henninghall.date_picker.DatePickerPackage;
+// react-native-exit-app
+import com.github.wumke.RNExitApp.RNExitAppPackage;
 // react-native-fast-image
 import com.dylanvann.fastimage.FastImageViewPackage;
 // react-native-geolocation-service
@@ -86,10 +90,12 @@ public class PackageList {
   public ArrayList<ReactPackage> getPackages() {
     return new ArrayList<>(Arrays.<ReactPackage>asList(
       new MainReactPackage(mConfig),
+      new AsyncStoragePackage(),
       new RNDateTimePickerPackage(),
       new ReactSliderPackage(),
       new RNGoogleSigninPackage(),
       new DatePickerPackage(),
+      new RNExitAppPackage(),
       new FastImageViewPackage(),
       new RNFusedLocationPackage(),
       new RNGestureHandlerPackage(),

@@ -26,59 +26,15 @@ import Carousel from 'react-native-snap-carousel';
 import {fontFamily} from '../../../constants/fonts';
 import MyHeart from '../../../components/MyHeart';
 import LinearGradient from 'react-native-linear-gradient';
-const Search = props => {
+const Search = ({route, navigation}) => {
+  const {routeArray} = route.params;
   useEffect(() => {
-    setFilteredlist(list);
+    setFilteredlist(routeArray);
+    setList(routeArray);
   }, []);
   const [filteredlist, setFilteredlist] = useState([]);
   const [myfocus, setMyfocus] = useState('search');
-  const [list, setList] = useState([
-    {
-      id: 1,
-      name: 'Emma',
-      img: appImages.img10,
-    },
-    {
-      id: 2,
-      name: 'Jennifer',
-      img: appImages.img2,
-    },
-    {
-      id: 3,
-      name: 'John Doe',
-      img: appImages.img4,
-    },
-    {
-      id: 4,
-      name: 'Mike',
-      img: appImages.img3,
-    },
-    {
-      id: 5,
-      name: 'Ryu',
-      img: appImages.img5,
-    },
-    {
-      id: 6,
-      name: 'Ken',
-      img: appImages.img6,
-    },
-    {
-      id: 7,
-      name: 'Tobey Maguire',
-      img: appImages.img7,
-    },
-    {
-      id: 8,
-      name: 'Jacob',
-      img: appImages.img8,
-    },
-    {
-      id: 9,
-      name: 'Mickey',
-      img: appImages.img9,
-    },
-  ]);
+  const [list, setList] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const search = searchText => {
     console.log('okiuhh');
@@ -86,7 +42,7 @@ const Search = props => {
     setSearchQuery(searchText);
     let filteredData = list.filter(function (item) {
       var searchIdNameLowerCase = searchText.toLowerCase();
-      var itemNameLowerCase = item.name.toLowerCase();
+      var itemNameLowerCase = item.document.userName.toLowerCase();
       console.log(item);
       var a = itemNameLowerCase.includes(searchIdNameLowerCase);
 
@@ -99,7 +55,7 @@ const Search = props => {
     return (
       <TouchableOpacity
         // onPress={() => props.navigation.navigate('Messaging')}
-        onPress={() => props.navigation.navigate('PlayScreen')}
+        onPress={() => navigation.navigate('PlayScreen')}
         activeOpacity={0.85}
         style={{
           borderRadius: responsiveWidth(5),
@@ -130,8 +86,13 @@ const Search = props => {
             paddingBottom: responsiveHeight(2),
             paddingTop: responsiveHeight(3),
           }}>
-          <Text style={styles.info1}>{item.name}, 22</Text>
-          <Text style={styles.info2}>72 km, Lawyer</Text>
+          <Text style={styles.info1}>
+            {item.document.userName}, {parseInt(item.Age)}
+          </Text>
+          <Text style={styles.info2}>
+            {item.document.dist.distance_km.toFixed(2)} km,{' '}
+            {item.document.profession}
+          </Text>
         </LinearGradient>
       </TouchableOpacity>
     );
@@ -215,7 +176,7 @@ const Search = props => {
           }}>
           <TouchableOpacity
             activeOpacity={0.6}
-            onPress={() => props.navigation.goBack()}
+            onPress={() => navigation.goBack()}
             style={{
               paddingLeft: responsiveWidth(2),
               marginLeft: responsiveWidth(-2),

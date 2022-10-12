@@ -30,8 +30,8 @@
 17-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:9:1-76
 17-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:9:18-74
 18    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-18-->[com.facebook.flipper:flipper:0.125.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\0b1ec2c07973cfa5079dd71e2b1acd9d\transformed\jetified-flipper-0.125.0\AndroidManifest.xml:16:5-76
-18-->[com.facebook.flipper:flipper:0.125.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\0b1ec2c07973cfa5079dd71e2b1acd9d\transformed\jetified-flipper-0.125.0\AndroidManifest.xml:16:22-73
+18-->[com.facebook.flipper:flipper:0.125.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\0eee5feee863d51fb76148b87dac3c67\transformed\jetified-flipper-0.125.0\AndroidManifest.xml:16:5-76
+18-->[com.facebook.flipper:flipper:0.125.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\0eee5feee863d51fb76148b87dac3c67\transformed\jetified-flipper-0.125.0\AndroidManifest.xml:16:22-73
 19
 20    <queries>
 20-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:9:5-13:15
@@ -43,129 +43,206 @@
 23        </intent>
 24    </queries>
 25
-26    <application
-26-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:10:5-29:19
-27        android:name="com.lovibear.MainApplication"
-27-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:11:7-38
-28        android:allowBackup="false"
-28-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:15:7-34
-29        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-29-->[androidx.core:core:1.6.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\bd0132704e0e7d36cbd43628c3622b83\transformed\core-1.6.0\AndroidManifest.xml:24:18-86
-30        android:debuggable="true"
-31        android:icon="@mipmap/ic_launcher"
-31-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:13:7-41
-32        android:label="@string/app_name"
-32-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:12:7-39
-33        android:roundIcon="@mipmap/ic_launcher_round"
-33-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:14:7-52
-34        android:theme="@style/AppTheme"
-34-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:16:7-38
-35        android:usesCleartextTraffic="true" >
-35-->D:\GitHub\lovibear\android\app\src\debug\AndroidManifest.xml:8:9-44
-36        <activity
-36-->D:\GitHub\lovibear\android\app\src\debug\AndroidManifest.xml:11:9-111
-37            android:name="com.facebook.react.devsupport.DevSettingsActivity"
-37-->D:\GitHub\lovibear\android\app\src\debug\AndroidManifest.xml:11:19-83
-38            android:exported="false" />
-38-->D:\GitHub\lovibear\android\app\src\debug\AndroidManifest.xml:11:84-108
-39        <activity
-39-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:17:7-28:18
-40            android:name="com.lovibear.MainActivity"
-40-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:18:9-37
-41            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
-41-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:20:9-118
-42            android:exported="true"
-42-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:23:9-32
-43            android:label="@string/app_name"
-43-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:19:9-41
-44            android:launchMode="singleTask"
-44-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:21:9-40
-45            android:windowSoftInputMode="adjustResize" >
-45-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:22:9-51
-46            <intent-filter>
-46-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:24:9-27:25
-47                <action android:name="android.intent.action.MAIN" />
-47-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:25:13-65
-47-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:25:21-62
-48
-49                <category android:name="android.intent.category.LAUNCHER" />
-49-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:26:13-73
-49-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:26:23-70
-50            </intent-filter>
-51        </activity>
-52
-53        <provider
-53-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:18:9-26:20
-54            android:name="com.reactnative.ivpusic.imagepicker.IvpusicImagePickerFileProvider"
-54-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:19:13-94
-55            android:authorities="com.lovibear.provider"
-55-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:20:13-60
-56            android:exported="false"
-56-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:21:13-37
-57            android:grantUriPermissions="true" >
-57-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:22:13-47
-58            <meta-data
-58-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:23:13-25:78
-59                android:name="android.support.FILE_PROVIDER_PATHS"
-59-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:24:17-67
-60                android:resource="@xml/ivpusic_imagepicker_provider_paths" />
-60-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:25:17-75
-61        </provider>
-62
-63        <activity
-63-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:28:9-30:72
-64            android:name="com.yalantis.ucrop.UCropActivity"
-64-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:29:13-60
-65            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-65-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:30:13-69
-66
-67        <meta-data
-67-->[com.github.bumptech.glide:okhttp3-integration:4.12.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\a68a37c9a335e1b9c57fa94a0240bd42\transformed\jetified-okhttp3-integration-4.12.0\AndroidManifest.xml:11:9-13:43
-68            android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule"
-68-->[com.github.bumptech.glide:okhttp3-integration:4.12.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\a68a37c9a335e1b9c57fa94a0240bd42\transformed\jetified-okhttp3-integration-4.12.0\AndroidManifest.xml:12:13-84
-69            android:value="GlideModule" />
-69-->[com.github.bumptech.glide:okhttp3-integration:4.12.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\a68a37c9a335e1b9c57fa94a0240bd42\transformed\jetified-okhttp3-integration-4.12.0\AndroidManifest.xml:13:13-40
-70
-71        <activity
-71-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\5ba6869c1b9d3a18d7e3a5c0849c9177\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:23:9-27:75
-72            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
-72-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\5ba6869c1b9d3a18d7e3a5c0849c9177\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:24:13-93
-73            android:excludeFromRecents="true"
-73-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\5ba6869c1b9d3a18d7e3a5c0849c9177\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:25:13-46
-74            android:exported="false"
-74-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\5ba6869c1b9d3a18d7e3a5c0849c9177\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:26:13-37
-75            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-75-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\5ba6869c1b9d3a18d7e3a5c0849c9177\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:27:13-72
-76        <!--
-77            Service handling Google Sign-In user revocation. For apps that do not integrate with
-78            Google Sign-In, this service will never be started.
-79        -->
-80        <service
-80-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\5ba6869c1b9d3a18d7e3a5c0849c9177\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:33:9-37:51
-81            android:name="com.google.android.gms.auth.api.signin.RevocationBoundService"
-81-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\5ba6869c1b9d3a18d7e3a5c0849c9177\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:34:13-89
-82            android:exported="true"
-82-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\5ba6869c1b9d3a18d7e3a5c0849c9177\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:35:13-36
-83            android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION"
-83-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\5ba6869c1b9d3a18d7e3a5c0849c9177\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:36:13-107
-84            android:visibleToInstantApps="true" />
-84-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\5ba6869c1b9d3a18d7e3a5c0849c9177\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:37:13-48
-85
-86        <activity
-86-->[com.google.android.gms:play-services-base:17.5.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\77edfb3fa4843b87999ed4523b6e83a5\transformed\jetified-play-services-base-17.5.0\AndroidManifest.xml:23:9-26:75
-87            android:name="com.google.android.gms.common.api.GoogleApiActivity"
-87-->[com.google.android.gms:play-services-base:17.5.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\77edfb3fa4843b87999ed4523b6e83a5\transformed\jetified-play-services-base-17.5.0\AndroidManifest.xml:24:13-79
+26    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+26-->[com.google.android.gms:play-services-measurement-api:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\83cc78b6f885d32adf89747813bda16f\transformed\jetified-play-services-measurement-api-21.1.1\AndroidManifest.xml:23:5-79
+26-->[com.google.android.gms:play-services-measurement-api:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\83cc78b6f885d32adf89747813bda16f\transformed\jetified-play-services-measurement-api-21.1.1\AndroidManifest.xml:23:22-76
+27    <uses-permission android:name="android.permission.WAKE_LOCK" />
+27-->[com.google.android.gms:play-services-measurement-api:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\83cc78b6f885d32adf89747813bda16f\transformed\jetified-play-services-measurement-api-21.1.1\AndroidManifest.xml:24:5-68
+27-->[com.google.android.gms:play-services-measurement-api:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\83cc78b6f885d32adf89747813bda16f\transformed\jetified-play-services-measurement-api-21.1.1\AndroidManifest.xml:24:22-65
+28    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+28-->[com.google.android.gms:play-services-measurement-api:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\83cc78b6f885d32adf89747813bda16f\transformed\jetified-play-services-measurement-api-21.1.1\AndroidManifest.xml:25:5-79
+28-->[com.google.android.gms:play-services-measurement-api:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\83cc78b6f885d32adf89747813bda16f\transformed\jetified-play-services-measurement-api-21.1.1\AndroidManifest.xml:25:22-76
+29    <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
+29-->[com.google.android.gms:play-services-measurement:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\60a3fc6f296a7ba7dc3008ed61b92026\transformed\jetified-play-services-measurement-21.1.1\AndroidManifest.xml:26:5-110
+29-->[com.google.android.gms:play-services-measurement:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\60a3fc6f296a7ba7dc3008ed61b92026\transformed\jetified-play-services-measurement-21.1.1\AndroidManifest.xml:26:22-107
+30
+31    <application
+31-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:10:5-29:19
+32        android:name="com.lovibear.MainApplication"
+32-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:11:7-38
+33        android:allowBackup="false"
+33-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:15:7-34
+34        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+34-->[androidx.core:core:1.6.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\a5e58d5460967d428046eefb3f6f97a2\transformed\core-1.6.0\AndroidManifest.xml:24:18-86
+35        android:debuggable="true"
+36        android:icon="@mipmap/ic_launcher"
+36-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:13:7-41
+37        android:label="@string/app_name"
+37-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:12:7-39
+38        android:roundIcon="@mipmap/ic_launcher_round"
+38-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:14:7-52
+39        android:theme="@style/AppTheme"
+39-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:16:7-38
+40        android:usesCleartextTraffic="true" >
+40-->D:\GitHub\lovibear\android\app\src\debug\AndroidManifest.xml:8:9-44
+41        <activity
+41-->D:\GitHub\lovibear\android\app\src\debug\AndroidManifest.xml:11:9-111
+42            android:name="com.facebook.react.devsupport.DevSettingsActivity"
+42-->D:\GitHub\lovibear\android\app\src\debug\AndroidManifest.xml:11:19-83
+43            android:exported="false" />
+43-->D:\GitHub\lovibear\android\app\src\debug\AndroidManifest.xml:11:84-108
+44        <activity
+44-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:17:7-28:18
+45            android:name="com.lovibear.MainActivity"
+45-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:18:9-37
+46            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+46-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:20:9-118
+47            android:exported="true"
+47-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:23:9-32
+48            android:label="@string/app_name"
+48-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:19:9-41
+49            android:launchMode="singleTask"
+49-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:21:9-40
+50            android:windowSoftInputMode="adjustResize" >
+50-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:22:9-51
+51            <intent-filter>
+51-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:24:9-27:25
+52                <action android:name="android.intent.action.MAIN" />
+52-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:25:13-65
+52-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:25:21-62
+53
+54                <category android:name="android.intent.category.LAUNCHER" />
+54-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:26:13-73
+54-->D:\GitHub\lovibear\android\app\src\main\AndroidManifest.xml:26:23-70
+55            </intent-filter>
+56        </activity>
+57
+58        <provider
+58-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:18:9-26:20
+59            android:name="com.reactnative.ivpusic.imagepicker.IvpusicImagePickerFileProvider"
+59-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:19:13-94
+60            android:authorities="com.lovibear.provider"
+60-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:20:13-60
+61            android:exported="false"
+61-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:21:13-37
+62            android:grantUriPermissions="true" >
+62-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:22:13-47
+63            <meta-data
+63-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:23:13-25:78
+64                android:name="android.support.FILE_PROVIDER_PATHS"
+64-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:24:17-67
+65                android:resource="@xml/ivpusic_imagepicker_provider_paths" />
+65-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:25:17-75
+66        </provider>
+67
+68        <activity
+68-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:28:9-30:72
+69            android:name="com.yalantis.ucrop.UCropActivity"
+69-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:29:13-60
+70            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+70-->[:react-native-image-crop-picker] D:\GitHub\lovibear\node_modules\react-native-image-crop-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:30:13-69
+71
+72        <service
+72-->[com.google.android.gms:play-services-measurement-api:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\83cc78b6f885d32adf89747813bda16f\transformed\jetified-play-services-measurement-api-21.1.1\AndroidManifest.xml:28:9-34:19
+73            android:name="com.google.firebase.components.ComponentDiscoveryService"
+73-->[com.google.android.gms:play-services-measurement-api:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\83cc78b6f885d32adf89747813bda16f\transformed\jetified-play-services-measurement-api-21.1.1\AndroidManifest.xml:29:13-84
+74            android:directBootAware="true"
+74-->[com.google.firebase:firebase-common:20.1.2] C:\Users\INFOTECH\.gradle\caches\transforms-3\1feedabb34127e8287c1b8ebf96b71e4\transformed\jetified-firebase-common-20.1.2\AndroidManifest.xml:35:13-43
+75            android:exported="false" >
+75-->[com.google.android.gms:play-services-measurement-api:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\83cc78b6f885d32adf89747813bda16f\transformed\jetified-play-services-measurement-api-21.1.1\AndroidManifest.xml:30:13-37
+76            <meta-data
+76-->[com.google.android.gms:play-services-measurement-api:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\83cc78b6f885d32adf89747813bda16f\transformed\jetified-play-services-measurement-api-21.1.1\AndroidManifest.xml:31:13-33:85
+77                android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
+77-->[com.google.android.gms:play-services-measurement-api:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\83cc78b6f885d32adf89747813bda16f\transformed\jetified-play-services-measurement-api-21.1.1\AndroidManifest.xml:32:17-139
+78                android:value="com.google.firebase.components.ComponentRegistrar" />
+78-->[com.google.android.gms:play-services-measurement-api:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\83cc78b6f885d32adf89747813bda16f\transformed\jetified-play-services-measurement-api-21.1.1\AndroidManifest.xml:33:17-82
+79            <meta-data
+79-->[com.google.firebase:firebase-installations:17.0.2] C:\Users\INFOTECH\.gradle\caches\transforms-3\1d539e8781fd10fc86204cc9326da1ab\transformed\jetified-firebase-installations-17.0.2\AndroidManifest.xml:18:13-20:85
+80                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
+80-->[com.google.firebase:firebase-installations:17.0.2] C:\Users\INFOTECH\.gradle\caches\transforms-3\1d539e8781fd10fc86204cc9326da1ab\transformed\jetified-firebase-installations-17.0.2\AndroidManifest.xml:19:17-127
+81                android:value="com.google.firebase.components.ComponentRegistrar" />
+81-->[com.google.firebase:firebase-installations:17.0.2] C:\Users\INFOTECH\.gradle\caches\transforms-3\1d539e8781fd10fc86204cc9326da1ab\transformed\jetified-firebase-installations-17.0.2\AndroidManifest.xml:20:17-82
+82        </service>
+83
+84        <provider
+84-->[com.google.firebase:firebase-common:20.1.2] C:\Users\INFOTECH\.gradle\caches\transforms-3\1feedabb34127e8287c1b8ebf96b71e4\transformed\jetified-firebase-common-20.1.2\AndroidManifest.xml:26:9-31:39
+85            android:name="com.google.firebase.provider.FirebaseInitProvider"
+85-->[com.google.firebase:firebase-common:20.1.2] C:\Users\INFOTECH\.gradle\caches\transforms-3\1feedabb34127e8287c1b8ebf96b71e4\transformed\jetified-firebase-common-20.1.2\AndroidManifest.xml:27:13-77
+86            android:authorities="com.lovibear.firebaseinitprovider"
+86-->[com.google.firebase:firebase-common:20.1.2] C:\Users\INFOTECH\.gradle\caches\transforms-3\1feedabb34127e8287c1b8ebf96b71e4\transformed\jetified-firebase-common-20.1.2\AndroidManifest.xml:28:13-72
+87            android:directBootAware="true"
+87-->[com.google.firebase:firebase-common:20.1.2] C:\Users\INFOTECH\.gradle\caches\transforms-3\1feedabb34127e8287c1b8ebf96b71e4\transformed\jetified-firebase-common-20.1.2\AndroidManifest.xml:29:13-43
 88            android:exported="false"
-88-->[com.google.android.gms:play-services-base:17.5.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\77edfb3fa4843b87999ed4523b6e83a5\transformed\jetified-play-services-base-17.5.0\AndroidManifest.xml:25:13-37
-89            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-89-->[com.google.android.gms:play-services-base:17.5.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\77edfb3fa4843b87999ed4523b6e83a5\transformed\jetified-play-services-base-17.5.0\AndroidManifest.xml:26:13-72
+88-->[com.google.firebase:firebase-common:20.1.2] C:\Users\INFOTECH\.gradle\caches\transforms-3\1feedabb34127e8287c1b8ebf96b71e4\transformed\jetified-firebase-common-20.1.2\AndroidManifest.xml:30:13-37
+89            android:initOrder="100" />
+89-->[com.google.firebase:firebase-common:20.1.2] C:\Users\INFOTECH\.gradle\caches\transforms-3\1feedabb34127e8287c1b8ebf96b71e4\transformed\jetified-firebase-common-20.1.2\AndroidManifest.xml:31:13-36
 90
 91        <meta-data
-91-->[com.google.android.gms:play-services-basement:17.5.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\7b0ad2460f9ecc246b50789246dce56f\transformed\jetified-play-services-basement-17.5.0\AndroidManifest.xml:23:9-25:69
-92            android:name="com.google.android.gms.version"
-92-->[com.google.android.gms:play-services-basement:17.5.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\7b0ad2460f9ecc246b50789246dce56f\transformed\jetified-play-services-basement-17.5.0\AndroidManifest.xml:24:13-58
-93            android:value="@integer/google_play_services_version" />
-93-->[com.google.android.gms:play-services-basement:17.5.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\7b0ad2460f9ecc246b50789246dce56f\transformed\jetified-play-services-basement-17.5.0\AndroidManifest.xml:25:13-66
-94    </application>
-95
-96</manifest>
+91-->[com.github.bumptech.glide:okhttp3-integration:4.12.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\69286a23ed9110cc88540f904a3a8bae\transformed\jetified-okhttp3-integration-4.12.0\AndroidManifest.xml:11:9-13:43
+92            android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule"
+92-->[com.github.bumptech.glide:okhttp3-integration:4.12.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\69286a23ed9110cc88540f904a3a8bae\transformed\jetified-okhttp3-integration-4.12.0\AndroidManifest.xml:12:13-84
+93            android:value="GlideModule" />
+93-->[com.github.bumptech.glide:okhttp3-integration:4.12.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\69286a23ed9110cc88540f904a3a8bae\transformed\jetified-okhttp3-integration-4.12.0\AndroidManifest.xml:13:13-40
+94
+95        <activity
+95-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\99d6af3551c548a835a89d5604649c2d\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:23:9-27:75
+96            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+96-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\99d6af3551c548a835a89d5604649c2d\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:24:13-93
+97            android:excludeFromRecents="true"
+97-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\99d6af3551c548a835a89d5604649c2d\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:25:13-46
+98            android:exported="false"
+98-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\99d6af3551c548a835a89d5604649c2d\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:26:13-37
+99            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+99-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\99d6af3551c548a835a89d5604649c2d\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:27:13-72
+100        <!--
+101            Service handling Google Sign-In user revocation. For apps that do not integrate with
+102            Google Sign-In, this service will never be started.
+103        -->
+104        <service
+104-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\99d6af3551c548a835a89d5604649c2d\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:33:9-37:51
+105            android:name="com.google.android.gms.auth.api.signin.RevocationBoundService"
+105-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\99d6af3551c548a835a89d5604649c2d\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:34:13-89
+106            android:exported="true"
+106-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\99d6af3551c548a835a89d5604649c2d\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:35:13-36
+107            android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION"
+107-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\99d6af3551c548a835a89d5604649c2d\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:36:13-107
+108            android:visibleToInstantApps="true" />
+108-->[com.google.android.gms:play-services-auth:19.2.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\99d6af3551c548a835a89d5604649c2d\transformed\jetified-play-services-auth-19.2.0\AndroidManifest.xml:37:13-48
+109
+110        <activity
+110-->[com.google.android.gms:play-services-base:17.5.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\042448c8617f343cde52d2de4438857c\transformed\jetified-play-services-base-17.5.0\AndroidManifest.xml:23:9-26:75
+111            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+111-->[com.google.android.gms:play-services-base:17.5.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\042448c8617f343cde52d2de4438857c\transformed\jetified-play-services-base-17.5.0\AndroidManifest.xml:24:13-79
+112            android:exported="false"
+112-->[com.google.android.gms:play-services-base:17.5.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\042448c8617f343cde52d2de4438857c\transformed\jetified-play-services-base-17.5.0\AndroidManifest.xml:25:13-37
+113            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+113-->[com.google.android.gms:play-services-base:17.5.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\042448c8617f343cde52d2de4438857c\transformed\jetified-play-services-base-17.5.0\AndroidManifest.xml:26:13-72
+114
+115        <receiver
+115-->[com.google.android.gms:play-services-measurement:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\60a3fc6f296a7ba7dc3008ed61b92026\transformed\jetified-play-services-measurement-21.1.1\AndroidManifest.xml:29:9-33:20
+116            android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
+116-->[com.google.android.gms:play-services-measurement:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\60a3fc6f296a7ba7dc3008ed61b92026\transformed\jetified-play-services-measurement-21.1.1\AndroidManifest.xml:30:13-85
+117            android:enabled="true"
+117-->[com.google.android.gms:play-services-measurement:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\60a3fc6f296a7ba7dc3008ed61b92026\transformed\jetified-play-services-measurement-21.1.1\AndroidManifest.xml:31:13-35
+118            android:exported="false" >
+118-->[com.google.android.gms:play-services-measurement:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\60a3fc6f296a7ba7dc3008ed61b92026\transformed\jetified-play-services-measurement-21.1.1\AndroidManifest.xml:32:13-37
+119        </receiver>
+120
+121        <service
+121-->[com.google.android.gms:play-services-measurement:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\60a3fc6f296a7ba7dc3008ed61b92026\transformed\jetified-play-services-measurement-21.1.1\AndroidManifest.xml:35:9-38:40
+122            android:name="com.google.android.gms.measurement.AppMeasurementService"
+122-->[com.google.android.gms:play-services-measurement:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\60a3fc6f296a7ba7dc3008ed61b92026\transformed\jetified-play-services-measurement-21.1.1\AndroidManifest.xml:36:13-84
+123            android:enabled="true"
+123-->[com.google.android.gms:play-services-measurement:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\60a3fc6f296a7ba7dc3008ed61b92026\transformed\jetified-play-services-measurement-21.1.1\AndroidManifest.xml:37:13-35
+124            android:exported="false" />
+124-->[com.google.android.gms:play-services-measurement:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\60a3fc6f296a7ba7dc3008ed61b92026\transformed\jetified-play-services-measurement-21.1.1\AndroidManifest.xml:38:13-37
+125        <service
+125-->[com.google.android.gms:play-services-measurement:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\60a3fc6f296a7ba7dc3008ed61b92026\transformed\jetified-play-services-measurement-21.1.1\AndroidManifest.xml:39:9-43:72
+126            android:name="com.google.android.gms.measurement.AppMeasurementJobService"
+126-->[com.google.android.gms:play-services-measurement:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\60a3fc6f296a7ba7dc3008ed61b92026\transformed\jetified-play-services-measurement-21.1.1\AndroidManifest.xml:40:13-87
+127            android:enabled="true"
+127-->[com.google.android.gms:play-services-measurement:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\60a3fc6f296a7ba7dc3008ed61b92026\transformed\jetified-play-services-measurement-21.1.1\AndroidManifest.xml:41:13-35
+128            android:exported="false"
+128-->[com.google.android.gms:play-services-measurement:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\60a3fc6f296a7ba7dc3008ed61b92026\transformed\jetified-play-services-measurement-21.1.1\AndroidManifest.xml:42:13-37
+129            android:permission="android.permission.BIND_JOB_SERVICE" />
+129-->[com.google.android.gms:play-services-measurement:21.1.1] C:\Users\INFOTECH\.gradle\caches\transforms-3\60a3fc6f296a7ba7dc3008ed61b92026\transformed\jetified-play-services-measurement-21.1.1\AndroidManifest.xml:43:13-69
+130
+131        <meta-data
+131-->[com.google.android.gms:play-services-basement:18.1.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\49f4c6683dd7ec3d473237f30e7396cb\transformed\jetified-play-services-basement-18.1.0\AndroidManifest.xml:21:9-23:69
+132            android:name="com.google.android.gms.version"
+132-->[com.google.android.gms:play-services-basement:18.1.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\49f4c6683dd7ec3d473237f30e7396cb\transformed\jetified-play-services-basement-18.1.0\AndroidManifest.xml:22:13-58
+133            android:value="@integer/google_play_services_version" />
+133-->[com.google.android.gms:play-services-basement:18.1.0] C:\Users\INFOTECH\.gradle\caches\transforms-3\49f4c6683dd7ec3d473237f30e7396cb\transformed\jetified-play-services-basement-18.1.0\AndroidManifest.xml:23:13-66
+134    </application>
+135
+136</manifest>

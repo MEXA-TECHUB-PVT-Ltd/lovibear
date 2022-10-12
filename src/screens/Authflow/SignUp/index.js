@@ -12,7 +12,6 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
-
 import React, {useEffect, useRef, useState} from 'react';
 import STYLES from '../../STYLES';
 import {appColor, appImages} from '../../../assets/utilities';
@@ -30,30 +29,46 @@ import {MyButton} from '../../../components/MyButton';
 import {DateSelect} from '../../../components/dateTimePicker/dateTimePicker';
 import {fontFamily} from '../../../constants/fonts';
 import Geolocation from 'react-native-geolocation-service';
-
 import moment from 'moment';
+import {Modal} from 'react-native-paper';
 const SignUp = props => {
   const refContainer = useRef();
   const [myfocus, setMyfocus] = useState('');
+  const [apigender, setApiGender] = useState('');
   const [securepassword, setSecurepassword] = useState(true);
+  const [secureconfirmpassword, setSecureConfirmpassword] = useState(true);
   const passwordinputref = useRef();
+  const confirmpasswordinputref = useRef();
   const emailinputref = useRef();
+  const professionref = useRef();
   const [softinput, setSoftinput] = useState(false);
   const [mydate, setMydate] = useState('');
   const [isVisible, setisVisible] = useState(false);
   const [checkemail, setCheckemail] = useState(false);
   const [checkpassword, setCheckpassword] = useState(false);
+  const [checkconfirmpassword, setCheckConfirmpassword] = useState(false);
+  const [checkgender, setCheckgender] = useState(false);
+  const [checkprofession, setCheckprofession] = useState(false);
+  const [gendererror, setGendererror] = useState('');
   const [checkusername, setCheckusername] = useState(false);
   const [emailerror, setEmailerror] = useState('');
   const [passworderror, setPassworderror] = useState('');
+  const [confirmpassworderror, setConfirmPassworderror] = useState('');
+  const [professionerror, setProfessionerror] = useState('');
   const [usernameerror, setUsernameerror] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmpassword, setConfirmPassword] = useState('');
+  const [profession, setProfession] = useState('');
+  const [gender, setGender] = useState('');
   const [username, setUsername] = useState('');
   const [firstchar, setFirstChar] = useState('');
   const [apiformatdate, setApiFormatDate] = useState('');
   const [mylat, setMylat] = useState();
   const [mylong, setMylong] = useState();
+  const [visible, setVisible] = React.useState(false);
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
   let regchecknumber = /^[0-9]*$/;
   let reg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w\w+)+$/;
   let regphone =
@@ -64,11 +79,9 @@ const SignUp = props => {
       setSoftinput(true);
     }, []),
   );
-
   useEffect(() => {
     getLocation();
   }, []);
-
   const getLocation = async () => {
     if (Platform.OS === 'ios') {
       Geolocation.requestAuthorization();
@@ -77,13 +90,11 @@ const SignUp = props => {
         authorizationLevel: 'whenInUse',
       });
     }
-
     if (Platform.OS === 'android') {
       await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       );
     }
-
     await Geolocation.getCurrentPosition(
       position => {
         console.log(position);
@@ -93,7 +104,7 @@ const SignUp = props => {
       error => {
         // See error code charts below.
         console.log(error.code, error.message);
-        getLocation();
+        props.navigation.goBack();
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
@@ -110,7 +121,6 @@ const SignUp = props => {
       setEmailerror('Enter Valid Email');
       return false;
     }
-
     if (regphone.test(firstchar + email) == false) {
       console.log('IN FIRST');
       if (regchecknumber.test(email)) {
@@ -125,10 +135,20 @@ const SignUp = props => {
         return false;
       }
     }
+    if (gender == '') {
+      setCheckgender(true);
+      setGendererror('Select Gender');
+      return false;
+    }
 
     if (password == '') {
       setCheckpassword(true);
       setPassworderror('Enter Valid Password');
+      return false;
+    }
+    if (password != confirmpassword) {
+      setCheckConfirmpassword(true);
+      setConfirmPassworderror("Password Doesn't Match");
       return false;
     }
     if (moment().diff(moment(mydate, 'DD-MM-YYYY'), 'years') < 18) {
@@ -144,6 +164,7 @@ const SignUp = props => {
       checkpassword == false &&
       checkemail == false &&
       checkusername == false &&
+      checkconfirmpassword == false &&
       mydate !== '' &&
       moment().diff(moment(mydate, 'DD-MM-YYYY'), 'years') > 18
     ) {
@@ -161,6 +182,8 @@ const SignUp = props => {
         signuptype: signuptype,
         mylat: mylat,
         mylong: mylong,
+        gender: apigender,
+        profession: profession,
       });
     }
   };
@@ -306,14 +329,92 @@ const SignUp = props => {
               onFocus={() => setMyfocus('email')}
               onBlur={() => setMyfocus('')}
               keyboardType={'email-address'}
-              onSubmitEditing={() => passwordinputref.current.focus()}
-              blurOnSubmit={false}
+              onSubmitEditing={() => showModal()}
+              blurOnSubmit={true}
               returnKeyType={'next'}
               ref={emailinputref}
             />
           </View>
           {checkemail ? (
             <Text style={styles.errortxt}>{emailerror}</Text>
+          ) : null}
+          <TouchableOpacity
+            onPress={() => {
+              showModal();
+            }}
+            activeOpacity={0.7}
+            style={[
+              styles.emailparent,
+              {
+                borderColor:
+                  myfocus == 'gender' ? appColor.appColorMain : '#D7D7D7',
+              },
+            ]}>
+            <Image
+              source={appImages.user}
+              resizeMode="contain"
+              style={{
+                width: responsiveWidth(5.5),
+                height: responsiveWidth(5.5),
+                // backgroundColor: 'red',
+                marginLeft: responsiveWidth(5),
+              }}
+            />
+            <TextInput
+              editable={false}
+              placeholderTextColor={'#8D8D8D'}
+              value={gender}
+              selectionColor={appColor.appColorMain}
+              placeholder="Gender"
+              style={styles.txtinputusername}
+              onFocus={() => setMyfocus('gender')}
+              onBlur={() => setMyfocus('')}
+              // onSubmitEditing={() => emailinputref.current.focus()}
+              blurOnSubmit={false}
+              returnKeyType={'next'}
+            />
+          </TouchableOpacity>
+          {checkgender ? (
+            <Text style={styles.errortxt}>{gendererror}</Text>
+          ) : null}
+          <View
+            style={[
+              styles.emailparent,
+              {
+                borderColor:
+                  myfocus == 'profession' ? appColor.appColorMain : '#D7D7D7',
+              },
+            ]}>
+            <Image
+              source={appImages.user}
+              resizeMode="contain"
+              style={{
+                width: responsiveWidth(5.5),
+                height: responsiveWidth(5.5),
+                // backgroundColor: 'red',
+                marginLeft: responsiveWidth(5),
+              }}
+            />
+            <TextInput
+              value={profession}
+              onChangeText={text => {
+                setProfession(text);
+                setCheckprofession(false);
+              }}
+              placeholderTextColor={'#8D8D8D'}
+              selectionColor={appColor.appColorMain}
+              placeholder="Profession"
+              style={styles.txtinputusername}
+              onFocus={() => setMyfocus('profession')}
+              onBlur={() => setMyfocus('')}
+              onSubmitEditing={() => passwordinputref.current.focus()}
+              ref={professionref}
+              blurOnSubmit={false}
+              returnKeyType={'next'}
+            />
+          </View>
+          {checkprofession ? (
+            <Text style={styles.errortxt}>{professionerror}</Text>
           ) : null}
           <View
             style={[
@@ -339,6 +440,8 @@ const SignUp = props => {
                 setPassword(text);
                 setCheckpassword(false);
               }}
+              blurOnSubmit={false}
+              returnKeyType={'next'}
               placeholderTextColor={'#8D8D8D'}
               selectionColor={appColor.appColorMain}
               placeholder="Password"
@@ -347,6 +450,7 @@ const SignUp = props => {
               onBlur={() => setMyfocus('')}
               secureTextEntry={securepassword}
               ref={passwordinputref}
+              onSubmitEditing={() => confirmpasswordinputref.current.focus()}
             />
             <EyeIcon
               style={{fontSize: responsiveFontSize(3.7), color: 'lightgray'}}
@@ -356,6 +460,50 @@ const SignUp = props => {
           </View>
           {checkpassword ? (
             <Text style={styles.errortxt}>{passworderror}</Text>
+          ) : null}
+          <View
+            style={[
+              styles.passwordparent,
+              {
+                borderColor:
+                  myfocus == 'confirmpassword'
+                    ? appColor.appColorMain
+                    : '#D7D7D7',
+              },
+            ]}>
+            <Image
+              source={appImages.password}
+              resizeMode="contain"
+              style={{
+                width: responsiveWidth(5.5),
+                height: responsiveWidth(5.5),
+                // backgroundColor: 'red',
+                marginLeft: responsiveWidth(5),
+              }}
+            />
+            <TextInput
+              value={confirmpassword}
+              onChangeText={text => {
+                setConfirmPassword(text);
+                setCheckConfirmpassword(false);
+              }}
+              placeholderTextColor={'#8D8D8D'}
+              selectionColor={appColor.appColorMain}
+              placeholder="Confirm Password"
+              style={styles.txtinputpassword}
+              onFocus={() => setMyfocus('confirmpassword')}
+              onBlur={() => setMyfocus('')}
+              secureTextEntry={secureconfirmpassword}
+              ref={confirmpasswordinputref}
+            />
+            <EyeIcon
+              style={{fontSize: responsiveFontSize(3.7), color: 'lightgray'}}
+              name={secureconfirmpassword ? 'eye-off' : 'eye'}
+              onPress={() => setSecureConfirmpassword(!secureconfirmpassword)}
+            />
+          </View>
+          {checkconfirmpassword ? (
+            <Text style={styles.errortxt}>{confirmpassworderror}</Text>
           ) : null}
           <DateSelect
             getDate={date => setMydate(date)}
@@ -457,6 +605,52 @@ const SignUp = props => {
           />
         </View>
       </ScrollView>
+      <Modal visible={visible} onDismiss={hideModal}>
+        <View
+          style={{
+            backgroundColor: '#fff',
+            alignItems: 'center',
+            width: responsiveWidth(65),
+            paddingVertical: responsiveHeight(2),
+            alignSelf: 'center',
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              setCheckgender(false);
+              professionref.current.focus();
+              setGender('Male');
+              setApiGender('male');
+              hideModal();
+            }}
+            style={styles.genderview}>
+            <Text style={styles.genderselecttxt}>Male</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setCheckgender(false);
+              professionref.current.focus();
+
+              setGender('Female');
+              setApiGender('female');
+              hideModal();
+            }}
+            style={styles.genderview}>
+            <Text style={styles.genderselecttxt}>Female</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setCheckgender(false);
+              setGender('Prefer not to say');
+              professionref.current.focus();
+
+              setApiGender('preferNotToSay');
+              hideModal();
+            }}
+            style={styles.genderview}>
+            <Text style={styles.genderselecttxt}>Prefer not to say</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
       <RBSheet
         ref={refContainer}
         openDuration={250}
@@ -547,7 +741,7 @@ const styles = StyleSheet.create({
     borderRadius: responsiveWidth(3),
     borderWidth: responsiveWidth(0.3),
     borderColor: '#D7D7D7',
-    marginTop: responsiveHeight(2),
+    marginTop: responsiveHeight(3),
     paddingVertical: responsiveHeight(0.9),
     flexDirection: 'row',
     alignItems: 'center',
@@ -601,5 +795,18 @@ const styles = StyleSheet.create({
   },
   forgettxt: {
     color: '#000000',
+  },
+  genderview: {
+    paddingVertical: responsiveHeight(2),
+    // backgroundColor: 'red',
+    width: responsiveWidth(65),
+    alignSelf: 'center',
+    textAlign: 'center',
+    alignItems: 'center',
+  },
+  genderselecttxt: {
+    color: '#000000',
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(2.3),
   },
 });
