@@ -37,21 +37,61 @@ import LinearGradient from 'react-native-linear-gradient';
 import {fontFamily} from '../../../constants/fonts';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import {Base_URL} from '../../../Base_URL';
-import {ActivityIndicator} from 'react-native-paper';
+import {ActivityIndicator, Modal} from 'react-native-paper';
 import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import messaging from '@react-native-firebase/messaging';
 
 const PlayScreen = props => {
   useEffect(() => {
     getLocation();
     // Filter();
+    getuid();
+    checkPermission();
   }, []);
 
-  const [mylat, setMylat] = useState(0);
-  const [mylong, setMylong] = useState(0);
+  const getuid = async () => {
+    const userid = await AsyncStorage.getItem('userid');
+    console.log('THE LOGIN USER ID ===========', userid);
+  };
+  const [mylat, setMylat] = useState();
+  const [mylong, setMylong] = useState();
   const [gettinglocation, setGettinglocation] = useState(true);
   const [swipeduser, setSwipedUser] = useState();
   const [undostatus, setUndoStatus] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [firsttime, setFirsttime] = useState(true);
+  const [dofilter, setDoFilter] = useState(false);
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+  const [modaltype, setModalType] = useState('');
+
+  const checkPermission = async () => {
+    console.log('check permission function call');
+    const enabled = await messaging().hasPermission();
+    messaging().notifi;
+    console.log('check permission function call enable', enabled);
+    if (enabled) {
+      getToken();
+    } else {
+      requestPermission();
+    }
+  };
+  const getToken = async () => {
+    console.log('get token call');
+    const fcmToken = await messaging().getToken();
+    console.log('check fcm token', fcmToken);
+    await AsyncStorage.setItem('Device_id', fcmToken);
+    const asyncFcmToken = await AsyncStorage.getItem('Device_id');
+    console.log('ASYNC FCM TOKEN=============', asyncFcmToken);
+  };
+  const requestPermission = async () => {
+    console.log('requestPermission call');
+    try {
+      await messaging().requestPermission();
+      getToken();
+    } catch (error) {}
+  };
 
   const getLocation = async () => {
     if (Platform.OS === 'ios') {
@@ -71,9 +111,18 @@ const PlayScreen = props => {
         console.log(position);
         setMylat(position.coords.latitude);
         setMylong(position.coords.longitude);
-        setTimeout(() => {
-          Filter(position.coords.latitude, position.coords.longitude);
-        }, 1000);
+        if (firsttime) {
+          setTimeout(() => {
+            Filter(position.coords.latitude, position.coords.longitude);
+          }, 500);
+        } else {
+          setTimeout(() => {
+            FilterPagination(
+              position.coords.latitude,
+              position.coords.longitude,
+            );
+          }, 500);
+        }
       },
       error => {
         // See error code charts below.
@@ -95,6 +144,7 @@ const PlayScreen = props => {
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
   };
+
   // APIS CALLS BELOW
 
   const RightSwipeApi = async rightswipedid => {
@@ -103,7 +153,7 @@ const PlayScreen = props => {
     var axios = require('axios');
     var data = JSON.stringify({
       swipedBy: userid,
-      swipedUser: rightswipedid,
+      swipedUser: rightswipedid[0]._id,
     });
 
     var config = {
@@ -118,13 +168,119 @@ const PlayScreen = props => {
     await axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
+        console.log('THE CARD INDEX======', cardIndex);
+        console.log('THE LIST LENGTH=====', CardsList.length);
+
         if (response.data.result.matchFound == true) {
-          props.navigation.navigate('Bingo');
+          sendMatchNotification(
+            response.data.result.result.swipedBy,
+            response.data.result.result.swipedUser,
+          );
+          // props.navigation.navigate('Bingo');
         }
         console.log(
           'API RESPONSE AFTER RIGHT SWIPING============',
           response.data,
         );
+        sendRightSwipeNotification(
+          response.data.result.result.swipedBy,
+          response.data.result.result.swipedUser,
+        );
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    FirebaseRight(rightswipedid);
+  };
+
+  const sendRightSwipeNotification = async (myid, swipedid) => {
+    var axios = require('axios');
+    var data = JSON.stringify({
+      senderId: myid,
+      receiverId: swipedid,
+      senderType: 'user',
+      receiverType: 'user',
+      body: 'You got right swiped by',
+    });
+
+    var config = {
+      method: 'post',
+      url: Base_URL + '/notification/createNotification',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const FirebaseRight = async swipeduser => {
+    console.log(
+      'SWIPED USER FCM TOKEN===================',
+      swipeduser[0].document.fcmToken,
+    );
+    var axios = require('axios');
+    var data = JSON.stringify({
+      registration_ids: [swipeduser[0].fcmToken],
+      notification: {
+        title: 'LoviBear',
+        body: 'You got right swiped',
+        mutable_content: true,
+        sound: 'Tri-tone',
+        icon: 'ic_noti',
+        color: 'purple',
+      },
+    });
+
+    var config = {
+      method: 'post',
+      url: 'https://fcm.googleapis.com/fcm/send',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization:
+          'key=AAAAbAHNGv8:APA91bEt5KW6o-qgxKeb39lOIY3nIdsJP6FOj7hK0kBR_aeHQ2clJXa4g9ySbdKX1WzdZi78HXdJ5A2JXJXpHKYbcmwgv0E-KhNXKhNK0hLv6m3xlYMGy1jeFUvtsi55l4iv16OpJTJC',
+      },
+      data: data,
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const sendMatchNotification = async (myid, swipedid) => {
+    var axios = require('axios');
+    var data = JSON.stringify({
+      senderId: myid,
+      receiverId: swipedid,
+      senderType: 'user',
+      receiverType: 'user',
+      body: 'You found a match with',
+    });
+
+    var config = {
+      method: 'post',
+      url: Base_URL + '/notification/createNotification',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
       })
       .catch(function (error) {
         console.log(error);
@@ -137,7 +293,7 @@ const PlayScreen = props => {
     var axios = require('axios');
     var data = JSON.stringify({
       swipedBy: userid,
-      swipedUser: leftswipedid,
+      swipedUser: leftswipedid[0]._id,
     });
 
     var config = {
@@ -173,7 +329,7 @@ const PlayScreen = props => {
         '/swipe/deleteSwipeByUsers_id/?swipedBy=' +
         userid +
         '&swipedUser=' +
-        swipeduser,
+        swipeduser[0]._id,
       headers: {},
     };
     axios(config)
@@ -187,22 +343,23 @@ const PlayScreen = props => {
   };
 
   const Filter = async (customlat, customlong) => {
+    setFirsttime(false);
+    console.log('CARD LIST LENGTH=====', CardsList.length);
+    const userid = await AsyncStorage.getItem('userid');
     console.log('HERE AT FILTER FUNCTION');
     var axios = require('axios');
     console.log('MY CUSTOM LAT AND LONG==========', mylat, mylong);
     var data = JSON.stringify({
-      long: customlong,
-      lat: customlat,
+      long: customlat,
+      lat: customlong,
       radiusInKm: myradius,
     });
-
     var config = {
       method: 'post',
       url:
         Base_URL +
-        '/user/usersInRadius/?page=' +
-        pagination +
-        '&limit=10' +
+        '/user/usersInRadius/?page=1' +
+        '&limit=6' +
         '&gender=' +
         gender +
         bypost +
@@ -220,14 +377,101 @@ const PlayScreen = props => {
 
     await axios(config)
       .then(function (response) {
-        console.log(JSON.stringify('THE CARD LIST============', response.data));
+        // console.log(JSON.stringify('THE CARD LIST============', response.data));
         if (response.data.message == 'No user found with this query') {
           console.log('No Results Found');
           setLoading(false);
           setEmpty(true);
         } else {
+          let myarr = response.data.users.filter(item => {
+            return item._id !== userid;
+          });
+          // setCardsList(myarr);
           setCardsList(response.data.users);
-          console.log('THE CARD LIST================', CardsList);
+
+          console.log('THE CARD LIST================', response.data.users);
+          var thevar = response.data.users.map(item => {
+            return item.document.userName;
+          });
+
+          console.log('THE VAR============', thevar);
+
+          setLoading(false);
+          setEmpty(false);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+        console.log(error.response.data);
+        if (error.response.data.message == 'No user found with this query') {
+          console.log('No Results Found');
+          setLoading(false);
+          setEmpty(true);
+        }
+      });
+  };
+
+  const FilterPagination = async (customlat, customlong) => {
+    setLoading(true);
+    console.log('CARD LIST LENGTH=====', CardsList.length);
+    const userid = await AsyncStorage.getItem('userid');
+    console.log('HERE AT FILTER FUNCTION');
+    var axios = require('axios');
+    // console.log('MY PAGINATION LAT AND LONG==========', mylat, mylong);
+    var data = JSON.stringify({
+      long: customlat,
+      lat: customlong,
+      radiusInKm: myradius,
+    });
+    var config = {
+      method: 'post',
+      url:
+        Base_URL +
+        '/user/usersInRadius/?page=' +
+        pagination +
+        '&limit=6' +
+        '&gender=' +
+        gender +
+        bypost +
+        '&byPosts=' +
+        bypost +
+        '&min_age=' +
+        minage +
+        '&max_age=' +
+        maxage,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console
+          .log
+          // JSON.stringify('THE CARD LIST PAGINATION============', response.data),
+          ();
+        if (response.data.message == 'No user found with this query') {
+          console.log('No Results Found');
+          setLoading(false);
+          setEmpty(true);
+        } else {
+          setCardIndex(0);
+          let myarr = response.data.users.filter(item => {
+            return item._id !== userid;
+          });
+          // setCardsList(myarr);
+          setCardsList(response.data.users);
+          var thevar = response.data.users.map(item => {
+            return item.document.userName;
+          });
+
+          console.log('THE VAR============', thevar);
+
+          console.log(
+            'THE CARD LIST PAGINATION================',
+            response.data.users,
+          );
           setLoading(false);
           setEmpty(false);
         }
@@ -245,7 +489,7 @@ const PlayScreen = props => {
 
   // API CALLS ABOVE
 
-  const [pagination, setPagination] = useState(1);
+  const [pagination, setPagination] = useState(2);
   const [bypost, setByPost] = useState('');
   const [minage, setMinAge] = useState(0);
   const [maxage, setMaxAge] = useState(100);
@@ -261,25 +505,37 @@ const PlayScreen = props => {
       id: 1,
       title: 'Posts',
       image: appImages.postsoption,
-      onPress: () => refContainer.current.close(),
+      onPress: () => {
+        setModalType('posts');
+        refContainer.current.close();
+      },
     },
     {
       id: 2,
       title: 'Bio',
       image: appImages.biooption,
-      onPress: () => refContainer.current.close(),
+      onPress: () => {
+        setModalType('bio');
+        refContainer.current.close();
+      },
     },
     {
       id: 3,
       title: 'Location',
       image: appImages.locationoption,
-      onPress: () => refContainer.current.close(),
+      onPress: () => {
+        setModalType('location');
+        refContainer.current.close();
+      },
     },
     {
       id: 4,
       title: 'Age',
       image: appImages.ageoption,
-      onPress: () => refContainer.current.close(),
+      onPress: () => {
+        setModalType('age');
+        refContainer.current.close();
+      },
     },
   ]);
   const renderItemCategory = ({item}) => {
@@ -607,11 +863,16 @@ const PlayScreen = props => {
                 let arr = CardsList.filter((item, index) => {
                   return index == cardIndex;
                 });
-                RightSwipeApi(arr[0]._id);
-                setSwipedUser(arr[0]._id);
+                RightSwipeApi(arr);
+                setSwipedUser(arr);
+
                 setProcessing(false);
               }}
               onSwiped={cardIndex => {
+                // if (cardIndex == CardsList.length - 2) {
+                //   console.log('ON FINAL CARD');
+                //   getLocation();
+                // }
                 setTimeout(() => {
                   setUndoStatus(true);
                 }, 850);
@@ -632,14 +893,17 @@ const PlayScreen = props => {
                 let arr = CardsList.filter((item, index) => {
                   return index == cardIndex;
                 });
-                LeftSwipeApi(arr[0]._id);
-                setSwipedUser(arr[0]._id);
+                LeftSwipeApi(arr);
+                setSwipedUser(arr);
                 setProcessing(false);
               }}
               renderCard={item => Card(item)}
               ref={swiperRef}
               onSwipedAll={() => {
-                setEmpty(true);
+                // setEmpty(true);
+                setLoading(true);
+                setPagination(pagination + 1);
+                getLocation();
               }}
             />
           )}
@@ -761,6 +1025,9 @@ const PlayScreen = props => {
           </View>
         </View>
       </RBSheet>
+      <Modal visible={visible} onDismiss={hideModal}>
+        <Text>Example Modal. Click outside this area to dismiss.</Text>
+      </Modal>
     </SafeAreaView>
   );
 };

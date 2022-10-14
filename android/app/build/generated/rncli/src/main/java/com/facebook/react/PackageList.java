@@ -17,6 +17,10 @@ import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
 // @react-native-community/slider
 import com.reactnativecommunity.slider.ReactSliderPackage;
+// @react-native-firebase/app
+import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
+// @react-native-firebase/messaging
+import io.invertase.firebase.messaging.ReactNativeFirebaseMessagingPackage;
 // @react-native-google-signin/google-signin
 import com.reactnativegooglesignin.RNGoogleSigninPackage;
 // react-native-date-picker
@@ -93,6 +97,8 @@ public class PackageList {
       new AsyncStoragePackage(),
       new RNDateTimePickerPackage(),
       new ReactSliderPackage(),
+      new ReactNativeFirebaseAppPackage(),
+      new ReactNativeFirebaseMessagingPackage(),
       new RNGoogleSigninPackage(),
       new DatePickerPackage(),
       new RNExitAppPackage(),

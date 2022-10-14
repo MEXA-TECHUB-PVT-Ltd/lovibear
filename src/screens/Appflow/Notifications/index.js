@@ -24,62 +24,46 @@ import {
 } from 'react-native-responsive-dimensions';
 import Carousel from 'react-native-snap-carousel';
 import {fontFamily} from '../../../constants/fonts';
+import {useFocusEffect} from '@react-navigation/native';
+import {Base_URL} from '../../../Base_URL';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Notifications = props => {
-  const [list, setList] = useState([
-    {
-      id: 1,
-      content: 'Congratulations! You found a match',
-      img: appImages.img2,
-    },
-    {
-      id: 2,
-      content:
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diamnonumy',
-      img: appImages.img3,
-    },
-    {
-      id: 3,
-      content:
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diamnonumy',
-      img: appImages.img4,
-    },
-    {
-      id: 4,
-      content:
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diamnonumy',
-      img: appImages.img5,
-    },
-    {
-      id: 5,
-      content:
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diamnonumy',
-      img: appImages.img6,
-    },
-    {
-      id: 6,
-      content:
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diamnonumy',
-      img: appImages.img7,
-    },
-    {
-      id: 7,
-      content:
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diamnonumy',
-      img: appImages.img8,
-    },
-    {
-      id: 8,
-      content:
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diamnonumy',
-      img: appImages.img9,
-    },
-    {
-      id: 9,
-      content:
-        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diamnonumy',
-      img: appImages.img10,
-    },
-  ]);
+  useFocusEffect(
+    React.useCallback(() => {
+      GetNotifications();
+    }, []),
+  );
+
+  const GetNotifications = async () => {
+    const userid = await AsyncStorage.getItem('userid');
+    console.log('THE USER ID ON NOTIFICATIONS========', userid);
+    var axios = require('axios');
+    var data = JSON.stringify({
+      userId: userid,
+      type: 'user',
+    });
+
+    var config = {
+      method: 'post',
+      url: Base_URL + '/notification/getNotificationsByType',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        setList(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error.data);
+        console.log(error);
+      });
+  };
+
+  const [list, setList] = useState([]);
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
@@ -118,12 +102,14 @@ const Notifications = props => {
               height: responsiveWidth(21),
               borderRadius: responsiveWidth(100),
             }}
-            source={item.img}
+            source={{uri: item.image}}
             resizeMode="cover"
           />
         </View>
 
-        <Text style={styles.worktxt}>{item.content}</Text>
+        <Text style={styles.worktxt}>
+          {item.body} {item.name}
+        </Text>
       </TouchableOpacity>
     );
   };
