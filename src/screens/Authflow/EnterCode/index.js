@@ -31,19 +31,57 @@ import {useFocusEffect} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import {MyButton} from '../../../components/MyButton';
 import {fontFamily} from '../../../constants/fonts';
+import {Base_URL} from '../../../Base_URL';
 const CELL_COUNT = 4;
 
-const EnterCode = props => {
+const EnterCode = ({route, navigation}) => {
   const [myfocus, setMyfocus] = useState('');
   const [securepassword, setSecurepassword] = useState(true);
   const passwordinputref = useRef();
   const emailinputref = useRef();
+  const {email} = route.params;
   const [value, setValue] = useState('');
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
   const [props2, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue,
   });
+
+  const [otperror, setOtpError] = useState(false);
+
+  const VerifyOTPApi = async () => {
+    var axios = require('axios');
+    var data = JSON.stringify({
+      userEmailAddress: email,
+      userEnteredOtp: value,
+    });
+
+    var config = {
+      method: 'post',
+      url: Base_URL + '/forgetPassword/verifyOTP',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        if (response.data.status == false) {
+          setOtpError(true);
+        } else {
+          navigation.navigate('UpdatePassword', {
+            userid: response.data.data.userId,
+            email: response.data.data.email,
+          });
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   return (
     <SafeAreaView style={STYLES.container}>
       <StatusBar
@@ -101,7 +139,10 @@ const EnterCode = props => {
             ref={ref}
             {...props2}
             value={value}
-            onChangeText={setValue}
+            onChangeText={text => {
+              setValue(text);
+              setOtpError(false);
+            }}
             cellCount={CELL_COUNT}
             rootStyle={styles.codeFieldRoot}
             keyboardType="number-pad"
@@ -192,10 +233,10 @@ const EnterCode = props => {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <MyButton
-            title={'VERIFY CODE'}
-            onPress={() => props.navigation.navigate('UpdatePassword')}
-          />
+          <Text style={styles.errortxt}>
+            {otperror == false ? '' : 'Wrong OTP'}
+          </Text>
+          <MyButton title={'VERIFY CODE'} onPress={() => VerifyOTPApi()} />
 
           <MyHeart
             myStyles={{
@@ -301,5 +342,16 @@ const styles = StyleSheet.create({
   },
   focusCell: {
     borderColor: appColor.appColorMain,
+  },
+  errortxt: {
+    width: responsiveWidth(60),
+    alignSelf: 'center',
+    color: '#fff',
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(2.2),
+    marginTop: responsiveHeight(1),
+    textAlign: 'center',
+    marginTop: responsiveHeight(-3),
+    marginBottom: responsiveHeight(2),
   },
 });

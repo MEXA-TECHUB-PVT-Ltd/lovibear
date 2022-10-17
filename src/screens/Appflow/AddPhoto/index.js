@@ -25,7 +25,28 @@ import {
 } from 'react-native-responsive-dimensions';
 import Carousel from 'react-native-snap-carousel';
 import {fontFamily} from '../../../constants/fonts';
+import {Base_URL} from '../../../Base_URL';
+import RNFetchBlob from 'rn-fetch-blob';
+import {MyButton, MyButtonLoader} from '../../../components/MyButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const AddPhoto = props => {
+  let apiarr = [];
+  const [apiImagesList, setApiImagesList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    AddUserId();
+  }, []);
+  const AddUserId = async () => {
+    const userid = await AsyncStorage.getItem('userid');
+
+    apiarr = apiImagesList;
+    await apiarr.push({
+      name: 'userId',
+      data: userid,
+    });
+
+    console.log('PUTTING UID ========', apiarr);
+  };
   const refContainer = useRef();
   const [categorylist, setCategorylist] = useState([
     {
@@ -82,11 +103,21 @@ const AddPhoto = props => {
     ImagePicker.openPicker({
       cropping: false,
     }).then(async image => {
+      var filename = image.path.substring(image.path.lastIndexOf('/') + 1);
       let arr = mylist;
       await arr.unshift({
         image: image.path,
       });
       await setMylist([...arr]);
+      apiarr = apiImagesList;
+      await apiarr.push({
+        name: 'postImages',
+        filename: filename,
+        type: image.mime,
+        data: RNFetchBlob.wrap(image.path),
+      });
+      setApiImagesList(apiarr);
+      console.log('THE API IMAGES==============', apiarr);
       await console.log('MY LIST==============', mylist);
       await refContainer.current.close();
       console.log('ARR LENGTH', arr.length);
@@ -102,11 +133,24 @@ const AddPhoto = props => {
     ImagePicker.openCamera({
       cropping: false,
     }).then(async image => {
+      var filename = image.path.substring(image.path.lastIndexOf('/') + 1);
+
       let arr = mylist;
       await arr.unshift({
         image: image.path,
       });
       await setMylist([...arr]);
+
+      apiarr = apiImagesList;
+      await apiarr.push({
+        name: 'postImages',
+        filename: filename,
+        type: image.mime,
+        data: RNFetchBlob.wrap(image.path),
+      });
+      setApiImagesList(apiarr);
+      console.log('THE API IMAGES==============', apiarr);
+
       await console.log('MY LIST==============', mylist);
       await refContainer.current.close();
       console.log('ARR LENGTH', arr.length);
@@ -118,6 +162,39 @@ const AddPhoto = props => {
       }
     });
   };
+
+  const UploadMedia = () => {
+    setLoading(true);
+
+    console.log('ENTERED HERE', apiImagesList);
+    console.log('API IMAGES LIST LENGTH HERE', apiImagesList.length);
+    if (apiImagesList.length > 0) {
+      console.log('INSIDE THE IF CONDITION');
+
+      RNFetchBlob.fetch(
+        'POST',
+        Base_URL + '/posts/createPost',
+        {
+          otherHeader: 'foo',
+          'Content-Type': 'multipart/form-data',
+        },
+        apiImagesList,
+      )
+        .then(response => {
+          console.log('response:', response.data);
+          let myresponse = JSON.parse(response.data);
+          console.log('AFTER PARSING=======', myresponse);
+
+          props.navigation.goBack();
+          setLoading(false);
+        })
+        .catch(error => {
+          console.log(error);
+          setLoading(false);
+        });
+    }
+  };
+
   const renderItem = ({item, index}) => {
     return (
       <TouchableOpacity
@@ -149,113 +226,132 @@ const AddPhoto = props => {
   };
   return (
     <SafeAreaView style={STYLES.container}>
-      <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} />
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: '#fff',
-          paddingHorizontal: responsiveWidth(5),
-        }}>
+      <ScrollView contentContainerStyle={STYLES.scrollview}>
+        <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} />
         <View
           style={{
-            marginTop: responsiveHeight(1.5),
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginBottom: responsiveHeight(1.9),
-            justifyContent: 'space-between',
+            flex: 1,
+            backgroundColor: '#fff',
+            paddingHorizontal: responsiveWidth(5),
           }}>
-          <Text style={styles.txt1}>Add Photo</Text>
-          <TouchableOpacity
-            activeOpacity={0.6}
-            onPress={() => props.navigation.goBack()}>
-            <Image
-              source={appImages.crossphoto}
-              style={{
-                width: responsiveWidth(5.3),
-                height: responsiveWidth(5.3),
-              }}
-            />
-          </TouchableOpacity>
-        </View>
-        <Image
-          source={appImages.photoheader}
-          style={{
-            height: responsiveWidth(35),
-            width: responsiveWidth(65),
-            resizeMode: 'contain',
-            // backgroundColor: 'red',
-            alignSelf: 'center',
-          }}
-        />
-
-        <Text
-          style={{
-            marginTop: responsiveHeight(3),
-            width: responsiveWidth(85),
-            alignSelf: 'center',
-            alignItems: 'center',
-            color: '#707070',
-            fontSize: responsiveFontSize(1.8),
-            textAlign: 'center',
-            fontFamily: fontFamily.Baskerville_Old_Face,
-            lineHeight: responsiveHeight(3),
-          }}>
-          Lorem Ipsum Dolor Sit Amet, Consetetur Sadipscing Elitr, Sed Diam
-          Nonumy
-        </Text>
-        <FlatList
-          data={mylist}
-          renderItem={renderItem}
-          showsVerticalScrollIndicator={false}
-          numColumns={3}
-          //   columnWrapperStyle={{justifyContent: 'space-between'}}
-          contentContainerStyle={{
-            marginTop: responsiveHeight(4),
-            paddingBottom: responsiveHeight(9),
-          }}
-        />
-      </View>
-      <RBSheet
-        ref={refContainer}
-        openDuration={250}
-        animationType="slide"
-        customStyles={{
-          container: {
-            // height: responsiveHeight(50),
-            borderTopRightRadius: responsiveWidth(7),
-            borderTopLeftRadius: responsiveWidth(7),
-          },
-        }}>
-        <View style={{flex: 1}}>
           <View
             style={{
+              marginTop: responsiveHeight(1.5),
               flexDirection: 'row',
               alignItems: 'center',
+              marginBottom: responsiveHeight(1.9),
               justifyContent: 'space-between',
-              width: responsiveWidth(85),
-              alignSelf: 'center',
-              marginTop: responsiveHeight(3),
             }}>
-            <Text style={styles.selectcategorytxt}>Upload Image</Text>
+            <Text style={styles.txt1}>Add Photo</Text>
             <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => refContainer.current.close()}>
+              activeOpacity={0.6}
+              onPress={() => props.navigation.goBack()}>
               <Image
-                source={appImages.closerbsheet}
-                resizeMode="contain"
-                style={styles.sicon2}
+                source={appImages.crossphoto}
+                style={{
+                  width: responsiveWidth(5.3),
+                  height: responsiveWidth(5.3),
+                }}
               />
             </TouchableOpacity>
           </View>
-          <View style={{flex: 1, marginTop: responsiveHeight(2)}}>
+          <Image
+            source={appImages.photoheader}
+            style={{
+              height: responsiveWidth(35),
+              width: responsiveWidth(65),
+              resizeMode: 'contain',
+              // backgroundColor: 'red',
+              alignSelf: 'center',
+            }}
+          />
+
+          <Text
+            style={{
+              marginTop: responsiveHeight(3),
+              width: responsiveWidth(85),
+              alignSelf: 'center',
+              alignItems: 'center',
+              color: '#707070',
+              fontSize: responsiveFontSize(1.8),
+              textAlign: 'center',
+              fontFamily: fontFamily.Baskerville_Old_Face,
+              lineHeight: responsiveHeight(3),
+            }}>
+            Lorem Ipsum Dolor Sit Amet, Consetetur Sadipscing Elitr, Sed Diam
+            Nonumy
+          </Text>
+          <View>
             <FlatList
-              data={categorylist}
-              renderItem={renderItemCategory}
+              data={mylist}
+              renderItem={renderItem}
               showsVerticalScrollIndicator={false}
+              numColumns={3}
+              //   columnWrapperStyle={{justifyContent: 'space-between'}}
+              contentContainerStyle={{
+                marginTop: responsiveHeight(4),
+                paddingBottom: responsiveHeight(5),
+              }}
             />
           </View>
+
+          {loading ? (
+            <MyButtonLoader title={'Add Post'} />
+          ) : (
+            <MyButton
+              title={'Add Post'}
+              myStyles={{
+                marginBottom: responsiveHeight(2),
+              }}
+              onPress={() => {
+                UploadMedia();
+              }}
+            />
+          )}
         </View>
-      </RBSheet>
+        <RBSheet
+          ref={refContainer}
+          openDuration={250}
+          animationType="slide"
+          customStyles={{
+            container: {
+              // height: responsiveHeight(50),
+              borderTopRightRadius: responsiveWidth(7),
+              borderTopLeftRadius: responsiveWidth(7),
+            },
+          }}>
+          <View style={{flex: 1}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: responsiveWidth(85),
+                alignSelf: 'center',
+                marginTop: responsiveHeight(3),
+              }}>
+              <Text style={styles.selectcategorytxt}>Upload Image</Text>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => refContainer.current.close()}>
+                <Image
+                  source={appImages.closerbsheet}
+                  resizeMode="contain"
+                  style={styles.sicon2}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <View style={{flex: 1, marginTop: responsiveHeight(2)}}>
+              <FlatList
+                data={categorylist}
+                renderItem={renderItemCategory}
+                showsVerticalScrollIndicator={false}
+              />
+            </View>
+          </View>
+        </RBSheet>
+      </ScrollView>
     </SafeAreaView>
   );
 };

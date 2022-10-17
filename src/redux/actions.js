@@ -1,15 +1,15 @@
-export const SET_FROM_GENDER = "SET_FROM_GENDER";
-export const SET_FROM_CATEGORY= "SET_FROM_CATEGORY";
+export const SET_FROM_ROUTE = 'SET_FROM_ROUTE';
+export const SET_ROUTE_CARD = 'SET_ROUTE_CARD';
 
-export const setFromgender = fromgender => dispatch => {
-    dispatch({
-        type: SET_FROM_GENDER,
-        payload: fromgender,
-    });
+export const setFromRoute = fromroute => dispatch => {
+  dispatch({
+    type: SET_FROM_ROUTE,
+    payload: fromroute,
+  });
 };
-export const setFromcategory = fromcategory => dispatch => {
-    dispatch({
-        type: SET_FROM_CATEGORY,
-        payload: fromcategory,
-    });
+export const setRouteCard = routecard => dispatch => {
+  dispatch({
+    type: SET_ROUTE_CARD,
+    payload: routecard,
+  });
 };

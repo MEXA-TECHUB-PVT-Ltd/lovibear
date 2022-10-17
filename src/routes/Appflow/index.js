@@ -134,6 +134,10 @@ const MyTabs = () => {
       <Tab.Screen
         name="PlayScreenScreens"
         component={PlayScreenTab}
+        // initialParams={{
+        //   fromRoute: 'default',
+        //   cardDetail: 'default',
+        // }}
         options={{
           // unmountOnBlur: true,
           tabBarIcon: ({focused}) => (

@@ -76,6 +76,7 @@ const appImages = {
   supericon: require(IMAGES_DIR + 'supericon.png'),
   musicplay: require(IMAGES_DIR + 'musicplay.png'),
   gendericon: require(IMAGES_DIR + 'gendericon.png'),
+  noimg: require(IMAGES_DIR + 'noimg.jpg'),
 };
 const appColor = {
   appColorMain: '#FF0047',

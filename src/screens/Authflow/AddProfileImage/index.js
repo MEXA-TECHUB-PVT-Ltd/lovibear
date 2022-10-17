@@ -28,49 +28,57 @@ import FastImage from 'react-native-fast-image';
 import {MyButton, MyButtonLoader} from '../../../components/MyButton';
 import {fontFamily} from '../../../constants/fonts';
 import {Base_URL} from '../../../Base_URL';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const AddProfileImage = ({route, navigation}) => {
-  const [pfplink, setPfpLink] = useState('');
   const [myimage, setMyimage] = useState('');
-  const {
-    username,
-    email,
-    password,
-    apiformatdate,
-    signuptype,
-    mylat,
-    mylong,
-    gender,
-    profession,
-  } = route.params;
-  console.log(
-    username,
-    email,
-    password,
-    apiformatdate,
-    signuptype,
-    gender,
-    profession,
-  );
+  const [apiarray, setApiArray] = useState([]);
+  let myarr = [];
+
+  const {fromRoute, userid, mylat, mylong} = route.params;
+  const UpdateUserId = async () => {
+    await myarr.push({
+      name: 'userId',
+      data: userid,
+    });
+    await myarr.push({
+      name: 'long',
+      data: mylong,
+    });
+    await myarr.push({
+      name: 'lat',
+      data: mylat,
+    });
+    console.log('USER INFORMATION UPDATED');
+  };
+  console.log(fromRoute, userid, mylat, mylong);
   const [selectedImage, setSelectedImage] = useState();
   const [loading, setLoading] = useState(false);
   const imageTakeFromGallery = () => {
     ImagePicker.openPicker({
       cropping: false,
       // compressImageQuality: 1,
-    }).then(image => {
+    }).then(async image => {
       console.log(image);
       setMyimage(image.path);
       const filename = image.path.substring(image.path.lastIndexOf('/') + 1);
+      // myarr = [...apiarray];
       setSelectedImage({
-        uri: image.path,
+        name: 'profileImage',
+        filename: filename,
         type: image.mime,
-        name: filename,
+        data: RNFetchBlob.wrap(image.path),
       });
+      // await myarr.push({
+      //   name: 'profileImage',
+      //   filename: filename,
+      //   type: image.mime,
+      //   data: RNFetchBlob.wrap(image.path),
+      // });
     });
   };
 
-  const images = [myimage == '' ? appImages.userimage : {uri: myimage}];
+  const images = [myimage == '' ? appImages.noimg : {uri: myimage}];
   const imageTakeFromCamera = () => {
     ImagePicker.openCamera({
       cropping: false,
@@ -79,9 +87,10 @@ const AddProfileImage = ({route, navigation}) => {
       setMyimage(image.path);
       const filename = image.path.substring(image.path.lastIndexOf('/') + 1);
       setSelectedImage({
-        uri: image.path,
+        name: 'profileImage',
+        filename: filename,
         type: image.mime,
-        name: filename,
+        data: RNFetchBlob.wrap(image.path),
       });
     });
   };
@@ -96,78 +105,103 @@ const AddProfileImage = ({route, navigation}) => {
   };
   const [imagevisible, setImagevisible] = useState(false);
 
+  useEffect(() => {
+    UpdateUserId();
+  }, []);
+
   const UploadToCloudinary = image => {
     if (myimage !== '') {
       setLoading(true);
-
-      const data = new FormData();
-      data.append('file', selectedImage);
-      data.append('upload_preset', 'lovibearApp');
-      data.append('cloud_name', 'dzyxgcils');
-
-      fetch('https://api.cloudinary.com/v1_1/dzyxgcils/image/upload', {
-        method: 'post',
-        body: data,
-      })
-        .then(res => res.json())
-        .then(data => {
-          console.log('THE DATA===========', data);
-          SignUpApi(data.url);
+      RNFetchBlob.fetch(
+        'put',
+        Base_URL + '/user/updateUserProfile',
+        {
+          otherHeader: 'foo',
+          'Content-Type': 'multipart/form-data',
+        },
+        [
+          {
+            name: 'userId',
+            data: String(userid),
+          },
+          {
+            name: 'long',
+            data: String(mylong),
+          },
+          {
+            name: 'lat',
+            data: String(mylat),
+          },
+          selectedImage,
+        ],
+      )
+        .then(response => {
+          console.log('response:', response.data);
+          let myresponse = JSON.parse(response.data);
+          console.log('MY RESPONSE IMAGE FROM API ============', myresponse);
+          if (myresponse.message == 'Updated successfully') {
+            navigation.navigate('Login');
+          }
+          setLoading(false);
+        })
+        .catch(error => {
+          console.log(error);
+          setLoading(false);
         });
     }
   };
-  const SignUpApi = async image => {
-    var axios = require('axios');
-    if (signuptype == 'phoneNumber') {
-      var data = JSON.stringify({
-        userName: username,
-        password: password,
-        phoneNumber: '+' + email,
-        signupType: signuptype,
-        dateOfBirth: apiformatdate,
-        profileImage: image,
-        location: {
-          coordinates: [mylong, mylat],
-        },
-        gender: gender,
-        profession: profession,
-      });
-    } else {
-      var data = JSON.stringify({
-        userName: username,
-        password: password,
-        signupType: signuptype,
-        dateOfBirth: apiformatdate,
-        profileImage: image,
-        email: email,
-        location: {
-          coordinates: [mylong, mylat],
-        },
-        gender: gender,
-        profession: profession,
-      });
-    }
+  // const SignUpApi = async image => {
+  //   var axios = require('axios');
+  //   if (signuptype == 'phoneNumber') {
+  //     var data = JSON.stringify({
+  //       userName: username,
+  //       password: password,
+  //       phoneNumber: '+' + email,
+  //       signupType: signuptype,
+  //       dateOfBirth: apiformatdate,
+  //       profileImage: image,
+  //       location: {
+  //         coordinates: [mylong, mylat],
+  //       },
+  //       gender: gender,
+  //       profession: profession,
+  //     });
+  //   } else {
+  //     var data = JSON.stringify({
+  //       userName: username,
+  //       password: password,
+  //       signupType: signuptype,
+  //       dateOfBirth: apiformatdate,
+  //       profileImage: image,
+  //       email: email,
+  //       location: {
+  //         coordinates: [mylong, mylat],
+  //       },
+  //       gender: gender,
+  //       profession: profession,
+  //     });
+  //   }
 
-    var config = {
-      method: 'post',
-      url: Base_URL + '/user/register',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: data,
-    };
+  //   var config = {
+  //     method: 'post',
+  //     url: Base_URL + '/user/register',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     data: data,
+  //   };
 
-    await axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
-        navigation.navigate('Login');
-        setLoading(false);
-      })
-      .catch(function (error) {
-        console.log(error.response);
-        setLoading(false);
-      });
-  };
+  //   await axios(config)
+  //     .then(function (response) {
+  //       console.log(JSON.stringify(response.data));
+  //       navigation.navigate('Login');
+  //       setLoading(false);
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error.response);
+  //       setLoading(false);
+  //     });
+  // };
   return (
     <SafeAreaView style={STYLES.containerJustify}>
       <StatusBar
@@ -249,7 +283,7 @@ const AddProfileImage = ({route, navigation}) => {
         width={responsiveWidth(13)}
         height={responsiveWidth(13)}
       />
-      <View>
+      <View pointerEvents={loading ? 'none' : 'auto'}>
         <Text style={styles.maintxt}>Add Profile Image</Text>
         <TouchableOpacity
           activeOpacity={0.85}
@@ -269,7 +303,7 @@ const AddProfileImage = ({route, navigation}) => {
               height: responsiveWidth(44),
             }}>
             <Image
-              source={myimage == '' ? appImages.userimage : {uri: myimage}}
+              source={myimage == '' ? appImages.noimg : {uri: myimage}}
               style={{
                 width: responsiveWidth(44),
                 height: responsiveWidth(44),

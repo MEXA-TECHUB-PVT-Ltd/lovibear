@@ -137,7 +137,7 @@ const Splash2 = props => {
             />
             <Text style={styles.txt1}>Signup with phone number</Text>
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.button1}
             activeOpacity={0.8}
             onPress={() => props.navigation.navigate('SignUp')}>
@@ -168,7 +168,7 @@ const Splash2 = props => {
               }}
             />
             <Text style={styles.txt2}>Signup with Google</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <View
             style={{
               flexDirection: 'row',
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     // paddingHorizontal: responsiveWidth(1),
     paddingVertical: responsiveHeight(1.4),
     borderRadius: responsiveWidth(100),
-    marginBottom: responsiveHeight(2),
+    marginBottom: responsiveHeight(8),
     overflow: 'hidden',
   },
   txt2: {

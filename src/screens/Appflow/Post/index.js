@@ -26,45 +26,59 @@ import Carousel from 'react-native-snap-carousel';
 import {fontFamily} from '../../../constants/fonts';
 import MyHeart from '../../../components/MyHeart';
 import LinearGradient from 'react-native-linear-gradient';
+import {Base_URL} from '../../../Base_URL';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useFocusEffect} from '@react-navigation/native';
 const Post = props => {
-  const [list, setList] = useState([
-    {
-      id: 1,
-      img: appImages.img2,
-    },
-    {
-      id: 2,
-      img: appImages.img3,
-    },
-    {
-      id: 3,
-      img: appImages.img4,
-    },
-    {
-      id: 4,
-      img: appImages.img5,
-    },
-    {
-      id: 5,
-      img: appImages.img6,
-    },
-    {
-      id: 6,
-      img: appImages.img7,
-    },
-    {
-      id: 7,
-      img: appImages.img8,
-    },
-    {
-      id: 8,
-      img: appImages.img9,
-    },
-    {
-      id: 9,
-      img: appImages.img10,
-    },
-  ]);
+  useEffect(() => {
+    GetUser();
+  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      GetPosts();
+    }, []),
+  );
+
+  const GetUser = async () => {
+    const userid = await AsyncStorage.getItem('userid');
+    var axios = require('axios');
+
+    var config = {
+      method: 'get',
+      url: Base_URL + '/user/specificUser/' + userid,
+      headers: {},
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        setUserDetails(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const GetPosts = async () => {
+    const userid = await AsyncStorage.getItem('userid');
+    var axios = require('axios');
+    var config = {
+      method: 'get',
+      url: Base_URL + '/posts/getPostsOfUser/' + userid,
+      headers: {},
+    };
+    await axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        setList(response.data.result);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const [userDetails, setUserDetails] = useState();
+  const [list, setList] = useState([]);
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
@@ -80,7 +94,7 @@ const Post = props => {
           justifyContent: 'center',
         }}>
         <Image
-          source={item.img}
+          source={{uri: item.postImages[0].image_url}}
           style={{
             width: responsiveWidth(42),
             height: responsiveWidth(50),
@@ -99,7 +113,7 @@ const Post = props => {
             paddingBottom: responsiveHeight(2),
             paddingTop: responsiveHeight(3),
           }}>
-          <Text style={styles.info1}>Emma</Text>
+          {/* <Text style={styles.info1}>Emma</Text> */}
           {/* <Text style={styles.info2}>72 km, Lawyer</Text> */}
         </LinearGradient>
       </TouchableOpacity>
@@ -254,7 +268,11 @@ const Post = props => {
                 height: responsiveWidth(30.5),
                 borderRadius: responsiveWidth(100),
               }}
-              source={appImages.girlimg}
+              source={
+                userDetails == undefined
+                  ? appImages.girlimg
+                  : {uri: userDetails[0].profileImage.userPicUrl}
+              }
             />
           </View>
           <View
@@ -268,19 +286,19 @@ const Post = props => {
               style={{
                 color: '#fff',
                 fontFamily: fontFamily.Baskerville_Old_Face,
-                fontSize: responsiveFontSize(2.5),
+                fontSize: responsiveFontSize(2.8),
                 marginBottom: responsiveHeight(0.5),
               }}>
-              Lorem Ipsum
+              {userDetails == undefined ? '' : userDetails[0].userName}
             </Text>
-            <Text
+            {/* <Text
               style={{
                 color: '#fff',
                 fontFamily: fontFamily.Baskerville_Old_Face,
                 fontSize: responsiveFontSize(2),
               }}>
               25.15 miles
-            </Text>
+            </Text> */}
           </View>
         </View>
         <FlatList

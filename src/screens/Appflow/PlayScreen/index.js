@@ -41,14 +41,23 @@ import {ActivityIndicator, Modal} from 'react-native-paper';
 import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
+import {useSelector, useDispatch} from 'react-redux';
+import {setFromRoute, setRouteCard} from '../../../redux/actions';
 
-const PlayScreen = props => {
+const PlayScreen = ({route, navigation}) => {
+  const dispatch = useDispatch();
+  const {fromroute, routecard} = useSelector(state => state.userReducer);
+
   useEffect(() => {
     getLocation();
     // Filter();
     getuid();
-    checkPermission();
   }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      FromRoutes();
+    }, [fromroute, routecard]),
+  );
 
   const getuid = async () => {
     const userid = await AsyncStorage.getItem('userid');
@@ -65,47 +74,21 @@ const PlayScreen = props => {
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const [modaltype, setModalType] = useState('');
-
-  const checkPermission = async () => {
-    console.log('check permission function call');
-    const enabled = await messaging().hasPermission();
-    messaging().notifi;
-    console.log('check permission function call enable', enabled);
-    if (enabled) {
-      getToken();
-    } else {
-      requestPermission();
-    }
-  };
-  const getToken = async () => {
-    console.log('get token call');
-    const fcmToken = await messaging().getToken();
-    console.log('check fcm token', fcmToken);
-    await AsyncStorage.setItem('Device_id', fcmToken);
-    const asyncFcmToken = await AsyncStorage.getItem('Device_id');
-    console.log('ASYNC FCM TOKEN=============', asyncFcmToken);
-  };
-  const requestPermission = async () => {
-    console.log('requestPermission call');
-    try {
-      await messaging().requestPermission();
-      getToken();
-    } catch (error) {}
-  };
+  const [routefirsttime, setRouteFirstTime] = useState(true);
 
   const getLocation = async () => {
-    if (Platform.OS === 'ios') {
-      Geolocation.requestAuthorization();
-      Geolocation.setRNConfiguration({
-        skipPermissionRequests: false,
-        authorizationLevel: 'whenInUse',
-      });
-    }
-    if (Platform.OS === 'android') {
-      await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      );
-    }
+    // if (Platform.OS === 'ios') {
+    //   Geolocation.requestAuthorization();
+    //   Geolocation.setRNConfiguration({
+    //     skipPermissionRequests: false,
+    //     authorizationLevel: 'whenInUse',
+    //   });
+    // }
+    // if (Platform.OS === 'android') {
+    await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+    // }
     await Geolocation.getCurrentPosition(
       position => {
         console.log(position);
@@ -143,6 +126,49 @@ const PlayScreen = props => {
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
+  };
+
+  const FromRoutes = async () => {
+    console.log('CHECKING ROUTE ==', fromroute);
+    console.log('CHECKING ROUTE CARD ==', routecard);
+
+    if (fromroute == 'discover') {
+      setLoading(true);
+
+      if (routefirsttime == true) {
+        let _arr = [...CardsList];
+        await _arr.unshift(routecard);
+        var sdsd = _arr.map(item => {
+          return item.document._id;
+        });
+        console.log('THE ARR=======', sdsd);
+        setCardsList(_arr);
+        setEmpty(false);
+        setCardIndex(0);
+        setRouteFirstTime(false);
+
+        setTimeout(() => {
+          setLoading(false);
+        }, 800);
+      } else {
+        let _arr = [...CardsList];
+        await _arr.splice(cardIndex + 2, 0, routecard);
+        var sdsd = _arr.map(item => {
+          return item.document._id;
+        });
+        console.log('THE ARR=======', sdsd);
+        setCardsList(_arr);
+        setEmpty(false);
+
+        setTimeout(() => {
+          setLoading(false);
+        }, 800);
+      }
+
+      // setCardIndex(0)
+      // dispatch(setRouteCard({}));
+      // dispatch(setFromRoute(''));
+    }
   };
 
   // APIS CALLS BELOW
@@ -185,15 +211,19 @@ const PlayScreen = props => {
         sendRightSwipeNotification(
           response.data.result.result.swipedBy,
           response.data.result.result.swipedUser,
+          rightswipedid,
         );
+        if (response.data.message == 'user has successfully right swiped') {
+          setUndoStatus(true);
+        }
       })
+
       .catch(function (error) {
         console.log(error);
       });
-    FirebaseRight(rightswipedid);
   };
 
-  const sendRightSwipeNotification = async (myid, swipedid) => {
+  const sendRightSwipeNotification = async (myid, swipedid, rightswipedid) => {
     var axios = require('axios');
     var data = JSON.stringify({
       senderId: myid,
@@ -215,23 +245,24 @@ const PlayScreen = props => {
     await axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
+        FirebaseRight(rightswipedid, response.data.data);
       })
       .catch(function (error) {
         console.log(error);
       });
   };
 
-  const FirebaseRight = async swipeduser => {
+  const FirebaseRight = async (swipeduser, senderDetail) => {
     console.log(
       'SWIPED USER FCM TOKEN===================',
       swipeduser[0].document.fcmToken,
     );
     var axios = require('axios');
     var data = JSON.stringify({
-      registration_ids: [swipeduser[0].fcmToken],
+      registration_ids: [swipeduser[0].document.fcmToken],
       notification: {
         title: 'LoviBear',
-        body: 'You got right swiped',
+        body: 'You got right swiped by ' + senderDetail.name,
         mutable_content: true,
         sound: 'Tri-tone',
         icon: 'ic_noti',
@@ -312,6 +343,9 @@ const PlayScreen = props => {
           'API RESPONSE AFTER LEFT SWIPING============',
           response.data,
         );
+        if (response.data.message == 'user has successfully left swiped') {
+          setUndoStatus(true);
+        }
       })
       .catch(function (error) {
         console.log(error);
@@ -319,8 +353,15 @@ const PlayScreen = props => {
   };
 
   const RewindCardApi = async () => {
+    setLoading(true);
+    setUndoStatus(false);
+    setTimeout(() => {
+      setUndoStatus(false);
+    }, 300);
+    setTimeout(() => {
+      setUndoStatus(false);
+    }, 600);
     const userid = await AsyncStorage.getItem('userid');
-
     var axios = require('axios');
     var config = {
       method: 'delete',
@@ -335,10 +376,12 @@ const PlayScreen = props => {
     axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
+        setLoading(false);
       })
       .catch(function (error) {
         console.log('THE ERROR ON REWIND====', error.response);
         console.log(error);
+        setLoading(false);
       });
   };
 
@@ -359,7 +402,7 @@ const PlayScreen = props => {
       url:
         Base_URL +
         '/user/usersInRadius/?page=1' +
-        '&limit=6' +
+        '&limit=7' +
         '&gender=' +
         gender +
         bypost +
@@ -395,9 +438,9 @@ const PlayScreen = props => {
           });
 
           console.log('THE VAR============', thevar);
+          setEmpty(false);
 
           setLoading(false);
-          setEmpty(false);
         }
       })
       .catch(function (error) {
@@ -405,13 +448,15 @@ const PlayScreen = props => {
         console.log(error.response.data);
         if (error.response.data.message == 'No user found with this query') {
           console.log('No Results Found');
-          setLoading(false);
           setEmpty(true);
+
+          setLoading(false);
         }
       });
   };
 
   const FilterPagination = async (customlat, customlong) => {
+    setRouteFirstTime(true);
     setLoading(true);
     console.log('CARD LIST LENGTH=====', CardsList.length);
     const userid = await AsyncStorage.getItem('userid');
@@ -429,7 +474,7 @@ const PlayScreen = props => {
         Base_URL +
         '/user/usersInRadius/?page=' +
         pagination +
-        '&limit=6' +
+        '&limit=7' +
         '&gender=' +
         gender +
         bypost +
@@ -634,10 +679,15 @@ const PlayScreen = props => {
 
   const swiperRef = useRef();
   const Card = item => {
+    console.log('ITEM DOUCMEN===========', item.document.profileImage);
     return (
       <View style={styles.mycard}>
         <Image
-          source={{uri: item.document.profileImage}}
+          source={
+            item.document.profileImage == undefined
+              ? appImages.noimg
+              : {uri: item.document.profileImage.userPicUrl}
+          }
           style={styles.cardimage}
         />
 
@@ -651,7 +701,9 @@ const PlayScreen = props => {
             paddingBottom: responsiveHeight(1.5),
             paddingTop: responsiveHeight(1.5),
           }}>
-          <Text style={styles.txt1}>{item.document.userName}, 22</Text>
+          <Text style={styles.txt1}>
+            {item.document.userName}, {parseInt(item.Age)}
+          </Text>
           <Text style={styles.txt2}>
             {item.document.dist.distance_km.toFixed(2)} km,
             {' ' + item.document.profession}
@@ -685,7 +737,7 @@ const PlayScreen = props => {
               activeOpacity={0.7}
               disabled={loading ? true : false}
               onPress={() =>
-                props.navigation.navigate('Search', {routeArray: CardsList})
+                navigation.navigate('Search', {routeArray: CardsList})
               }>
               <FastImage
                 source={appImages.searchicon}
@@ -873,9 +925,7 @@ const PlayScreen = props => {
                 //   console.log('ON FINAL CARD');
                 //   getLocation();
                 // }
-                setTimeout(() => {
-                  setUndoStatus(true);
-                }, 850);
+
                 setCardIndex(cardIndex);
                 console.log('Swiped');
                 swiperRef.current.state.pan.setOffset({x: 0, y: 0});
@@ -942,14 +992,9 @@ const PlayScreen = props => {
               if (undostatus == true) {
                 console.log('HERE AT UNDO BUTTON PRESS');
 
-                setLoading(true);
                 RewindCardApi();
-                setTimeout(() => {
-                  setEmpty(false);
-                  setCardIndex(cardIndex + 1 - 1);
-                  setLoading(false);
-                }, 500);
-                setUndoStatus(false);
+                setEmpty(false);
+                setCardIndex(cardIndex);
               }
             }}>
             <Image

@@ -25,11 +25,13 @@ import {useFocusEffect} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import {MyButton} from '../../../components/MyButton';
 import {fontFamily} from '../../../constants/fonts';
+import {Base_URL} from '../../../Base_URL';
 const ForgotPassword = props => {
   const [myfocus, setMyfocus] = useState('');
   const [securepassword, setSecurepassword] = useState(true);
   const passwordinputref = useRef();
   const emailinputref = useRef();
+  const [email, setEmail] = useState('');
   const [softinput, setSoftinput] = useState(false);
 
   useFocusEffect(
@@ -37,6 +39,32 @@ const ForgotPassword = props => {
       setSoftinput(true);
     }, []),
   );
+
+  const ForgotPasswordApi = () => {
+    var axios = require('axios');
+    var data = JSON.stringify({
+      userEmailAddress: email.toLowerCase(),
+    });
+
+    var config = {
+      method: 'post',
+      url: Base_URL + '/forgetPassword/userForgetPassword',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        if (response.data.message != 'No one found with This Email address')
+          props.navigation.navigate('EnterCode', {email: email.toLowerCase()});
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
   return (
     <SafeAreaView style={STYLES.container}>
       <StatusBar
@@ -124,7 +152,8 @@ const ForgotPassword = props => {
               }}
             />
             <TextInput
-              showSoftInputOnFocus={softinput}
+              value={email}
+              // showSoftInputOnFocus={softinput}
               autoFocus
               selectionColor={appColor.appColorMain}
               placeholderTextColor={'#8D8D8D'}
@@ -132,6 +161,9 @@ const ForgotPassword = props => {
               style={styles.txtinputemail}
               onFocus={() => setMyfocus('email')}
               onBlur={() => setMyfocus('')}
+              onChangeText={text => {
+                setEmail(text);
+              }}
             />
           </View>
         </View>
@@ -195,7 +227,9 @@ const ForgotPassword = props => {
           }}>
           <MyButton
             title={'SEND CODE'}
-            onPress={() => props.navigation.navigate('EnterCode')}
+            onPress={() => {
+              ForgotPasswordApi();
+            }}
           />
 
           <MyHeart

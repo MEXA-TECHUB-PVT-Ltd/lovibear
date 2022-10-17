@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   ScrollView,
   PermissionsAndroid,
+  Permission,
 } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import React, {useEffect, useRef, useState} from 'react';
@@ -25,12 +26,17 @@ import EyeIcon from 'react-native-vector-icons/Ionicons';
 import MyHeart from '../../../components/MyHeart';
 import {useFocusEffect} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
-import {MyButton} from '../../../components/MyButton';
+import {MyButton, MyButtonLoader} from '../../../components/MyButton';
 import {DateSelect} from '../../../components/dateTimePicker/dateTimePicker';
 import {fontFamily} from '../../../constants/fonts';
 import Geolocation from 'react-native-geolocation-service';
+// import Geolocation from '@react-native-community/geolocation';
 import moment from 'moment';
 import {Modal} from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Base_URL} from '../../../Base_URL';
+import messaging from '@react-native-firebase/messaging';
+
 const SignUp = props => {
   const refContainer = useRef();
   const [myfocus, setMyfocus] = useState('');
@@ -69,6 +75,8 @@ const SignUp = props => {
   const [visible, setVisible] = React.useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
+  const [loading, setLoading] = useState(false);
+
   let regchecknumber = /^[0-9]*$/;
   let reg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w\w+)+$/;
   let regphone =
@@ -81,6 +89,7 @@ const SignUp = props => {
   );
   useEffect(() => {
     getLocation();
+    checkPermission();
   }, []);
   const getLocation = async () => {
     if (Platform.OS === 'ios') {
@@ -110,7 +119,35 @@ const SignUp = props => {
     );
   };
 
+  const checkPermission = async () => {
+    console.log('check permission function call');
+    const enabled = await messaging().hasPermission();
+    messaging().notifi;
+    console.log('check permission function call enable', enabled);
+    if (enabled) {
+      getToken();
+    } else {
+      requestPermission();
+    }
+  };
+  const getToken = async () => {
+    console.log('get token call');
+    const fcmToken = await messaging().getToken();
+    console.log('check fcm token', fcmToken);
+    await AsyncStorage.setItem('Device_id', fcmToken);
+    const asyncFcmToken = await AsyncStorage.getItem('Device_id');
+    console.log('ASYNC FCM TOKEN=============', asyncFcmToken);
+  };
+  const requestPermission = async () => {
+    console.log('requestPermission call');
+    try {
+      await messaging().requestPermission();
+      getToken();
+    } catch (error) {}
+  };
+
   const Validations = () => {
+    setLoading(true);
     if (username == '') {
       setCheckusername(true);
       setUsernameerror('Enter Username');
@@ -174,18 +211,90 @@ const SignUp = props => {
       } else {
         signuptype = 'email';
       }
-      props.navigation.navigate('AddProfileImage', {
-        username: username,
-        email: email,
-        password: password,
-        apiformatdate: apiformatdate,
-        signuptype: signuptype,
-        mylat: mylat,
-        mylong: mylong,
-        gender: apigender,
-        profession: profession,
-      });
+
+      // props.navigation.navigate('AddProfileImage', {
+      //   username: username,
+      //   email: email,
+      //   password: password,
+      //   apiformatdate: apiformatdate,
+      //   signuptype: signuptype,
+      //   mylat: mylat,
+      //   mylong: mylong,
+      //   gender: apigender,
+      //   profession: profession,
+      // });
+      SignUpApi(signuptype);
     }
+  };
+
+  const SignUpApi = async signuptype => {
+    const myfcm = await AsyncStorage.getItem('Device_id');
+    var formdata = new FormData();
+    if (signuptype == 'phoneNumber') {
+      formdata.append('userName', username);
+      formdata.append('password', password);
+      formdata.append('gender', apigender);
+      formdata.append('dateOfBirth', apiformatdate);
+      formdata.append('profession', profession);
+      formdata.append(
+        'location',
+        ' {"coordinates":[' + mylong + ',' + mylat + '] }',
+      );
+      formdata.append('fcmToken', myfcm);
+      formdata.append('phoneNumber', '+' + email);
+      formdata.append('signupType', signuptype);
+    } else {
+      formdata.append('userName', username);
+      formdata.append('password', password);
+      formdata.append('gender', apigender);
+      formdata.append('dateOfBirth', apiformatdate);
+      formdata.append('profession', profession);
+      formdata.append(
+        'location',
+        ' {"coordinates":[' + mylong + ',' + mylat + '] }',
+      );
+      formdata.append('fcmToken', myfcm);
+      formdata.append('email', email.toLowerCase());
+      formdata.append('signupType', signuptype);
+      formdata.append('userEmailAddress', email.toLowerCase());
+    }
+
+    var requestOptions = {
+      method: 'POST',
+      body: formdata,
+      redirect: 'follow',
+    };
+    await fetch(Base_URL + '/user/register', requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        // console.log(
+        //   'THE RESULT FIRST==========',
+        //   result.result.location.coordinates[0],
+        // );
+        console.log('THE RESULT SECOND==========', result);
+
+        console.log('THE RESULT==========', result.message);
+        if (result.message == 'this phone Number already exists') {
+          setCheckemail(true);
+          setEmailerror('Phone Number Already Registered');
+          setLoading(false);
+        } else if (result.message == 'email already in exists') {
+          setCheckemail(true);
+          setEmailerror('Email Already Registered');
+          setLoading(false);
+        } else {
+          setLoading(false);
+
+          props.navigation.navigate('AddProfileImage', {
+            fromRoute: 'signup',
+            userid: result.result._id,
+            mylong: result.result.location.coordinates[0],
+            mylat: result.result.location.coordinates[1],
+          });
+        }
+      })
+
+      .catch(error => console.log('error', error));
   };
 
   return (
@@ -569,12 +678,17 @@ const SignUp = props => {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <MyButton
-            title={'SIGN UP'}
-            onPress={() => {
-              Validations();
-            }}
-          />
+          {loading ? (
+            <MyButtonLoader title={'SIGN UP'} />
+          ) : (
+            <MyButton
+              title={'SIGN UP'}
+              onPress={() => {
+                Validations();
+              }}
+            />
+          )}
+
           <View style={{flexDirection: 'row', marginTop: responsiveHeight(4)}}>
             <Text style={styles.txt4}>Already Have an Account ? </Text>
             <TouchableOpacity

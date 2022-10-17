@@ -26,19 +26,72 @@ import {useFocusEffect} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import {MyButton} from '../../../components/MyButton';
 import {fontFamily} from '../../../constants/fonts';
-const UpdatePassword = props => {
+import {Base_URL} from '../../../Base_URL';
+const UpdatePassword = ({route, navigation}) => {
   const [myfocus, setMyfocus] = useState('');
   const [securepassword, setSecurepassword] = useState(true);
   const passwordinputref = useRef();
   const emailinputref = useRef();
   const [softinput, setSoftinput] = useState(false);
   const [secureconfirmpassword, setSecureconfirmpassword] = useState(true);
+  const {email, userid} = route.params;
+  const [password, setPassword] = useState('');
+  const [confirmpassword, setConfirmPassword] = useState('');
+  const [checkpassword, setCheckpassword] = useState(false);
+  const [checkconfirmpassword, setCheckConfirmpassword] = useState(false);
+  const [passworderror, setPassworderror] = useState('');
+  const [confirmpassworderror, setConfirmPassworderror] = useState('');
   useFocusEffect(
     React.useCallback(() => {
       setSoftinput(true);
     }, []),
   );
 
+  const Validations = () => {
+    console.log('HERE ON VALIDATIONS');
+
+    if (password == '') {
+      setCheckpassword(true);
+      setPassworderror('Enter Valid Password');
+      return false;
+    }
+    if (password != confirmpassword) {
+      setCheckConfirmpassword(true);
+      setConfirmPassworderror("Password Doesn't Match");
+      return false;
+    }
+    if (checkpassword == false && checkconfirmpassword == false) {
+      console.log('HERE ON API');
+      UpdatePasswordApi();
+    }
+  };
+
+  const UpdatePasswordApi = async () => {
+    var axios = require('axios');
+    var data = JSON.stringify({
+      email: email,
+      newPassword: password,
+      userId: userid,
+    });
+    var config = {
+      method: 'put',
+      url: Base_URL + '/user/updateUserPassword',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        if (response.data.success == true) {
+          navigation.navigate('Login');
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
   return (
     <SafeAreaView style={STYLES.container}>
       <StatusBar
@@ -122,6 +175,11 @@ const UpdatePassword = props => {
             />
             <TextInput
               showSoftInputOnFocus={softinput}
+              value={password}
+              onChangeText={text => {
+                setPassword(text);
+                setCheckpassword(false);
+              }}
               autoFocus
               placeholder="Password"
               selectionColor={appColor.appColorMain}
@@ -139,6 +197,9 @@ const UpdatePassword = props => {
               onPress={() => setSecurepassword(!securepassword)}
             />
           </View>
+          {checkpassword ? (
+            <Text style={styles.errortxt}>{passworderror}</Text>
+          ) : null}
           <View
             style={[
               styles.passwordparent,
@@ -160,6 +221,11 @@ const UpdatePassword = props => {
               }}
             />
             <TextInput
+              onChangeText={text => {
+                setConfirmPassword(text);
+                setCheckConfirmpassword(false);
+              }}
+              value={confirmpassword}
               placeholder="Confirm Password"
               selectionColor={appColor.appColorMain}
               style={styles.txtinputpassword}
@@ -174,6 +240,9 @@ const UpdatePassword = props => {
               onPress={() => setSecureconfirmpassword(!secureconfirmpassword)}
             />
           </View>
+          {checkconfirmpassword ? (
+            <Text style={styles.errortxt}>{confirmpassworderror}</Text>
+          ) : null}
         </View>
 
         <View
@@ -235,7 +304,9 @@ const UpdatePassword = props => {
           }}>
           <MyButton
             title={'Update'}
-            onPress={() => props.navigation.navigate('Login')}
+            onPress={() => {
+              Validations();
+            }}
           />
 
           <MyHeart
@@ -327,5 +398,13 @@ const styles = StyleSheet.create({
     color: '#080808',
     fontFamily: fontFamily.Baskerville_Old_Face,
     fontSize: responsiveFontSize(2),
+  },
+  errortxt: {
+    width: responsiveWidth(83),
+    alignSelf: 'center',
+    color: 'red',
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(2),
+    marginTop: responsiveHeight(1),
   },
 });

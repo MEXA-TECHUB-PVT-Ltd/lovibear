@@ -41,7 +41,6 @@ const Login = props => {
   const [securepassword, setSecurepassword] = useState(true);
   const passwordinputref = useRef();
   const [gettingLoginStatus, setGettingLoginStatus] = useState(true);
-
   const emailinputref = useRef();
   const [softinput, setSoftinput] = useState(false);
   const [email, setEmail] = useState('');
@@ -52,17 +51,16 @@ const Login = props => {
   const [checkpassword, setCheckpassword] = useState(false);
   const [firstchar, setFirstChar] = useState('');
   const [loading, setLoading] = useState(false);
-
   useFocusEffect(
     React.useCallback(() => {
       setSoftinput(true);
     }, []),
   );
-
   useEffect(() => {
     // GoogleSignin.configure();
     // _isSignedIn();
   }, []);
+
   const _isSignedIn = async () => {
     const isSignedIn = await GoogleSignin.isSignedIn();
     if (isSignedIn) {
@@ -168,7 +166,7 @@ const Login = props => {
         });
       } else {
         var data = JSON.stringify({
-          email: email,
+          email: email.toLowerCase(),
           password: password,
         });
       }
@@ -191,6 +189,13 @@ const Login = props => {
           if (response.data.message == 'Logged in successfully') {
             // console.log('THE USER ID==========', response.data);
             await AsyncStorage.setItem('userid', response.data.Data._id);
+            await AsyncStorage.setItem(
+              'signuptype',
+              response.data.Data.signupType,
+            );
+            await AsyncStorage.setItem('password', password);
+            // await AsyncStorage.setItem('userid', response.data.Data._id);
+
             props.navigation.navigate('App');
             console.log('MY LOADER=======', loading);
             setLoading(false);
