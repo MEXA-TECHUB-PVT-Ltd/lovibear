@@ -47,6 +47,32 @@ import {setFromRoute, setRouteCard} from '../../../redux/actions';
 const PlayScreen = ({route, navigation}) => {
   const dispatch = useDispatch();
   const {fromroute, routecard} = useSelector(state => state.userReducer);
+  const [mylat, setMylat] = useState();
+  const [mylong, setMylong] = useState();
+  const [gettinglocation, setGettinglocation] = useState(true);
+  const [swipeduser, setSwipedUser] = useState();
+  const [undostatus, setUndoStatus] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [firsttime, setFirsttime] = useState(true);
+  const [dofilter, setDoFilter] = useState(false);
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+  const [modaltype, setModalType] = useState('');
+  const [routefirsttime, setRouteFirstTime] = useState(true);
+  const [pagination, setPagination] = useState(2);
+  const [bypost, setByPost] = useState('');
+  const [minage, setMinAge] = useState(0);
+  const [maxage, setMaxAge] = useState(100);
+  const [myradius, setMyRadius] = useState(500000);
+  const [loading, setLoading] = useState(true);
+  const [empty, setEmpty] = useState(false);
+  const [gender, setGender] = useState('');
+  const [CardsList, setCardsList] = useState([]);
+  const refContainer = useRef();
+  const [cardIndex, setCardIndex] = useState(0);
+
+  let postreference = '';
+  let indexreference = '';
 
   useEffect(() => {
     getLocation();
@@ -63,32 +89,20 @@ const PlayScreen = ({route, navigation}) => {
     const userid = await AsyncStorage.getItem('userid');
     console.log('THE LOGIN USER ID ===========', userid);
   };
-  const [mylat, setMylat] = useState();
-  const [mylong, setMylong] = useState();
-  const [gettinglocation, setGettinglocation] = useState(true);
-  const [swipeduser, setSwipedUser] = useState();
-  const [undostatus, setUndoStatus] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [firsttime, setFirsttime] = useState(true);
-  const [dofilter, setDoFilter] = useState(false);
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
-  const [modaltype, setModalType] = useState('');
-  const [routefirsttime, setRouteFirstTime] = useState(true);
 
   const getLocation = async () => {
-    // if (Platform.OS === 'ios') {
-    //   Geolocation.requestAuthorization();
-    //   Geolocation.setRNConfiguration({
-    //     skipPermissionRequests: false,
-    //     authorizationLevel: 'whenInUse',
-    //   });
-    // }
-    // if (Platform.OS === 'android') {
-    await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
-    // }
+    if (Platform.OS === 'ios') {
+      Geolocation.requestAuthorization();
+      Geolocation.setRNConfiguration({
+        skipPermissionRequests: false,
+        authorizationLevel: 'whenInUse',
+      });
+    }
+    if (Platform.OS === 'android') {
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+    }
     await Geolocation.getCurrentPosition(
       position => {
         console.log(position);
@@ -108,14 +122,8 @@ const PlayScreen = ({route, navigation}) => {
         }
       },
       error => {
-        // See error code charts below.
         console.log(error.code, error.message);
         Alert.alert('Enable Location', 'Your location is required to proceed', [
-          // {
-          //   text: 'Cancel',
-          //   onPress: () => console.log('Cancel Pressed'),
-          //   style: 'cancel',
-          // },
           {
             text: 'OK',
             onPress: () => {
@@ -128,47 +136,66 @@ const PlayScreen = ({route, navigation}) => {
     );
   };
 
+  const FromModal = async () => {
+    setLoading(true);
+
+    if (Platform.OS === 'ios') {
+      Geolocation.requestAuthorization();
+      Geolocation.setRNConfiguration({
+        skipPermissionRequests: false,
+        authorizationLevel: 'whenInUse',
+      });
+    }
+    if (Platform.OS === 'android') {
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+    }
+    await Geolocation.getCurrentPosition(
+      position => {
+        console.log(position);
+        setMylat(position.coords.latitude);
+        setMylong(position.coords.longitude);
+        setTimeout(() => {
+          Filter(position.coords.latitude, position.coords.longitude);
+        }, 500);
+      },
+      error => {
+        console.log(error.code, error.message);
+        Alert.alert('Enable Location', 'Your location is required to proceed', [
+          {
+            text: 'OK',
+            onPress: () => {
+              FromModal();
+            },
+          },
+        ]);
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    );
+  };
+
   const FromRoutes = async () => {
     console.log('CHECKING ROUTE ==', fromroute);
     console.log('CHECKING ROUTE CARD ==', routecard);
+    console.log('REFERENCE INDEX==========', indexreference);
+    // if (fromroute == 'discover' || fromroute == 'search') {
+    //   console.log('ROUTE FROM ============', fromroute);
+    //   console.log('REFERENCE INDEX==========', indexreference);
+    //   setLoading(true);
+    //   if (routefirsttime == true) {
+    //     let _arr = [...CardsList];
+    //     await _arr.unshift(routecard);
+    //     var sdsd = _arr.map(item => {
+    //       return item.document._id;
+    //     });
+    //     console.log('THE ARR=======', sdsd);
+    //     setCardsList(_arr);
 
-    if (fromroute == 'discover') {
-      setLoading(true);
-
-      if (routefirsttime == true) {
-        let _arr = [...CardsList];
-        await _arr.unshift(routecard);
-        var sdsd = _arr.map(item => {
-          return item.document._id;
-        });
-        console.log('THE ARR=======', sdsd);
-        setCardsList(_arr);
-        setEmpty(false);
-        setCardIndex(0);
-        setRouteFirstTime(false);
-
-        setTimeout(() => {
-          setLoading(false);
-        }, 800);
-      } else {
-        let _arr = [...CardsList];
-        await _arr.splice(cardIndex + 2, 0, routecard);
-        var sdsd = _arr.map(item => {
-          return item.document._id;
-        });
-        console.log('THE ARR=======', sdsd);
-        setCardsList(_arr);
-        setEmpty(false);
-
-        setTimeout(() => {
-          setLoading(false);
-        }, 800);
-      }
-
-      // setCardIndex(0)
-      // dispatch(setRouteCard({}));
-      // dispatch(setFromRoute(''));
-    }
+    //   // setCardIndex(0)
+    //   dispatch(setRouteCard({}));
+    //   dispatch(setFromRoute(''));
+    //   }}
   };
 
   // APIS CALLS BELOW
@@ -245,6 +272,7 @@ const PlayScreen = ({route, navigation}) => {
     await axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
+        console.log('SENDING NOTI RIGHT ===============', response.data);
         FirebaseRight(rightswipedid, response.data.data);
       })
       .catch(function (error) {
@@ -373,7 +401,7 @@ const PlayScreen = ({route, navigation}) => {
         swipeduser[0]._id,
       headers: {},
     };
-    axios(config)
+    await axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
         setLoading(false);
@@ -387,6 +415,11 @@ const PlayScreen = ({route, navigation}) => {
 
   const Filter = async (customlat, customlong) => {
     setFirsttime(false);
+    if (postreference == true) {
+      console.log('BY POST IS TRUE');
+    } else {
+      console.log('BY POST IS FALSE');
+    }
     console.log('CARD LIST LENGTH=====', CardsList.length);
     const userid = await AsyncStorage.getItem('userid');
     console.log('HERE AT FILTER FUNCTION');
@@ -405,9 +438,8 @@ const PlayScreen = ({route, navigation}) => {
         '&limit=7' +
         '&gender=' +
         gender +
-        bypost +
         '&byPosts=' +
-        bypost +
+        postreference +
         '&min_age=' +
         minage +
         '&max_age=' +
@@ -477,7 +509,6 @@ const PlayScreen = ({route, navigation}) => {
         '&limit=7' +
         '&gender=' +
         gender +
-        bypost +
         '&byPosts=' +
         bypost +
         '&min_age=' +
@@ -498,27 +529,26 @@ const PlayScreen = ({route, navigation}) => {
           ();
         if (response.data.message == 'No user found with this query') {
           console.log('No Results Found');
-          setLoading(false);
           setEmpty(true);
+          setLoading(false);
         } else {
           setCardIndex(0);
           let myarr = response.data.users.filter(item => {
             return item._id !== userid;
           });
-          // setCardsList(myarr);
           setCardsList(response.data.users);
           var thevar = response.data.users.map(item => {
             return item.document.userName;
           });
-
           console.log('THE VAR============', thevar);
 
           console.log(
             'THE CARD LIST PAGINATION================',
             response.data.users,
           );
-          setLoading(false);
           setEmpty(false);
+
+          setLoading(false);
         }
       })
       .catch(function (error) {
@@ -526,25 +556,15 @@ const PlayScreen = ({route, navigation}) => {
         console.log(error.response.data);
         if (error.response.data.message == 'No user found with this query') {
           console.log('No Results Found');
-          setLoading(false);
           setEmpty(true);
+
+          setLoading(false);
         }
       });
   };
 
   // API CALLS ABOVE
 
-  const [pagination, setPagination] = useState(2);
-  const [bypost, setByPost] = useState('');
-  const [minage, setMinAge] = useState(0);
-  const [maxage, setMaxAge] = useState(100);
-  const [myradius, setMyRadius] = useState(5000);
-  const [loading, setLoading] = useState(true);
-  const [empty, setEmpty] = useState(false);
-  const [gender, setGender] = useState('');
-  const [CardsList, setCardsList] = useState([]);
-  const refContainer = useRef();
-  const [cardIndex, setCardIndex] = useState(0);
   const [categorylist, setCategorylist] = useState([
     {
       id: 1,
@@ -552,6 +572,7 @@ const PlayScreen = ({route, navigation}) => {
       image: appImages.postsoption,
       onPress: () => {
         setModalType('posts');
+        showModal();
         refContainer.current.close();
       },
     },
@@ -561,6 +582,8 @@ const PlayScreen = ({route, navigation}) => {
       image: appImages.biooption,
       onPress: () => {
         setModalType('bio');
+        showModal();
+
         refContainer.current.close();
       },
     },
@@ -570,6 +593,8 @@ const PlayScreen = ({route, navigation}) => {
       image: appImages.locationoption,
       onPress: () => {
         setModalType('location');
+        showModal();
+
         refContainer.current.close();
       },
     },
@@ -579,6 +604,8 @@ const PlayScreen = ({route, navigation}) => {
       image: appImages.ageoption,
       onPress: () => {
         setModalType('age');
+        showModal();
+
         refContainer.current.close();
       },
     },
@@ -731,7 +758,9 @@ const PlayScreen = ({route, navigation}) => {
         />
 
         <View style={styles.header}>
-          <Text style={styles.headertxt}>Play Game</Text>
+          <Text style={styles.headertxt}>
+            Play Game {bypost ? 'POSTRUE' : 'POSTFALSE'}
+          </Text>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <TouchableOpacity
               activeOpacity={0.7}
@@ -925,8 +954,8 @@ const PlayScreen = ({route, navigation}) => {
                 //   console.log('ON FINAL CARD');
                 //   getLocation();
                 // }
-
-                setCardIndex(cardIndex);
+                setCardIndex(cardIndex + 1);
+                FromRoutes();
                 console.log('Swiped');
                 swiperRef.current.state.pan.setOffset({x: 0, y: 0});
                 console.log('THE LIST AFTER SWIPING===========', CardsList);
@@ -994,7 +1023,7 @@ const PlayScreen = ({route, navigation}) => {
 
                 RewindCardApi();
                 setEmpty(false);
-                setCardIndex(cardIndex);
+                setCardIndex(cardIndex - 1);
               }
             }}>
             <Image
@@ -1070,8 +1099,109 @@ const PlayScreen = ({route, navigation}) => {
           </View>
         </View>
       </RBSheet>
-      <Modal visible={visible} onDismiss={hideModal}>
-        <Text>Example Modal. Click outside this area to dismiss.</Text>
+      <Modal
+        visible={visible}
+        onDismiss={hideModal}
+        contentContainerStyle={{flex: 1}}>
+        {modaltype == 'posts' ? (
+          <View
+            style={{
+              backgroundColor: '#fff',
+              alignItems: 'center',
+              width: responsiveWidth(80),
+              alignSelf: 'center',
+            }}>
+            <Text
+              style={{
+                paddingTop: responsiveHeight(4),
+                paddingBottom: responsiveHeight(5),
+              }}>
+              Sort results by post?
+            </Text>
+            <View
+              style={{
+                width: responsiveWidth(80),
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-around',
+                paddingBottom: responsiveHeight(5),
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  hideModal();
+                  setByPost(true);
+                  postreference = true;
+                  setTimeout(() => {
+                    FromModal(postreference);
+                  }, 600);
+                }}>
+                <Text>Yes</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  hideModal();
+                  setByPost(false);
+                  postreference = '';
+                  setTimeout(() => {
+                    FromModal(postreference);
+                  }, 600);
+                }}>
+                <Text>No</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : modaltype == 'bio' ? (
+          <View
+            style={{
+              backgroundColor: '#fff',
+              alignItems: 'center',
+              width: responsiveWidth(80),
+              alignSelf: 'center',
+            }}>
+            <Text
+              style={{
+                paddingTop: responsiveHeight(4),
+                paddingBottom: responsiveHeight(2),
+              }}>
+              Sort by gender
+            </Text>
+            <View
+              style={{
+                width: responsiveWidth(80),
+
+                alignItems: 'center',
+              }}>
+              <TouchableOpacity
+                style={{
+                  marginVertical: responsiveHeight(2),
+                }}>
+                <Text>Male</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  marginVertical: responsiveHeight(2),
+                }}>
+                <Text>Female</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  marginVertical: responsiveHeight(2),
+                }}>
+                <Text>Prefer not to say</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : modaltype == 'location' ? (
+          <View>
+            <Text>Enter Radius</Text>
+            <TextInput
+              value={myradius}
+              onChangeText={text => {
+                myradius(text);
+              }}
+            />
+          </View>
+        ) : null}
       </Modal>
     </SafeAreaView>
   );

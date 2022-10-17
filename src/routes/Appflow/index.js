@@ -12,6 +12,7 @@ import {
   SubscribeInApp,
   Bingo,
   VideoScreen,
+  UpdatePasswordInApp,
 } from '../../screens';
 import {appColor, appImages} from '../../assets/utilities';
 import {StyleSheet, View, Text, Image} from 'react-native';
@@ -283,6 +284,10 @@ const App = () => {
       <AppStack.Screen name={'SubscribeInApp'} component={SubscribeInApp} />
       <AppStack.Screen name={'Bingo'} component={Bingo} />
       <AppStack.Screen name={'VideoScreen'} component={VideoScreen} />
+      <AppStack.Screen
+        name={'UpdatePasswordInApp'}
+        component={UpdatePasswordInApp}
+      />
     </AppStack.Navigator>
   );
 };

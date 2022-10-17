@@ -269,7 +269,8 @@ const Post = props => {
                 borderRadius: responsiveWidth(100),
               }}
               source={
-                userDetails == undefined
+                userDetails == undefined ||
+                userDetails[0].profileImage.userPicUrl == undefined
                   ? appImages.girlimg
                   : {uri: userDetails[0].profileImage.userPicUrl}
               }

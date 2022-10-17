@@ -31,13 +31,15 @@ import {useFocusEffect} from '@react-navigation/native';
 import EyeIcon from 'react-native-vector-icons/Ionicons';
 import {DateSelect} from '../../../components/dateTimePicker/dateTimePicker';
 import ImagePicker from 'react-native-image-crop-picker';
-import {MyButton} from '../../../components/MyButton';
+import {MyButton, MyButtonLoader} from '../../../components/MyButton';
 import {MyButton2} from '../../../components/MyButton2';
 import {Base_URL} from '../../../Base_URL';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
 import {Modal} from 'react-native-paper';
 import moment from 'moment';
+import RNFetchBlob from 'rn-fetch-blob';
+import Toast from 'react-native-simple-toast';
 
 const EditProfile = props => {
   const [myfocus, setMyfocus] = useState('');
@@ -49,6 +51,9 @@ const EditProfile = props => {
   const [apigender, setApiGender] = useState('');
   const [secureconfirmpassword, setSecureConfirmpassword] = useState(true);
   const confirmpasswordinputref = useRef();
+  const [selectedImage, setSelectedImage] = useState();
+  const [isselected, setIsSelected] = useState(false);
+
   const professionref = useRef();
   useFocusEffect(
     React.useCallback(() => {
@@ -61,46 +66,23 @@ const EditProfile = props => {
     GetUser();
   }, []);
 
-  const GetUser = async () => {
-    const userid = await AsyncStorage.getItem('userid');
-
-    var axios = require('axios');
-
-    var config = {
-      method: 'get',
-      url: Base_URL + '/user/specificUser/' + userid,
-      headers: {},
-    };
-
-    await axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
-        setUsername(response.data[0].userName);
-        setEmail(response.data[0].email);
-        if (response.data[0].gender == 'male') {
-          setGender('Male');
-        } else if (response.data[0].gender == 'female') {
-          setGender('Female');
-        }
-        setProfession(response.data[0].profession);
-        setMydate(moment(response.data[0].dateOfBirth).format('DD-MM-YYYY'));
-        setApiFormatDate(
-          moment(response.data[0].dateOfBirth).format('MM-DD-YYYY'),
-        );
-        setMyimage(response.data[0].profileImage.userPicUrl);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-
   const [myimage, setMyimage] = useState('');
   const imageTakeFromGallery = () => {
     ImagePicker.openPicker({
       cropping: false,
+      mediaType: 'photo',
     }).then(image => {
       console.log(image.path);
       setMyimage(image.path);
+      const filename = image.path.substring(image.path.lastIndexOf('/') + 1);
+      // myarr = [...apiarray];
+      setSelectedImage({
+        name: 'profileImage',
+        filename: filename,
+        type: image.mime,
+        data: RNFetchBlob.wrap(image.path),
+      });
+      setIsSelected(true);
     });
   };
   const images = [myimage == '' ? appImages.userimage : {uri: myimage}];
@@ -110,6 +92,15 @@ const EditProfile = props => {
     }).then(image => {
       console.log(image.path);
       setMyimage(image.path);
+      const filename = image.path.substring(image.path.lastIndexOf('/') + 1);
+      // myarr = [...apiarray];
+      setSelectedImage({
+        name: 'profileImage',
+        filename: filename,
+        type: image.mime,
+        data: RNFetchBlob.wrap(image.path),
+      });
+      setIsSelected(true);
     });
   };
 
@@ -179,7 +170,7 @@ const EditProfile = props => {
   const showModal = () => setModalVisible(true);
   const hideModal = () => setModalVisible(false);
   const [loading, setLoading] = useState(false);
-
+  const [fixedemail, setFixedEmail] = useState('');
   let regchecknumber = /^[0-9]*$/;
   let reg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w\w+)+$/;
   let regphone =
@@ -238,19 +229,15 @@ const EditProfile = props => {
   };
 
   const UpdateApi = async () => {
+    setLoading(true);
     const userid = await AsyncStorage.getItem('userid');
     const signuptype = await AsyncStorage.getItem('signuptype');
     var formdata = new FormData();
     if (signuptype == 'email') {
       formdata.append('userName', username);
-      // formdata.append('password', password);
       formdata.append('gender', apigender);
       formdata.append('dateOfBirth', apiformatdate);
       formdata.append('profession', profession);
-      formdata.append(
-        'location',
-        ' {"coordinates":[' + mylong + ',' + mylat + '] }',
-      );
       formdata.append('email', email.toLowerCase());
       formdata.append('userEmailAddress', email.toLowerCase());
       formdata.append('userId', userid);
@@ -258,14 +245,9 @@ const EditProfile = props => {
       formdata.append('lat', mylat);
     } else {
       formdata.append('userName', username);
-      // formdata.append('password', password);
       formdata.append('gender', apigender);
       formdata.append('dateOfBirth', apiformatdate);
       formdata.append('profession', profession);
-      formdata.append(
-        'location',
-        ' {"coordinates":[' + mylong + ',' + mylat + '] }',
-      );
       formdata.append('phoneNumber', '+' + email);
       formdata.append('userEmailAddress', email);
       formdata.append('userId', userid);
@@ -281,8 +263,91 @@ const EditProfile = props => {
 
     fetch(Base_URL + '/user/updateUserProfile', requestOptions)
       .then(response => response.text())
-      .then(result => console.log(result))
+      .then(result => {
+        console.log(result);
+        if (isselected == true) {
+          UpdateImage();
+        } else {
+          setLoading(false);
+        }
+      })
       .catch(error => console.log('error', error));
+  };
+
+  const UpdateImage = async () => {
+    const userid = await AsyncStorage.getItem('userid');
+    if (isselected == true) {
+      console.log('UPLOADING THE IMAGE=========');
+      RNFetchBlob.fetch(
+        'put',
+        Base_URL + '/user/updateUserProfile',
+        {
+          otherHeader: 'foo',
+          'Content-Type': 'multipart/form-data',
+        },
+        [
+          {
+            name: 'userId',
+            data: String(userid),
+          },
+          {
+            name: 'long',
+            data: String(mylong),
+          },
+          {
+            name: 'lat',
+            data: String(mylat),
+          },
+          selectedImage,
+        ],
+      )
+        .then(response => {
+          console.log('response:', response.data);
+          let myresponse = JSON.parse(response.data);
+          console.log('MY RESPONSE IMAGE FROM API ============', myresponse);
+          Toast.show('Profile Updated', Toast.SHORT);
+          setLoading(false);
+        })
+        .catch(error => {
+          console.log(error);
+          setLoading(false);
+        });
+    }
+  };
+
+  const GetUser = async () => {
+    const userid = await AsyncStorage.getItem('userid');
+    var axios = require('axios');
+
+    var config = {
+      method: 'get',
+      url: Base_URL + '/user/specificUser/' + userid,
+      headers: {},
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        setUsername(response.data[0].userName);
+        setEmail(response.data[0].email);
+        console.log(response.data[0].gender);
+        if (response.data[0].gender == 'male') {
+          setGender('Male');
+          setApiGender('male');
+        } else if (response.data[0].gender == 'female') {
+          setGender('Female');
+          setApiGender('female');
+        }
+        setProfession(response.data[0].profession);
+        setMydate(moment(response.data[0].dateOfBirth).format('DD-MM-YYYY'));
+        setApiFormatDate(
+          moment(response.data[0].dateOfBirth).format('MM-DD-YYYY'),
+        );
+        setMyimage(response.data[0].profileImage.userPicUrl);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   return (
@@ -640,6 +705,9 @@ const EditProfile = props => {
           />
           {checkdate ? <Text style={styles.errortxt}>{dateerror}</Text> : null}
           <TouchableOpacity
+            onPress={() => {
+              props.navigation.navigate('UpdatePasswordInApp', {});
+            }}
             activeOpacity={0.7}
             style={[
               styles.passwordparent,
@@ -685,23 +753,41 @@ const EditProfile = props => {
           </TouchableOpacity>
         </View>
 
-        <MyButton
-          onPress={() => {
-            Validations();
-          }}
-          myStyles={{
-            width: responsiveWidth(80),
-            backgroundColor: appColor.appColorMain,
-            marginBottom: responsiveHeight(4),
+        {loading ? (
+          <MyButtonLoader
+            myStyles={{
+              width: responsiveWidth(80),
+              backgroundColor: appColor.appColorMain,
+              marginBottom: responsiveHeight(4),
 
-            marginTop: responsiveHeight(4),
-            height: responsiveHeight(7),
-          }}
-          title={'Update'}
-          itsTextstyle={{
-            color: '#fff',
-          }}
-        />
+              marginTop: responsiveHeight(4),
+              height: responsiveHeight(7),
+            }}
+            title={'Update'}
+            itsTextstyle={{
+              color: '#fff',
+            }}
+          />
+        ) : (
+          <MyButton
+            onPress={() => {
+              Validations();
+            }}
+            myStyles={{
+              width: responsiveWidth(80),
+              backgroundColor: appColor.appColorMain,
+              marginBottom: responsiveHeight(4),
+
+              marginTop: responsiveHeight(4),
+              height: responsiveHeight(7),
+            }}
+            title={'Update'}
+            itsTextstyle={{
+              color: '#fff',
+            }}
+          />
+        )}
+
         <Dialog.Container
           visible={visible}
           verticalButtons={true}
@@ -763,10 +849,11 @@ const EditProfile = props => {
             }}>
             <TouchableOpacity
               onPress={() => {
+                setApiGender('male');
+
                 setCheckgender(false);
                 professionref.current.focus();
                 setGender('Male');
-                setApiGender('male');
                 hideModal();
               }}
               style={styles.genderview}>
@@ -774,10 +861,11 @@ const EditProfile = props => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
+                setApiGender('female');
+
                 setCheckgender(false);
                 professionref.current.focus();
                 setGender('Female');
-                setApiGender('female');
                 hideModal();
               }}
               style={styles.genderview}>

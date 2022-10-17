@@ -20,7 +20,7 @@ import AddPhoto from './Appflow/AddPhoto';
 import SubscribeInApp from './Appflow/SubscribeInApp';
 import Bingo from './Appflow/Bingo';
 import VideoScreen from './Appflow/VideoScreen';
-
+import UpdatePasswordInApp from './Appflow/UpdatePasswordInApp';
 export {
   PlayScreen,
   Post,
@@ -35,6 +35,7 @@ export {
   SubscribeInApp,
   Bingo,
   VideoScreen,
+  UpdatePasswordInApp,
 };
 export {
   Splash,

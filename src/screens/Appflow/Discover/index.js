@@ -31,6 +31,7 @@ import {Base_URL} from '../../../Base_URL';
 import Geolocation from 'react-native-geolocation-service';
 import {useDispatch, useSelector} from 'react-redux';
 import {setFromRoute, setRouteCard} from '../../../redux/actions';
+
 const Discover = props => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -73,23 +74,6 @@ const Discover = props => {
     );
   };
   const GetAllUsers = async (mylat, mylong) => {
-    // var axios = require('axios');
-
-    // var config = {
-    //   method: 'get',
-    //   url: Base_URL + '/user/allUsers',
-    //   headers: {},
-    // };
-
-    // await axios(config)
-    //   .then(function (response) {
-    //     console.log(JSON.stringify(response.data));
-    //     setList(response.data);
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
-
     var axios = require('axios');
     var data = JSON.stringify({
       long: mylong,
@@ -107,7 +91,7 @@ const Discover = props => {
       data: data,
     };
 
-    axios(config)
+    await axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
         setList(response.data.users);

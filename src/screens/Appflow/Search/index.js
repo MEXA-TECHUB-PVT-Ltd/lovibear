@@ -10,6 +10,8 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
+  PermissionsAndroid,
+  Platform,
 } from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import Right from 'react-native-vector-icons/FontAwesome';
@@ -26,36 +28,116 @@ import Carousel from 'react-native-snap-carousel';
 import {fontFamily} from '../../../constants/fonts';
 import MyHeart from '../../../components/MyHeart';
 import LinearGradient from 'react-native-linear-gradient';
+import {Base_URL} from '../../../Base_URL';
+import Geolocation from 'react-native-geolocation-service';
+import {useDispatch, useSelector} from 'react-redux';
+import {setFromRoute, setRouteCard} from '../../../redux/actions';
+
 const Search = ({route, navigation}) => {
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const {routeArray} = route.params;
   useEffect(() => {
-    setFilteredlist(routeArray);
     setList(routeArray);
   }, []);
+
+  const getLocation = async () => {
+    setLoading(true);
+    if (Platform.OS === 'ios') {
+      Geolocation.requestAuthorization();
+      Geolocation.setRNConfiguration({
+        skipPermissionRequests: false,
+        authorizationLevel: 'whenInUse',
+      });
+    }
+    if (Platform.OS === 'android') {
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+    }
+    await Geolocation.getCurrentPosition(
+      position => {
+        console.log(position);
+        // setMylat(position.coords.latitude);
+        // setMylong(position.coords.longitude);
+        setTimeout(() => {
+          SearchApi(position.coords.latitude, position.coords.longitude);
+        }, 500);
+      },
+      error => {
+        console.log(error.code, error.message);
+        Alert.alert('Enable Location', 'Your location is required to proceed', [
+          {
+            text: 'OK',
+            onPress: () => {
+              getLocation();
+            },
+          },
+        ]);
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    );
+  };
   const [filteredlist, setFilteredlist] = useState([]);
   const [myfocus, setMyfocus] = useState('search');
   const [list, setList] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const search = searchText => {
-    console.log('okiuhh');
-    console.log(searchText);
-    setSearchQuery(searchText);
-    let filteredData = list.filter(function (item) {
-      var searchIdNameLowerCase = searchText.toLowerCase();
-      var itemNameLowerCase = item.document.userName.toLowerCase();
-      console.log(item);
-      var a = itemNameLowerCase.includes(searchIdNameLowerCase);
+  // const [searchQuery, setSearchQuery] = useState('');
 
-      return a;
+  // const search = searchText => {
+  //   console.log('okiuhh');
+  //   console.log(searchText);
+  //   setSearchQuery(searchText);
+  //   let filteredData = list.filter(function (item) {
+  //     var searchIdNameLowerCase = searchText.toLowerCase();
+  //     var itemNameLowerCase = item.document.userName.toLowerCase();
+  //     console.log(item);
+  //     var a = itemNameLowerCase.includes(searchIdNameLowerCase);
+
+  //     return a;
+  //   });
+  //   console.log('SEARCH', search);
+  //   setFilteredlist(filteredData);
+  // };
+
+  const [singlesearch, setSingleSearch] = useState('');
+  const [myradius, setMyRadius] = useState(50000);
+
+  const SearchApi = async (mylat, mylong) => {
+    var axios = require('axios');
+    var data = JSON.stringify({
+      long: mylong,
+      lat: mylat,
     });
-    console.log('SEARCH', search);
-    setFilteredlist(filteredData);
+
+    var config = {
+      method: 'post',
+      url: Base_URL + '/user/getUserByName/?name=sharj&radiusInKm=100',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        setList(response.data.users);
+        setLoading(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
+
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
         // onPress={() => props.navigation.navigate('Messaging')}
-        onPress={() => navigation.navigate('PlayScreen')}
+        onPress={() => {
+          dispatch(setFromRoute('search'));
+          dispatch(setRouteCard(item));
+          navigation.navigate('PlayScreen');
+        }}
         activeOpacity={0.85}
         style={{
           borderRadius: responsiveWidth(5),
@@ -67,7 +149,11 @@ const Search = ({route, navigation}) => {
           justifyContent: 'center',
         }}>
         <Image
-          source={item.img}
+          source={
+            item.document.profileImage == undefined
+              ? appImages.noimg
+              : {uri: item.document.profileImage.userPicUrl}
+          }
           style={{
             width: responsiveWidth(42),
             height: responsiveWidth(50),
@@ -208,22 +294,31 @@ const Search = ({route, navigation}) => {
               onFocus={() => setMyfocus('search')}
               onSubmitEditing={() => setMyfocus('')}
               placeholderTextColor={'#8D8D8D'}
+              // onChangeText={text => {
+              //   search(text);
+              // }}
+              // value={searchQuery}
               onChangeText={text => {
-                search(text);
+                setSingleSearch(text);
               }}
-              value={searchQuery}
+              value={singlesearch}
               autoFocus
             />
-            <Image
-              source={appImages.searchicon}
-              style={{width: responsiveWidth(5), height: responsiveWidth(5)}}
-            />
+            <TouchableOpacity
+              onPress={() => {
+                getLocation();
+              }}>
+              <Image
+                source={appImages.searchicon}
+                style={{width: responsiveWidth(5), height: responsiveWidth(5)}}
+              />
+            </TouchableOpacity>
           </View>
         </View>
 
         <FlatList
           keyboardShouldPersistTaps={'always'}
-          data={filteredlist}
+          data={list}
           renderItem={renderItem}
           contentContainerStyle={{}}
           numColumns={2}
