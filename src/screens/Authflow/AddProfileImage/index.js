@@ -9,6 +9,7 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  BackHandler,
 } from 'react-native';
 import ImageView from 'react-native-image-viewing';
 import Dialog from 'react-native-dialog';
@@ -31,11 +32,24 @@ import {Base_URL} from '../../../Base_URL';
 import RNFetchBlob from 'rn-fetch-blob';
 
 const AddProfileImage = ({route, navigation}) => {
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        navigation.navigate('Splash');
+        return true;
+      };
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction,
+      );
+      return () => backHandler.remove();
+    }, []),
+  );
   const [myimage, setMyimage] = useState('');
   const [apiarray, setApiArray] = useState([]);
   let myarr = [];
 
-  const {fromRoute, userid, mylat, mylong} = route.params;
+  const {routeFrom, userid, mylat, mylong, email, password} = route.params;
   const UpdateUserId = async () => {
     await myarr.push({
       name: 'userId',
@@ -51,7 +65,7 @@ const AddProfileImage = ({route, navigation}) => {
     });
     console.log('USER INFORMATION UPDATED');
   };
-  console.log(fromRoute, userid, mylat, mylong);
+  console.log(routeFrom, userid, mylat, mylong, email, password);
   const [selectedImage, setSelectedImage] = useState();
   const [loading, setLoading] = useState(false);
   const imageTakeFromGallery = () => {
@@ -135,14 +149,58 @@ const AddProfileImage = ({route, navigation}) => {
           selectedImage,
         ],
       )
-        .then(response => {
+        .then(async response => {
           console.log('response:', response.data);
           let myresponse = JSON.parse(response.data);
           console.log('MY RESPONSE IMAGE FROM API ============', myresponse);
           if (myresponse.message == 'Updated successfully') {
-            navigation.navigate('Login');
+            if (routeFrom == 'emailorphone') {
+              navigation.navigate('Login');
+            } else if (routeFrom == 'google') {
+              var axios = require('axios');
+              var data = JSON.stringify({
+                email: email,
+                password: password,
+                ip: '192.168.20.1',
+                country: 'japan',
+              });
+
+              var config = {
+                method: 'post',
+                url: Base_URL + '/user/login',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                data: data,
+              };
+
+              await axios(config)
+                .then(async function (response) {
+                  console.log(JSON.stringify(response.data));
+                  if (response.data.message == 'Logged in successfully') {
+                    // console.log('THE USER ID==========', response.data);
+                    await AsyncStorage.setItem(
+                      'userid',
+                      response.data.Data._id,
+                    );
+                    await AsyncStorage.setItem(
+                      'signuptype',
+                      response.data.Data.signupType,
+                    );
+                    await AsyncStorage.setItem('password', 'googlesignup');
+                    props.navigation.navigate('App', {
+                      screen: 'PlayScreenScreens',
+                    });
+                  }
+
+                  setLoading(false);
+                })
+                .catch(function (error) {
+                  console.log(error);
+                  setLoading(false);
+                });
+            }
           }
-          setLoading(false);
         })
         .catch(error => {
           console.log(error);

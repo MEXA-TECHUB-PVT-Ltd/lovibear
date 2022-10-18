@@ -21,6 +21,8 @@ import SubscribeInApp from './Appflow/SubscribeInApp';
 import Bingo from './Appflow/Bingo';
 import VideoScreen from './Appflow/VideoScreen';
 import UpdatePasswordInApp from './Appflow/UpdatePasswordInApp';
+import Splash0 from './Authflow/Splash0';
+import ImageChecker from './Appflow/ImageChecker';
 export {
   PlayScreen,
   Post,
@@ -36,6 +38,7 @@ export {
   Bingo,
   VideoScreen,
   UpdatePasswordInApp,
+  ImageChecker,
 };
 export {
   Splash,
@@ -47,4 +50,5 @@ export {
   SignUp,
   AddProfileImage,
   Subscribe,
+  Splash0,
 };

@@ -77,6 +77,7 @@ const appImages = {
   musicplay: require(IMAGES_DIR + 'musicplay.png'),
   gendericon: require(IMAGES_DIR + 'gendericon.png'),
   noimg: require(IMAGES_DIR + 'noimg.jpg'),
+  splashicon: require(IMAGES_DIR + 'splashicon.png'),
 };
 const appColor = {
   appColorMain: '#FF0047',

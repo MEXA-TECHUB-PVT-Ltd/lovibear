@@ -13,6 +13,7 @@ import {
   Bingo,
   VideoScreen,
   UpdatePasswordInApp,
+  ImageChecker,
 } from '../../screens';
 import {appColor, appImages} from '../../assets/utilities';
 import {StyleSheet, View, Text, Image} from 'react-native';
@@ -276,6 +277,7 @@ const App = () => {
       screenOptions={{headerShown: false}}
       initialRouteName={'MyTabs'}>
       <AppStack.Screen name={'MyTabs'} component={MyTabs} />
+      <AppStack.Screen name={'ImageChecker'} component={ImageChecker} />
       <AppStack.Screen name={'Messaging'} component={Messaging} />
       <AppStack.Screen name={'Settings'} component={Settings} />
       <AppStack.Screen name={'Search'} component={Search} />

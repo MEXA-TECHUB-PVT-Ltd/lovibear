@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   FlatList,
   PermissionsAndroid,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import Right from 'react-native-vector-icons/FontAwesome';
@@ -31,13 +32,24 @@ import {Base_URL} from '../../../Base_URL';
 import Geolocation from 'react-native-geolocation-service';
 import {useDispatch, useSelector} from 'react-redux';
 import {setFromRoute, setRouteCard} from '../../../redux/actions';
+import {useFocusEffect} from '@react-navigation/native';
+import {ActivityIndicator} from 'react-native-paper';
 
 const Discover = props => {
+  const [loading, setLoading] = useState(false);
+  const [empty, setEmpty] = useState(false);
   const dispatch = useDispatch();
-  useEffect(() => {
-    getLocation();
-  }, []);
+  // useEffect(() => {
+  //   getLocation();
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getLocation();
+    }, []),
+  );
   const getLocation = async () => {
+    setLoading(true);
     if (Platform.OS === 'ios') {
       Geolocation.requestAuthorization();
       Geolocation.setRNConfiguration({
@@ -55,9 +67,8 @@ const Discover = props => {
         console.log(position);
         // setMylat(position.coords.latitude);
         // setMylong(position.coords.longitude);
-        setTimeout(() => {
-          GetAllUsers(position.coords.latitude, position.coords.longitude);
-        }, 500);
+
+        GetAllUsers(position.coords.latitude, position.coords.longitude);
       },
       error => {
         console.log(error.code, error.message);
@@ -84,7 +95,8 @@ const Discover = props => {
     var config = {
       method: 'post',
       url:
-        Base_URL + '/user/usersInRadius/?page=1&limit=30&min_age=1&max_age=100',
+        Base_URL +
+        '/user/usersInRadius/?page=1&limit=100000000&min_age=1&max_age=100',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -94,9 +106,22 @@ const Discover = props => {
     await axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
-        setList(response.data.users);
+        if (response.data.message == 'No user found with this query') {
+          setEmpty(true);
+          setLoading(false);
+        } else {
+          setList(response.data.users);
+          setEmpty(false);
+          setLoading(false);
+        }
       })
       .catch(function (error) {
+        if (error.response.data.message == 'No user found with this query') {
+          console.log('No Results Found');
+          setEmpty(true);
+
+          setLoading(false);
+        }
         console.log(error);
       });
   };
@@ -226,20 +251,47 @@ const Discover = props => {
             marginTop: responsiveHeight(1.5),
 
             marginBottom: responsiveHeight(1.5),
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}>
           <Text style={styles.txt1}>Discover</Text>
+          {loading ? (
+            <ActivityIndicator color={appColor.appColorMain} size={'small'} />
+          ) : null}
         </View>
 
-        <FlatList
-          data={list}
-          renderItem={renderItem}
-          contentContainerStyle={{}}
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-          columnWrapperStyle={{
-            justifyContent: 'space-between',
-          }}
-        />
+        {empty ? (
+          <View
+            style={{
+              flexGrow: 1,
+              width: responsiveWidth(80),
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignSelf: 'center',
+              marginBottom: responsiveHeight(5),
+            }}>
+            <Text
+              style={{
+                fontFamily: fontFamily.Baskerville_Old_Face,
+                color: appColor.appColorMain,
+                fontSize: responsiveFontSize(3.2),
+              }}>
+              No Results Found
+            </Text>
+          </View>
+        ) : (
+          <FlatList
+            data={list}
+            renderItem={renderItem}
+            contentContainerStyle={{}}
+            numColumns={2}
+            showsVerticalScrollIndicator={false}
+            columnWrapperStyle={{
+              justifyContent: 'space-between',
+            }}
+          />
+        )}
       </View>
     </SafeAreaView>
   );

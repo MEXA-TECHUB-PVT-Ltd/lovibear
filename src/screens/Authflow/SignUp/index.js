@@ -37,7 +37,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Base_URL} from '../../../Base_URL';
 import messaging from '@react-native-firebase/messaging';
 
-const SignUp = props => {
+const SignUp = ({navigation, route}) => {
   const refContainer = useRef();
   const [myfocus, setMyfocus] = useState('');
   const [apigender, setApiGender] = useState('');
@@ -76,6 +76,8 @@ const SignUp = props => {
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const [loading, setLoading] = useState(false);
+  const {routeFrom, userInfo} = route.params;
+  console.log('ROUTE FROM IN SIGN UP ==============', routeFrom, userInfo);
 
   let regchecknumber = /^[0-9]*$/;
   let reg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w\w+)+$/;
@@ -88,9 +90,19 @@ const SignUp = props => {
     }, []),
   );
   useEffect(() => {
+    CheckingRoute();
     getLocation();
     checkPermission();
   }, []);
+  const CheckingRoute = () => {
+    if (routeFrom == 'google') {
+      setUsername(userInfo.name);
+      setEmail(userInfo.email);
+      setPassword(userInfo.id);
+      setConfirmPassword(userInfo.id);
+    }
+  };
+
   const getLocation = async () => {
     if (Platform.OS === 'ios') {
       Geolocation.requestAuthorization();
@@ -113,7 +125,7 @@ const SignUp = props => {
       error => {
         // See error code charts below.
         console.log(error.code, error.message);
-        props.navigation.goBack();
+        navigation.goBack();
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
@@ -147,7 +159,6 @@ const SignUp = props => {
   };
 
   const Validations = () => {
-    setLoading(true);
     if (username == '') {
       setCheckusername(true);
       setUsernameerror('Enter Username');
@@ -228,6 +239,7 @@ const SignUp = props => {
   };
 
   const SignUpApi = async signuptype => {
+    setLoading(true);
     const myfcm = await AsyncStorage.getItem('Device_id');
     var formdata = new FormData();
     if (signuptype == 'phoneNumber') {
@@ -243,6 +255,20 @@ const SignUp = props => {
       formdata.append('fcmToken', myfcm);
       formdata.append('phoneNumber', '+' + email);
       formdata.append('signupType', signuptype);
+    } else if (routeFrom == 'google') {
+      formdata.append('userName', username);
+      formdata.append('password', password);
+      formdata.append('gender', apigender);
+      formdata.append('dateOfBirth', apiformatdate);
+      formdata.append('profession', profession);
+      formdata.append(
+        'location',
+        ' {"coordinates":[' + mylong + ',' + mylat + '] }',
+      );
+      formdata.append('fcmToken', myfcm);
+      formdata.append('email', email.toLowerCase());
+      formdata.append('signupType', 'google');
+      formdata.append('userEmailAddress', email.toLowerCase());
     } else {
       formdata.append('userName', username);
       formdata.append('password', password);
@@ -285,11 +311,13 @@ const SignUp = props => {
         } else {
           setLoading(false);
 
-          props.navigation.navigate('AddProfileImage', {
-            fromRoute: 'signup',
+          navigation.navigate('AddProfileImage', {
+            routeFrom: routeFrom,
             userid: result.result._id,
             mylong: result.result.location.coordinates[0],
             mylat: result.result.location.coordinates[1],
+            email: userInfo.email,
+            password: userInfo.id,
           });
         }
       })
@@ -370,9 +398,12 @@ const SignUp = props => {
               }}
             />
             <TextInput
+              editable={routeFrom == 'google' ? false : true}
               placeholderTextColor={'#8D8D8D'}
-              showSoftInputOnFocus={softinput}
-              autoFocus
+              showSoftInputOnFocus={
+                routeFrom == 'google' ? !softinput : softinput
+              }
+              autoFocus={routeFrom == 'google' ? false : true}
               value={username}
               onChangeText={text => {
                 setUsername(text);
@@ -421,6 +452,7 @@ const SignUp = props => {
             </Text>
 
             <TextInput
+              editable={routeFrom == 'google' ? false : true}
               value={email}
               onChangeText={text => {
                 setEmail(text);
@@ -525,95 +557,115 @@ const SignUp = props => {
           {checkprofession ? (
             <Text style={styles.errortxt}>{professionerror}</Text>
           ) : null}
-          <View
-            style={[
-              styles.passwordparent,
-              {
-                borderColor:
-                  myfocus == 'password' ? appColor.appColorMain : '#D7D7D7',
-              },
-            ]}>
-            <Image
-              source={appImages.password}
-              resizeMode="contain"
-              style={{
-                width: responsiveWidth(5.5),
-                height: responsiveWidth(5.5),
-                // backgroundColor: 'red',
-                marginLeft: responsiveWidth(5),
-              }}
-            />
-            <TextInput
-              value={password}
-              onChangeText={text => {
-                setPassword(text);
-                setCheckpassword(false);
-              }}
-              blurOnSubmit={false}
-              returnKeyType={'next'}
-              placeholderTextColor={'#8D8D8D'}
-              selectionColor={appColor.appColorMain}
-              placeholder="Password"
-              style={styles.txtinputpassword}
-              onFocus={() => setMyfocus('password')}
-              onBlur={() => setMyfocus('')}
-              secureTextEntry={securepassword}
-              ref={passwordinputref}
-              onSubmitEditing={() => confirmpasswordinputref.current.focus()}
-            />
-            <EyeIcon
-              style={{fontSize: responsiveFontSize(3.7), color: 'lightgray'}}
-              name={securepassword ? 'eye-off' : 'eye'}
-              onPress={() => setSecurepassword(!securepassword)}
-            />
-          </View>
-          {checkpassword ? (
-            <Text style={styles.errortxt}>{passworderror}</Text>
+          {routeFrom != 'google' ? (
+            <>
+              <View
+                style={[
+                  styles.passwordparent,
+                  {
+                    borderColor:
+                      myfocus == 'password' ? appColor.appColorMain : '#D7D7D7',
+                  },
+                ]}>
+                <Image
+                  source={appImages.password}
+                  resizeMode="contain"
+                  style={{
+                    width: responsiveWidth(5.5),
+                    height: responsiveWidth(5.5),
+                    // backgroundColor: 'red',
+                    marginLeft: responsiveWidth(5),
+                  }}
+                />
+                <TextInput
+                  value={password}
+                  onChangeText={text => {
+                    setPassword(text);
+                    setCheckpassword(false);
+                  }}
+                  blurOnSubmit={false}
+                  returnKeyType={'next'}
+                  placeholderTextColor={'#8D8D8D'}
+                  selectionColor={appColor.appColorMain}
+                  placeholder="Password"
+                  style={styles.txtinputpassword}
+                  onFocus={() => setMyfocus('password')}
+                  onBlur={() => setMyfocus('')}
+                  secureTextEntry={securepassword}
+                  ref={passwordinputref}
+                  onSubmitEditing={() =>
+                    confirmpasswordinputref.current.focus()
+                  }
+                />
+                <EyeIcon
+                  style={{
+                    fontSize: responsiveFontSize(3.7),
+                    color: 'lightgray',
+                  }}
+                  name={securepassword ? 'eye-off' : 'eye'}
+                  onPress={() => setSecurepassword(!securepassword)}
+                />
+              </View>
+              {checkpassword ? (
+                <Text style={styles.errortxt}>{passworderror}</Text>
+              ) : null}
+            </>
           ) : null}
-          <View
-            style={[
-              styles.passwordparent,
-              {
-                borderColor:
-                  myfocus == 'confirmpassword'
-                    ? appColor.appColorMain
-                    : '#D7D7D7',
-              },
-            ]}>
-            <Image
-              source={appImages.password}
-              resizeMode="contain"
-              style={{
-                width: responsiveWidth(5.5),
-                height: responsiveWidth(5.5),
-                // backgroundColor: 'red',
-                marginLeft: responsiveWidth(5),
-              }}
-            />
-            <TextInput
-              value={confirmpassword}
-              onChangeText={text => {
-                setConfirmPassword(text);
-                setCheckConfirmpassword(false);
-              }}
-              placeholderTextColor={'#8D8D8D'}
-              selectionColor={appColor.appColorMain}
-              placeholder="Confirm Password"
-              style={styles.txtinputpassword}
-              onFocus={() => setMyfocus('confirmpassword')}
-              onBlur={() => setMyfocus('')}
-              secureTextEntry={secureconfirmpassword}
-              ref={confirmpasswordinputref}
-            />
-            <EyeIcon
-              style={{fontSize: responsiveFontSize(3.7), color: 'lightgray'}}
-              name={secureconfirmpassword ? 'eye-off' : 'eye'}
-              onPress={() => setSecureConfirmpassword(!secureconfirmpassword)}
-            />
-          </View>
-          {checkconfirmpassword ? (
-            <Text style={styles.errortxt}>{confirmpassworderror}</Text>
+
+          {routeFrom != 'google' ? (
+            <>
+              <View
+                style={[
+                  styles.passwordparent,
+                  {
+                    borderColor:
+                      myfocus == 'confirmpassword'
+                        ? appColor.appColorMain
+                        : '#D7D7D7',
+                  },
+                ]}>
+                <Image
+                  source={appImages.password}
+                  resizeMode="contain"
+                  style={{
+                    width: responsiveWidth(5.5),
+                    height: responsiveWidth(5.5),
+                    // backgroundColor: 'red',
+                    marginLeft: responsiveWidth(5),
+                  }}
+                />
+                <TextInput
+                  value={confirmpassword}
+                  onChangeText={text => {
+                    setConfirmPassword(text);
+                    setCheckConfirmpassword(false);
+                  }}
+                  placeholderTextColor={'#8D8D8D'}
+                  selectionColor={appColor.appColorMain}
+                  placeholder="Confirm Password"
+                  style={styles.txtinputpassword}
+                  onFocus={() => setMyfocus('confirmpassword')}
+                  onBlur={() => setMyfocus('')}
+                  secureTextEntry={secureconfirmpassword}
+                  ref={confirmpasswordinputref}
+                />
+                <EyeIcon
+                  style={{
+                    fontSize: responsiveFontSize(3.7),
+                    color: 'lightgray',
+                  }}
+                  name={secureconfirmpassword ? 'eye-off' : 'eye'}
+                  onPress={() =>
+                    setSecureConfirmpassword(!secureconfirmpassword)
+                  }
+                />
+              </View>
+              {checkconfirmpassword ? (
+                <Text style={styles.errortxt}>{confirmpassworderror}</Text>
+              ) : null}
+            </>
           ) : null}
+
           <DateSelect
             getDate={date => setMydate(date)}
             getApiDate={date => setApiFormatDate(date)}
@@ -679,7 +731,10 @@ const SignUp = props => {
             justifyContent: 'center',
           }}>
           {loading ? (
-            <MyButtonLoader title={'SIGN UP'} />
+            <MyButtonLoader
+              title={'SIGN UP'}
+              buttonColor={appColor.appColorMain}
+            />
           ) : (
             <MyButton
               title={'SIGN UP'}
@@ -693,7 +748,7 @@ const SignUp = props => {
             <Text style={styles.txt4}>Already Have an Account ? </Text>
             <TouchableOpacity
               activeOpacity={0.8}
-              onPress={() => props.navigation.navigate('Login')}>
+              onPress={() => navigation.navigate('Login')}>
               <Text style={styles.txt4}>Login</Text>
             </TouchableOpacity>
           </View>

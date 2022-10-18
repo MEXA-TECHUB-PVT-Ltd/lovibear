@@ -124,7 +124,12 @@ const Splash2 = props => {
           <TouchableOpacity
             style={styles.button1}
             activeOpacity={0.8}
-            onPress={() => props.navigation.navigate('SignUp')}>
+            onPress={() =>
+              props.navigation.navigate('SignUp', {
+                routeFrom: 'emailorphone',
+                userInfo: 'null',
+              })
+            }>
             <FastImage
               source={appImages.signupphone}
               resizeMode="contain"
@@ -135,7 +140,7 @@ const Splash2 = props => {
                 marginRight: responsiveWidth(3),
               }}
             />
-            <Text style={styles.txt1}>Signup with phone number</Text>
+            <Text style={styles.txt1}>SignUp With Email / Phone No.</Text>
           </TouchableOpacity>
           {/* <TouchableOpacity
             style={styles.button1}

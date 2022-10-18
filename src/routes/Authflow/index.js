@@ -8,6 +8,7 @@ import {
   SignUp,
   AddProfileImage,
   Subscribe,
+  Splash0,
 } from '../../screens';
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -17,7 +18,8 @@ const AuthApp = () => {
   return (
     <AuthStack.Navigator
       screenOptions={{headerShown: false}}
-      initialRouteName={'Splash'}>
+      initialRouteName={'Splash0'}>
+      <AuthStack.Screen name={'Splash0'} component={Splash0} />
       <AuthStack.Screen name={'Splash'} component={Splash} />
       <AuthStack.Screen name={'Splash2'} component={Splash2} />
       <AuthStack.Screen name={'Login'} component={Login} />

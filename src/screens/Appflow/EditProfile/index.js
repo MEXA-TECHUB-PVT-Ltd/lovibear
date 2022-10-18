@@ -36,11 +36,10 @@ import {MyButton2} from '../../../components/MyButton2';
 import {Base_URL} from '../../../Base_URL';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
-import {Modal} from 'react-native-paper';
+import {ActivityIndicator, Modal} from 'react-native-paper';
 import moment from 'moment';
 import RNFetchBlob from 'rn-fetch-blob';
 import Toast from 'react-native-simple-toast';
-
 const EditProfile = props => {
   const [myfocus, setMyfocus] = useState('');
   const [securepassword, setSecurepassword] = useState(true);
@@ -53,15 +52,23 @@ const EditProfile = props => {
   const confirmpasswordinputref = useRef();
   const [selectedImage, setSelectedImage] = useState();
   const [isselected, setIsSelected] = useState(false);
-
+  const [recoveryemail, setRecoveryEmail] = useState('');
   const professionref = useRef();
+  const recoveryemailinputref = useRef();
+  const [mysignuptype, setMySignupType] = useState('');
   useFocusEffect(
     React.useCallback(() => {
       setSoftinput(true);
     }, []),
   );
 
+  const GetAsyncInformation = async () => {
+    const signuptype = await AsyncStorage.getItem('signuptype');
+    setMySignupType(signuptype);
+  };
+
   useEffect(() => {
+    GetAsyncInformation();
     getLocation();
     GetUser();
   }, []);
@@ -140,7 +147,6 @@ const EditProfile = props => {
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
   };
-
   const [imagevisible, setImagevisible] = useState(false);
   const [checkemail, setCheckemail] = useState(false);
   const [checkpassword, setCheckpassword] = useState(false);
@@ -149,6 +155,8 @@ const EditProfile = props => {
   const [checkprofession, setCheckprofession] = useState(false);
   const [gendererror, setGendererror] = useState('');
   const [checkusername, setCheckusername] = useState(false);
+  const [checkrecoveryemail, setCheckRecoveryEmail] = useState(false);
+  const [recoveryemailerror, setrecoveryemailerror] = useState('');
   const [emailerror, setEmailerror] = useState('');
   const [passworderror, setPassworderror] = useState('');
   const [confirmpassworderror, setConfirmPassworderror] = useState('');
@@ -177,7 +185,6 @@ const EditProfile = props => {
     /\+(9[976]\d|8[987530]\d|6[987]\d|5[90]\d|42\d|3[875]\d|2[98654321]\d|9[8543210]|8[6421]|6[6543210]|5[87654321]|4[987654310]|3[9643210]|2[70]|7|1)\d{1,14}$/;
 
   const Validations = () => {
-    setLoading(true);
     if (username == '') {
       setCheckusername(true);
       setUsernameerror('Enter Username');
@@ -201,6 +208,14 @@ const EditProfile = props => {
         setEmailerror('Enter Valid Email');
         return false;
       }
+    }
+    if (mysignuptype == 'email' && reg.test(email) == false) {
+      setCheckemail(true);
+      setEmailerror('Enter Valid Email');
+    }
+    if (mysignuptype == 'phoneNumber' && regchecknumber.test(email) == false) {
+      setCheckemail(true);
+      setEmailerror('Enter Valid Phone Number');
     }
     if (gender == '') {
       setCheckgender(true);
@@ -249,7 +264,7 @@ const EditProfile = props => {
       formdata.append('dateOfBirth', apiformatdate);
       formdata.append('profession', profession);
       formdata.append('phoneNumber', '+' + email);
-      formdata.append('userEmailAddress', email);
+      formdata.append('userEmailAddress', recoveryemail);
       formdata.append('userId', userid);
       formdata.append('long', mylong);
       formdata.append('lat', mylat);
@@ -268,6 +283,8 @@ const EditProfile = props => {
         if (isselected == true) {
           UpdateImage();
         } else {
+          Toast.show('Profile Updated', Toast.SHORT);
+
           setLoading(false);
         }
       })
@@ -316,6 +333,7 @@ const EditProfile = props => {
   };
 
   const GetUser = async () => {
+    setLoading(true);
     const userid = await AsyncStorage.getItem('userid');
     var axios = require('axios');
 
@@ -329,7 +347,15 @@ const EditProfile = props => {
       .then(function (response) {
         console.log(JSON.stringify(response.data));
         setUsername(response.data[0].userName);
-        setEmail(response.data[0].email);
+        console.log('RESPONSE EMAIL', response.data[0].email);
+        if (response.data[0].email == undefined) {
+          setEmail(response.data[0].phoneNumber.slice(1));
+        } else {
+          setEmail(response.data[0].email);
+        }
+        if (response.data[0].userEmailAddress != undefined) {
+          setRecoveryEmail(response.data[0].userEmailAddress);
+        }
         console.log(response.data[0].gender);
         if (response.data[0].gender == 'male') {
           setGender('Male');
@@ -337,6 +363,9 @@ const EditProfile = props => {
         } else if (response.data[0].gender == 'female') {
           setGender('Female');
           setApiGender('female');
+        } else if (response.data[0].gender == 'preferNotToSay') {
+          setGender('Prefer not to say');
+          setApiGender('preferNotToSay');
         }
         setProfession(response.data[0].profession);
         setMydate(moment(response.data[0].dateOfBirth).format('DD-MM-YYYY'));
@@ -344,14 +373,18 @@ const EditProfile = props => {
           moment(response.data[0].dateOfBirth).format('MM-DD-YYYY'),
         );
         setMyimage(response.data[0].profileImage.userPicUrl);
+        setLoading(false);
       })
       .catch(function (error) {
         console.log(error);
+        setLoading(false);
       });
   };
 
   return (
-    <SafeAreaView style={STYLES.container}>
+    <SafeAreaView
+      style={STYLES.container}
+      pointerEvents={loading ? 'none' : 'auto'}>
       <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} />
       <ScrollView
         keyboardShouldPersistTaps={'always'}
@@ -364,29 +397,36 @@ const EditProfile = props => {
               marginTop: responsiveHeight(1),
               width: responsiveWidth(90),
               alignSelf: 'center',
+              justifyContent: 'space-between',
               // justifyContent: 'space-between',
             }}>
-            <TouchableOpacity
-              activeOpacity={0.6}
-              onPress={() => props.navigation.goBack()}
-              style={{
-                paddingLeft: responsiveWidth(2),
-                marginLeft: responsiveWidth(-2),
-                paddingRight: responsiveWidth(2),
-                paddingVertical: responsiveHeight(1.5),
-                marginVertical: responsiveHeight(0.5),
-                //   marginTop: responsiveHeight(2),
-              }}>
-              <Image
-                source={appImages.backicon2}
-                resizeMode="contain"
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={() => props.navigation.goBack()}
                 style={{
-                  width: responsiveWidth(4.5),
-                  height: responsiveWidth(4.5),
-                }}
-              />
-            </TouchableOpacity>
-            <Text style={styles.txt1}>Edit Profile</Text>
+                  paddingLeft: responsiveWidth(2),
+                  marginLeft: responsiveWidth(-2),
+                  paddingRight: responsiveWidth(2),
+                  paddingVertical: responsiveHeight(1.5),
+                  marginVertical: responsiveHeight(0.5),
+                  //   marginTop: responsiveHeight(2),
+                }}>
+                <Image
+                  source={appImages.backicon2}
+                  resizeMode="contain"
+                  style={{
+                    width: responsiveWidth(4.5),
+                    height: responsiveWidth(4.5),
+                  }}
+                />
+              </TouchableOpacity>
+              <Text style={styles.txt1}>Edit Profile</Text>
+            </View>
+
+            {loading ? (
+              <ActivityIndicator color={appColor.appColorMain} size={'small'} />
+            ) : null}
           </View>
           <TouchableOpacity
             activeOpacity={0.85}
@@ -451,9 +491,12 @@ const EditProfile = props => {
               }}
             />
             <TextInput
+              editable={mysignuptype == 'google' ? false : true}
+              showSoftInputOnFocus={
+                mysignuptype == 'google' ? !softinput : softinput
+              }
+              autoFocus={mysignuptype == 'google' ? false : true}
               placeholderTextColor={'#8D8D8D'}
-              showSoftInputOnFocus={softinput}
-              autoFocus
               value={username}
               onChangeText={text => {
                 setUsername(text);
@@ -462,7 +505,7 @@ const EditProfile = props => {
               selectionColor={appColor.appColorMain}
               placeholder="Username"
               style={styles.txtinputusername}
-              onFocus={() => setMyfocus('username')}
+              onFocus={() => setMyfocus('')}
               onBlur={() => setMyfocus('')}
               onSubmitEditing={() => emailinputref.current.focus()}
               blurOnSubmit={false}
@@ -502,6 +545,7 @@ const EditProfile = props => {
             </Text>
 
             <TextInput
+              editable={mysignuptype == 'google' ? false : true}
               value={email}
               onChangeText={text => {
                 setEmail(text);
@@ -528,6 +572,58 @@ const EditProfile = props => {
           {checkemail ? (
             <Text style={styles.errortxt}>{emailerror}</Text>
           ) : null}
+
+          {mysignuptype == 'phoneNumber' ? (
+            <>
+              <View
+                style={[
+                  styles.emailparent,
+                  {
+                    borderColor:
+                      myfocus == 'recoveryemail'
+                        ? appColor.appColorMain
+                        : '#D7D7D7',
+                    marginTop: responsiveHeight(2.8),
+                  },
+                ]}>
+                <Image
+                  source={appImages.email}
+                  resizeMode="contain"
+                  style={{
+                    width: responsiveWidth(5.5),
+                    height: responsiveWidth(5.5),
+                    // backgroundColor: 'red',
+                    marginLeft: responsiveWidth(5),
+                  }}
+                />
+                <TextInput
+                  value={recoveryemail}
+                  onChangeText={text => {
+                    setRecoveryEmail(text);
+                    setCheckRecoveryEmail(false);
+                  }}
+                  placeholderTextColor={'#8D8D8D'}
+                  selectionColor={appColor.appColorMain}
+                  placeholder="Recovery Email (Optional)"
+                  style={[
+                    styles.txtinputemail,
+                    {paddingLeft: responsiveWidth(3)},
+                  ]}
+                  onFocus={() => setMyfocus('recoveryemail')}
+                  onBlur={() => setMyfocus('')}
+                  keyboardType={'email-address'}
+                  onSubmitEditing={() => showModal()}
+                  blurOnSubmit={true}
+                  returnKeyType={'next'}
+                  ref={recoveryemailinputref}
+                />
+              </View>
+              {checkrecoveryemail ? (
+                <Text style={styles.errortxt}>{recoveryemailerror}</Text>
+              ) : null}
+            </>
+          ) : null}
+
           <TouchableOpacity
             onPress={() => {
               showModal();
@@ -599,8 +695,8 @@ const EditProfile = props => {
               onBlur={() => setMyfocus('')}
               // onSubmitEditing={() => passwordinputref.current.focus()}
               ref={professionref}
-              blurOnSubmit={false}
-              returnKeyType={'next'}
+              blurOnSubmit={true}
+              // returnKeyType={'next'}
             />
           </View>
           {checkprofession ? (
@@ -704,53 +800,55 @@ const EditProfile = props => {
             value={mydate}
           />
           {checkdate ? <Text style={styles.errortxt}>{dateerror}</Text> : null}
-          <TouchableOpacity
-            onPress={() => {
-              props.navigation.navigate('UpdatePasswordInApp', {});
-            }}
-            activeOpacity={0.7}
-            style={[
-              styles.passwordparent,
-              {
-                borderColor:
-                  myfocus == 'password' ? appColor.appColorMain : '#D7D7D7',
-              },
-            ]}>
-            <Image
-              source={appImages.password}
-              resizeMode="contain"
-              style={{
-                width: responsiveWidth(5.5),
-                height: responsiveWidth(5.5),
-                // backgroundColor: 'red',
-                marginLeft: responsiveWidth(5),
+          {mysignuptype != 'google' ? (
+            <TouchableOpacity
+              onPress={() => {
+                props.navigation.navigate('UpdatePasswordInApp', {});
               }}
-            />
-            <TextInput
-              editable={false}
-              value={'Update Password'}
-              // onChangeText={text => {
-              //   setPassword(text);
-              //   setCheckpassword(false);
-              // }}
-              blurOnSubmit={false}
-              returnKeyType={'next'}
-              placeholderTextColor={'#8D8D8D'}
-              selectionColor={appColor.appColorMain}
-              placeholder="Password"
-              style={styles.txtinputpassword}
-              onFocus={() => setMyfocus('password')}
-              onBlur={() => setMyfocus('')}
-              // secureTextEntry={securepassword}
-              ref={passwordinputref}
-              onSubmitEditing={() => confirmpasswordinputref.current.focus()}
-            />
-            {/* <EyeIcon
+              activeOpacity={0.7}
+              style={[
+                styles.passwordparent,
+                {
+                  borderColor:
+                    myfocus == 'password' ? appColor.appColorMain : '#D7D7D7',
+                },
+              ]}>
+              <Image
+                source={appImages.password}
+                resizeMode="contain"
+                style={{
+                  width: responsiveWidth(5.5),
+                  height: responsiveWidth(5.5),
+                  // backgroundColor: 'red',
+                  marginLeft: responsiveWidth(5),
+                }}
+              />
+              <TextInput
+                editable={false}
+                value={'Update Password'}
+                // onChangeText={text => {
+                //   setPassword(text);
+                //   setCheckpassword(false);
+                // }}
+                blurOnSubmit={false}
+                returnKeyType={'next'}
+                placeholderTextColor={'#8D8D8D'}
+                selectionColor={appColor.appColorMain}
+                placeholder="Password"
+                style={styles.txtinputpassword}
+                onFocus={() => setMyfocus('password')}
+                onBlur={() => setMyfocus('')}
+                // secureTextEntry={securepassword}
+                ref={passwordinputref}
+                onSubmitEditing={() => confirmpasswordinputref.current.focus()}
+              />
+              {/* <EyeIcon
               style={{fontSize: responsiveFontSize(3.7), color: 'lightgray'}}
               name={securepassword ? 'eye-off' : 'eye'}
               onPress={() => setSecurepassword(!securepassword)}
             /> */}
-          </TouchableOpacity>
+            </TouchableOpacity>
+          ) : null}
         </View>
 
         {loading ? (

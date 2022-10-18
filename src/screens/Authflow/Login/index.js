@@ -40,7 +40,6 @@ const Login = props => {
   const [myfocus, setMyfocus] = useState('');
   const [securepassword, setSecurepassword] = useState(true);
   const passwordinputref = useRef();
-  const [gettingLoginStatus, setGettingLoginStatus] = useState(true);
   const emailinputref = useRef();
   const [softinput, setSoftinput] = useState(false);
   const [email, setEmail] = useState('');
@@ -56,75 +55,8 @@ const Login = props => {
       setSoftinput(true);
     }, []),
   );
-  useEffect(() => {
-    // GoogleSignin.configure();
-    // _isSignedIn();
-  }, []);
 
-  const _isSignedIn = async () => {
-    const isSignedIn = await GoogleSignin.isSignedIn();
-    if (isSignedIn) {
-      alert('User is already signed in');
-      // Set User Info if user is already signed in
-      _getCurrentUserInfo();
-    } else {
-      console.log('Please Login');
-    }
-    setGettingLoginStatus(false);
-  };
-  const _getCurrentUserInfo = async () => {
-    try {
-      let info = await GoogleSignin.signInSilently();
-      console.log('User Info --> ', info);
-      setUserInfo(info);
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_REQUIRED) {
-        alert('User has not signed in yet');
-        console.log('User has not signed in yet');
-      } else {
-        alert("Unable to get user's info");
-        console.log("Unable to get user's info");
-      }
-    }
-  };
-  const _signIn = async () => {
-    // It will prompt google Signin Widget
-    try {
-      await GoogleSignin.hasPlayServices({
-        // Check if device has Google Play Services installed
-        // Always resolves to true on iOS
-        showPlayServicesUpdateDialog: true,
-      });
-      const userInfo = await GoogleSignin.signIn();
-      console.log('User Info --> ', userInfo);
-      setUserInfo(userInfo);
-    } catch (error) {
-      console.log('Message', JSON.stringify(error));
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        alert('User Cancelled the Login Flow');
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        alert('Signing In');
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        alert('Play Services Not Available or Outdated');
-      } else {
-        alert(error.message);
-      }
-    }
-  };
-  const _signOut = async () => {
-    setGettingLoginStatus(true);
-    // Remove user session from the device.
-    try {
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
-      // Removing user Info
-      setUserInfo(null);
-    } catch (error) {
-      console.error(error);
-    }
-    setGettingLoginStatus(false);
-  };
-  const Validations = () => {
+  const Validations = async () => {
     if (email == '') {
       setCheckemail(true);
       setEmailerror('Enter Valid Email');
@@ -181,7 +113,7 @@ const Login = props => {
       };
       setLoading(true);
 
-      axios(config)
+      await axios(config)
         .then(async function (response) {
           console.log('MY LOADER=======', loading);
           console.log(JSON.stringify(response.data));
@@ -196,7 +128,7 @@ const Login = props => {
             await AsyncStorage.setItem('password', password);
             // await AsyncStorage.setItem('userid', response.data.Data._id);
 
-            props.navigation.navigate('App');
+            props.navigation.navigate('App', {screen: 'PlayScreenScreens'});
             console.log('MY LOADER=======', loading);
             setLoading(false);
           }
@@ -457,7 +389,12 @@ const Login = props => {
             <Text style={styles.txt4}>Don't have an account ? </Text>
             <TouchableOpacity
               activeOpacity={0.7}
-              onPress={() => props.navigation.navigate('SignUp')}>
+              onPress={() =>
+                props.navigation.navigate('SignUp', {
+                  routeFrom: 'emailorphone',
+                  userInfo: 'null',
+                })
+              }>
               <Text style={styles.txt4}>Sign up</Text>
             </TouchableOpacity>
           </View>

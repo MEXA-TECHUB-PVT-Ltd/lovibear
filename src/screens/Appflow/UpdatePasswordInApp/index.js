@@ -23,7 +23,7 @@ import EyeIcon from 'react-native-vector-icons/Ionicons';
 import MyHeart from '../../../components/MyHeart';
 import {useFocusEffect} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
-import {MyButton} from '../../../components/MyButton';
+import {MyButton, MyButtonLoader} from '../../../components/MyButton';
 import {fontFamily} from '../../../constants/fonts';
 import {Base_URL} from '../../../Base_URL';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -33,7 +33,6 @@ const UpdatePasswordInApp = ({route, navigation}) => {
   const [myfocus, setMyfocus] = useState('');
   const [securepassword, setSecurepassword] = useState(true);
   const [secureoldpassword, setSecureOldPassword] = useState(true);
-
   const passwordinputref = useRef();
   const emailinputref = useRef();
   const secondref = useRef();
@@ -76,7 +75,6 @@ const UpdatePasswordInApp = ({route, navigation}) => {
   };
 
   const Validations = async () => {
-    setLoading(true);
     console.log('HERE ON VALIDATIONS');
     const currentpassword = await AsyncStorage.getItem('password');
     if (currentpassword != oldpassword) {
@@ -106,6 +104,8 @@ const UpdatePasswordInApp = ({route, navigation}) => {
   };
 
   const UpdatePasswordApi = async () => {
+    setLoading(true);
+
     const userid = await AsyncStorage.getItem('userid');
     var axios = require('axios');
     var data = JSON.stringify({
@@ -264,13 +264,11 @@ const UpdatePasswordInApp = ({route, navigation}) => {
               }}
             />
             <TextInput
-              showSoftInputOnFocus={softinput}
               value={password}
               onChangeText={text => {
                 setPassword(text);
                 setCheckpassword(false);
               }}
-              autoFocus
               placeholder="Password"
               selectionColor={appColor.appColorMain}
               style={styles.txtinputpassword}
@@ -393,12 +391,19 @@ const UpdatePasswordInApp = ({route, navigation}) => {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <MyButton
-            title={'Update'}
-            onPress={() => {
-              Validations();
-            }}
-          />
+          {loading ? (
+            <MyButtonLoader
+              title={'Update'}
+              buttonColor={appColor.appColorMain}
+            />
+          ) : (
+            <MyButton
+              title={'Update'}
+              onPress={() => {
+                Validations();
+              }}
+            />
+          )}
 
           <MyHeart
             myStyles={{

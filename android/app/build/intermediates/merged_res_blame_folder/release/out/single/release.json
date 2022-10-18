@@ -1,0 +1,438 @@
+[
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_postsoption.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_postsoption.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_imagepicker.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_imagepicker.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_img4.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_img4.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_sendicon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_sendicon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_emojiicon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_emojiicon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-xhdpi_node_modules_emojimartnative_dist_assets_arrowbackdark.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-xhdpi\\node_modules_emojimartnative_dist_assets_arrowbackdark.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-xxhdpi_node_modules_emojimartnative_dist_assets_arrowbackdark.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-xxhdpi\\node_modules_emojimartnative_dist_assets_arrowbackdark.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_user.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_user.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_photooption.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_photooption.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_img5.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_img5.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_leftcard.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_leftcard.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_musicplay.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_musicplay.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_node_modules_reactnavigation_elements_src_assets_backicon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\node_modules_reactnavigation_elements_src_assets_backicon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_node_modules_emojimartnative_dist_assets_arrowback.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\node_modules_emojimartnative_dist_assets_arrowback.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_third.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_third.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_google.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_google.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_discoverfocused.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_discoverfocused.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_discover.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_discover.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_gendericon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_gendericon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_node_modules_emojimartnative_dist_assets_clearicon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\node_modules_emojimartnative_dist_assets_clearicon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_facebook2.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_facebook2.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-xhdpi_node_modules_emojimartnative_dist_assets_emojiicon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-xhdpi\\node_modules_emojimartnative_dist_assets_emojiicon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\raw_src_assets_images_heartwhiteleft.svg.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\raw\\src_assets_images_heartwhiteleft.svg"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_filtericon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_filtericon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\mipmap-mdpi_ic_launcher.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_img10.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_img10.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_settingcache.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_settingcache.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_rightcard.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_rightcard.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-xhdpi_node_modules_emojimartnative_dist_assets_clearicon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-xhdpi\\node_modules_emojimartnative_dist_assets_clearicon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_callicon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_callicon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_backicon2.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_backicon2.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_node_modules_emojimartnative_dist_assets_emojiicon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\node_modules_emojimartnative_dist_assets_emojiicon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_addphoto.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_addphoto.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_settingsicon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_settingsicon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_alert.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_alert.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable_rn_edit_text_material.xml.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\src\\main\\res\\drawable\\rn_edit_text_material.xml"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_img2.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_img2.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-hdpi_node_modules_reactnavigation_elements_src_assets_backicon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-hdpi\\node_modules_reactnavigation_elements_src_assets_backicon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_settingnotifications.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_settingnotifications.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_node_modules_emojimartnative_dist_assets_clearicondark.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\node_modules_emojimartnative_dist_assets_clearicondark.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_noimg.jpg.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_noimg.jpg"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_biooption.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_biooption.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_photoheader.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_photoheader.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_email.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_email.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_crossphoto.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_crossphoto.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_settinguser.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_settinguser.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_premium.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_premium.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_userimage.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_userimage.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-xxhdpi_node_modules_emojimartnative_dist_assets_clearicon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-xxhdpi\\node_modules_emojimartnative_dist_assets_clearicon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_facebook.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_facebook.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_yeplabel.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_yeplabel.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_post.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_post.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-xxhdpi_node_modules_reactnavigation_elements_src_assets_backicon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-xxhdpi\\node_modules_reactnavigation_elements_src_assets_backicon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-xhdpi_node_modules_emojimartnative_dist_assets_arrowback.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-xhdpi\\node_modules_emojimartnative_dist_assets_arrowback.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_img7.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_img7.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_uploadgallery.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_uploadgallery.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_heartwhite.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_heartwhite.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_dateicon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_dateicon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_node_modules_emojimartnative_dist_assets_arrowbackdark.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\node_modules_emojimartnative_dist_assets_arrowbackdark.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_locationoption.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_locationoption.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_first.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_first.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_play.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_play.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_uploadcamera.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_uploadcamera.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_backicon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_backicon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_signupphone.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_signupphone.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\mipmap-hdpi_ic_launcher.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_notifications.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_notifications.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-xxxhdpi_node_modules_reactnavigation_elements_src_assets_backicon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-xxxhdpi\\node_modules_reactnavigation_elements_src_assets_backicon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_nopelabel.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_nopelabel.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-xxhdpi_node_modules_emojimartnative_dist_assets_arrowback.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-xxhdpi\\node_modules_emojimartnative_dist_assets_arrowback.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_girlimg.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_girlimg.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_img8.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_img8.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_chat.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_chat.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-xxhdpi_node_modules_emojimartnative_dist_assets_clearicondark.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-xxhdpi\\node_modules_emojimartnative_dist_assets_clearicondark.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_superlabel.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_superlabel.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_splashicon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_splashicon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_password.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_password.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_postfocused.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_postfocused.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_node_modules_reactnavigation_elements_src_assets_backiconmask.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\node_modules_reactnavigation_elements_src_assets_backiconmask.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_reloadcard.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_reloadcard.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_tickpink.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_tickpink.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_camerablack.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_camerablack.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_notificationsfocused.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_notificationsfocused.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_img9.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_img9.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_chatfocused.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_chatfocused.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_playfocused.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_playfocused.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_heartred.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_heartred.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_searchicon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_searchicon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-xxhdpi_node_modules_emojimartnative_dist_assets_emojiicon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-xxhdpi\\node_modules_emojimartnative_dist_assets_emojiicon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_addpost.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_addpost.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_second.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_second.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_ageoption.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_ageoption.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_node_modules_reactnativepaper_src_assets_backchevron.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\node_modules_reactnativepaper_src_assets_backchevron.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_camerawhite.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_camerawhite.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_settingprivacy.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_settingprivacy.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_closerbsheet.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_closerbsheet.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_img3.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_img3.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_supericon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_supericon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-xhdpi_node_modules_reactnavigation_elements_src_assets_backicon.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-xhdpi\\node_modules_reactnavigation_elements_src_assets_backicon.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-mdpi_src_assets_images_img6.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-mdpi\\src_assets_images_img6.png"
+    },
+    {
+        "merged": "D:\\GitHub\\lovibear\\android\\app\\build\\intermediates\\merged_res\\release\\drawable-xhdpi_node_modules_emojimartnative_dist_assets_clearicondark.png.flat",
+        "source": "D:\\GitHub\\lovibear\\android\\app\\build\\generated\\res\\react\\release\\drawable-xhdpi\\node_modules_emojimartnative_dist_assets_clearicondark.png"
+    }
+]

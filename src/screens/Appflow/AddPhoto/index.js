@@ -29,6 +29,8 @@ import {Base_URL} from '../../../Base_URL';
 import RNFetchBlob from 'rn-fetch-blob';
 import {MyButton, MyButtonLoader} from '../../../components/MyButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-simple-toast';
+
 const AddPhoto = props => {
   let apiarr = [];
   const [apiImagesList, setApiImagesList] = useState([]);
@@ -102,6 +104,7 @@ const AddPhoto = props => {
   const imageTakeFromGallery = () => {
     ImagePicker.openPicker({
       cropping: false,
+      mediaType: 'photo',
     }).then(async image => {
       var filename = image.path.substring(image.path.lastIndexOf('/') + 1);
       let arr = mylist;
@@ -132,6 +135,7 @@ const AddPhoto = props => {
   const imageTakeFromCamera = () => {
     ImagePicker.openCamera({
       cropping: false,
+      mediaType: 'photo',
     }).then(async image => {
       var filename = image.path.substring(image.path.lastIndexOf('/') + 1);
 
@@ -184,8 +188,9 @@ const AddPhoto = props => {
           console.log('response:', response.data);
           let myresponse = JSON.parse(response.data);
           console.log('AFTER PARSING=======', myresponse);
-
+          Toast.show('New Post Added');
           props.navigation.goBack();
+
           setLoading(false);
         })
         .catch(error => {
@@ -244,6 +249,7 @@ const AddPhoto = props => {
             }}>
             <Text style={styles.txt1}>Add Photo</Text>
             <TouchableOpacity
+              disabled={loading ? true : false}
               activeOpacity={0.6}
               onPress={() => props.navigation.goBack()}>
               <Image
@@ -296,9 +302,13 @@ const AddPhoto = props => {
           </View>
 
           {loading ? (
-            <MyButtonLoader title={'Add Post'} />
+            <MyButtonLoader
+              title={'Add Post'}
+              buttonColor={appColor.appColorMain}
+            />
           ) : (
             <MyButton
+              disabled={mylist.length == 1 ? true : false}
               title={'Add Post'}
               myStyles={{
                 marginBottom: responsiveHeight(2),

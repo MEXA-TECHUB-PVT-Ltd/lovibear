@@ -23,11 +23,13 @@ export const MyButton = props => {
     iconSize,
     customimg,
     imageStyle,
+    disabled,
   } = props;
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.8}
+      disabled={disabled == undefined ? false : disabled}
       style={[styles.container, myStyles]}>
       {iconName && (
         <View style={styles.IconCon}>

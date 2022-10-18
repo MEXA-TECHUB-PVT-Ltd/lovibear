@@ -8,8 +8,9 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  BackHandler,
 } from 'react-native';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import STYLES from '../../STYLES';
 import {appColor, appImages} from '../../../assets/utilities';
 import {SvgXml} from 'react-native-svg';
@@ -18,10 +19,151 @@ import {
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 import FastImage from 'react-native-fast-image';
 import MyHeart from '../../../components/MyHeart';
 import {fontFamily} from '../../../constants/fonts';
+import {useFocusEffect} from '@react-navigation/native';
+import {Base_URL} from '../../../Base_URL';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Splash = props => {
+  const [gettingLoginStatus, setGettingLoginStatus] = useState(true);
+  const [userInfo, setUserInfo] = useState();
+
+  const GoogleLoginApi = async info => {
+    var axios = require('axios');
+    var data = JSON.stringify({
+      email: info.email,
+      password: info.id,
+      ip: '192.168.20.1',
+      country: 'japan',
+    });
+
+    var config = {
+      method: 'post',
+      url: Base_URL + '/user/login',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+
+    await axios(config)
+      .then(async function (response) {
+        console.log(JSON.stringify(response.data));
+        if (response.data.message == 'Logged in successfully') {
+          // console.log('THE USER ID==========', response.data);
+          await AsyncStorage.setItem('userid', response.data.Data._id);
+          await AsyncStorage.setItem(
+            'signuptype',
+            response.data.Data.signupType,
+          );
+          await AsyncStorage.setItem('password', 'googlesignup');
+          props.navigation.navigate('App', {screen: 'PlayScreenScreens'});
+        }
+      })
+      .catch(async function (error) {
+        console.log('THE ERROR==========', error);
+        // console.log('THE ERROR=========', error.response.data);
+        if (error.response.data == 'Email or password is wrong') {
+          props.navigation.navigate('SignUp', {
+            routeFrom: 'google',
+            userInfo: info,
+          });
+          _signOut();
+        }
+      });
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        BackHandler.exitApp();
+        return true;
+      };
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction,
+      );
+      return () => backHandler.remove();
+    }, []),
+  );
+
+  useEffect(() => {
+    GoogleSignin.configure();
+    _isSignedIn();
+  }, []);
+  console.log('USER INFO==============', userInfo);
+  console.log('LOGIN STATUS===========', gettingLoginStatus);
+  const _isSignedIn = async () => {
+    const isSignedIn = await GoogleSignin.isSignedIn();
+    if (isSignedIn) {
+      console.log('User is already signed in');
+      // Set User Info if user is already signed in
+      _getCurrentUserInfo();
+    } else {
+      console.log('Please Login');
+    }
+    setGettingLoginStatus(false);
+  };
+  const _getCurrentUserInfo = async () => {
+    try {
+      let info = await GoogleSignin.signInSilently();
+      console.log('User Info --> ', info);
+      setUserInfo(info);
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_REQUIRED) {
+        // console.log('User has not signed in yet');
+        console.log('User has not signed in yet');
+      } else {
+        // console.log("Unable to get user's info");
+        console.log("Unable to get user's info");
+      }
+    }
+  };
+  const _signIn = async () => {
+    // It will prompt google Signin Widget
+    try {
+      await GoogleSignin.hasPlayServices({
+        // Check if device has Google Play Services installed
+        // Always resolves to true on iOS
+        showPlayServicesUpdateDialog: true,
+      });
+      const userInfo = await GoogleSignin.signIn();
+      console.log('User Info --> ', userInfo);
+      setUserInfo(userInfo);
+      console.log('MY CUSTOM INFO=========', userInfo.user);
+      GoogleLoginApi(userInfo.user);
+    } catch (error) {
+      console.log('Message', JSON.stringify(error));
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        alert('User Cancelled the Login Flow');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        alert('Signing In');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        alert('Play Services Not Available or Outdated');
+      } else {
+        alert(error.message);
+      }
+    }
+  };
+  const _signOut = async () => {
+    setGettingLoginStatus(true);
+    // Remove user session from the device.
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      // Removing user Info
+      setUserInfo(null);
+    } catch (error) {
+      console.log(error);
+    }
+    setGettingLoginStatus(false);
+  };
   return (
     <SafeAreaView style={STYLES.containerJustify}>
       <StatusBar
@@ -126,7 +268,7 @@ const Splash = props => {
             style={styles.button1}
             activeOpacity={0.8}
             onPress={() => props.navigation.navigate('Login')}>
-            <Text style={styles.txt1}>Login With Phone Number</Text>
+            <Text style={styles.txt1}>Login With Email / Phone Number</Text>
           </TouchableOpacity>
 
           <View
@@ -142,7 +284,10 @@ const Splash = props => {
             <TouchableOpacity
               style={styles.button2}
               activeOpacity={0.7}
-              onPress={() => props.navigation.navigate('Login')}>
+              onPress={() => {
+                _signOut();
+                // props.navigation.navigate('Login');
+              }}>
               <Text style={styles.txt2}>Login With</Text>
               <Image
                 source={appImages.facebook2}
@@ -157,7 +302,10 @@ const Splash = props => {
             <TouchableOpacity
               style={styles.button3}
               activeOpacity={0.7}
-              onPress={() => props.navigation.navigate('Login')}>
+              onPress={() => {
+                _signIn();
+                // props.navigation.navigate('Login')
+              }}>
               <Text style={styles.txt3}>Login With</Text>
               <Image
                 source={appImages.google}

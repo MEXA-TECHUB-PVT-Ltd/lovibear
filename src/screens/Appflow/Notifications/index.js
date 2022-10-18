@@ -27,7 +27,10 @@ import {fontFamily} from '../../../constants/fonts';
 import {useFocusEffect} from '@react-navigation/native';
 import {Base_URL} from '../../../Base_URL';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ActivityIndicator} from 'react-native-paper';
 const Notifications = props => {
+  const [loading, setLoading] = useState(false);
+  const [empty, setEmpty] = useState(false);
   useFocusEffect(
     React.useCallback(() => {
       GetNotifications();
@@ -35,6 +38,7 @@ const Notifications = props => {
   );
 
   const GetNotifications = async () => {
+    setLoading(true);
     const userid = await AsyncStorage.getItem('userid');
     console.log('THE USER ID ON NOTIFICATIONS========', userid);
     var axios = require('axios');
@@ -42,7 +46,6 @@ const Notifications = props => {
       userId: userid,
       type: 'user',
     });
-
     var config = {
       method: 'post',
       url: Base_URL + '/notification/getNotificationsByType',
@@ -55,7 +58,14 @@ const Notifications = props => {
     await axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
-        setList(response.data.data);
+        if (response.data.data.length == 0) {
+          setEmpty(true);
+          setLoading(false);
+        } else {
+          setList(response.data.data);
+          setEmpty(false);
+          setLoading(false);
+        }
       })
       .catch(function (error) {
         console.log(error.data);
@@ -131,29 +141,60 @@ const Notifications = props => {
             paddingHorizontal: responsiveWidth(5),
           }}>
           <Text style={styles.txt1}>Notifications</Text>
-          <TouchableOpacity activeOpacity={0.7}>
-            <Text
-              style={{
-                color: appColor.appColorMain,
-                fontFamily: fontFamily.Baskerville_Old_Face,
-                fontSize: responsiveFontSize(1.8),
-                opacity: 0.5,
-              }}>
-              Mark as read
-            </Text>
-          </TouchableOpacity>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {loading ? (
+              <ActivityIndicator
+                color={appColor.appColorMain}
+                size={'small'}
+                style={{marginRight: responsiveWidth(3)}}
+              />
+            ) : null}
+
+            <TouchableOpacity activeOpacity={0.7}>
+              <Text
+                style={{
+                  color: appColor.appColorMain,
+                  fontFamily: fontFamily.Baskerville_Old_Face,
+                  fontSize: responsiveFontSize(1.8),
+                  opacity: 0.5,
+                }}>
+                Mark as read
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
-        <FlatList
-          data={list}
-          renderItem={renderItem}
-          contentContainerStyle={{
-            flexGrow: 1,
-            paddingHorizontal: responsiveWidth(5),
-            paddingTop: responsiveHeight(1.9),
-          }}
-          showsVerticalScrollIndicator={false}
-        />
+        {empty ? (
+          <View
+            style={{
+              flexGrow: 1,
+              width: responsiveWidth(80),
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignSelf: 'center',
+              marginBottom: responsiveHeight(5),
+            }}>
+            <Text
+              style={{
+                fontFamily: fontFamily.Baskerville_Old_Face,
+                color: appColor.appColorMain,
+                fontSize: responsiveFontSize(3.2),
+              }}>
+              No Notifications Yet
+            </Text>
+          </View>
+        ) : (
+          <FlatList
+            data={list}
+            renderItem={renderItem}
+            contentContainerStyle={{
+              flexGrow: 1,
+              paddingHorizontal: responsiveWidth(5),
+              paddingTop: responsiveHeight(1.9),
+            }}
+            showsVerticalScrollIndicator={false}
+          />
+        )}
       </View>
     </SafeAreaView>
   );

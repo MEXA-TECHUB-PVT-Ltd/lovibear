@@ -39,7 +39,7 @@ const AppNavigation = props => {
     <Provider store={Store}>
       <NavigationContainer>
         <AppStack.Navigator screenOptions={{headerShown: false}}>
-          {/* <AppStack.Screen name={'Auth'} component={AuthApp} /> */}
+          <AppStack.Screen name={'Auth'} component={AuthApp} />
           <AppStack.Screen name={'App'} component={App} />
         </AppStack.Navigator>
       </NavigationContainer>

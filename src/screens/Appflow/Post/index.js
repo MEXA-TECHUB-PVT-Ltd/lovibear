@@ -28,16 +28,19 @@ import MyHeart from '../../../components/MyHeart';
 import LinearGradient from 'react-native-linear-gradient';
 import {Base_URL} from '../../../Base_URL';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ImageView from 'react-native-image-viewing';
 import {useFocusEffect} from '@react-navigation/native';
 const Post = props => {
-  useEffect(() => {
-    GetUser();
-  }, []);
   useFocusEffect(
     React.useCallback(() => {
+      GetUser();
+
       GetPosts();
     }, []),
   );
+  const [visible, setIsVisible] = useState(false);
+  const [viewimages, setViewImages] = useState([]);
+  const images = viewimages;
 
   const GetUser = async () => {
     const userid = await AsyncStorage.getItem('userid');
@@ -70,7 +73,12 @@ const Post = props => {
     await axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
-        setList(response.data.result);
+        if (response.data.message != 'Posts not found for this user') {
+          setList(response.data.result);
+          // let myarr = response.data.result.map(item=>{
+          //   return item.postImages
+          // })
+        }
       })
       .catch(function (error) {
         console.log(error);
@@ -82,6 +90,17 @@ const Post = props => {
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
+        onPress={() => {
+          let myarr = item.postImages.map(item => {
+            return {uri: item.image_url};
+          });
+          setViewImages(myarr);
+
+          console.log('MY ARR==========', myarr);
+          setTimeout(() => {
+            setIsVisible(true);
+          }, 200);
+        }}
         // onPress={() => props.navigation.navigate('Messaging')}
         activeOpacity={0.85}
         style={{
@@ -269,9 +288,10 @@ const Post = props => {
                 borderRadius: responsiveWidth(100),
               }}
               source={
-                userDetails == undefined ||
-                userDetails[0].profileImage.userPicUrl == undefined
-                  ? appImages.girlimg
+                userDetails == undefined
+                  ? appImages.noimg
+                  : userDetails[0].profileImage == undefined
+                  ? appImages.noimg
                   : {uri: userDetails[0].profileImage.userPicUrl}
               }
             />
@@ -314,6 +334,12 @@ const Post = props => {
             width: responsiveWidth(90),
             alignSelf: 'center',
           }}
+        />
+        <ImageView
+          images={images}
+          imageIndex={0}
+          visible={visible}
+          onRequestClose={() => setIsVisible(false)}
         />
       </ScrollView>
     </SafeAreaView>

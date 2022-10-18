@@ -12,6 +12,7 @@ import {
   FlatList,
   PermissionsAndroid,
   Platform,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import Right from 'react-native-vector-icons/FontAwesome';
@@ -32,10 +33,12 @@ import {Base_URL} from '../../../Base_URL';
 import Geolocation from 'react-native-geolocation-service';
 import {useDispatch, useSelector} from 'react-redux';
 import {setFromRoute, setRouteCard} from '../../../redux/actions';
+import {ActivityIndicator} from 'react-native-paper';
 
 const Search = ({route, navigation}) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const [empty, setEmpty] = useState(false);
   const {routeArray} = route.params;
   useEffect(() => {
     setList(routeArray);
@@ -111,7 +114,11 @@ const Search = ({route, navigation}) => {
 
     var config = {
       method: 'post',
-      url: Base_URL + '/user/getUserByName/?name=sharj&radiusInKm=100',
+      url:
+        Base_URL +
+        '/user/getUserByName/?name=' +
+        singlesearch +
+        '&radiusInKm=10000000',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -121,8 +128,16 @@ const Search = ({route, navigation}) => {
     await axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
-        setList(response.data.users);
-        setLoading(false);
+        console.log('ARRAY LENGTH===============', response.data.users.length);
+        if (response.data.users.length == 0) {
+          setList();
+          setEmpty(true);
+          setLoading(false);
+        } else {
+          setList(response.data.users);
+          setLoading(false);
+          setEmpty(false);
+        }
       })
       .catch(function (error) {
         console.log(error);
@@ -305,6 +320,7 @@ const Search = ({route, navigation}) => {
               autoFocus
             />
             <TouchableOpacity
+              disabled={singlesearch == '' ? true : false}
               onPress={() => {
                 getLocation();
               }}>
@@ -316,17 +332,58 @@ const Search = ({route, navigation}) => {
           </View>
         </View>
 
-        <FlatList
-          keyboardShouldPersistTaps={'always'}
-          data={list}
-          renderItem={renderItem}
-          contentContainerStyle={{}}
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-          columnWrapperStyle={{
-            justifyContent: 'space-between',
-          }}
-        />
+        {loading ? (
+          <View
+            style={{
+              flexGrow: 1,
+              width: responsiveWidth(80),
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignSelf: 'center',
+              marginBottom: responsiveHeight(10),
+            }}>
+            <Text
+              style={{
+                color: appColor.appColorMain,
+                fontFamily: fontFamily.Baskerville_Old_Face,
+                fontSize: responsiveFontSize(3),
+                marginBottom: responsiveHeight(2),
+              }}>
+              Please Wait ...
+            </Text>
+            <ActivityIndicator size={'large'} color={appColor.appColorMain} />
+          </View>
+        ) : empty ? (
+          <View
+            style={{
+              flexGrow: 1,
+              width: responsiveWidth(80),
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignSelf: 'center',
+              marginBottom: responsiveHeight(10),
+            }}>
+            <Text
+              style={{
+                fontFamily: fontFamily.Baskerville_Old_Face,
+                color: appColor.appColorMain,
+                fontSize: responsiveFontSize(3.2),
+              }}>
+              No Results Found
+            </Text>
+          </View>
+        ) : (
+          <FlatList
+            keyboardShouldPersistTaps={'always'}
+            data={list}
+            renderItem={renderItem}
+            numColumns={2}
+            showsVerticalScrollIndicator={false}
+            columnWrapperStyle={{
+              justifyContent: 'space-between',
+            }}
+          />
+        )}
       </View>
     </SafeAreaView>
   );

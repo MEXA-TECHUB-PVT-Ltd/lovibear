@@ -25,11 +25,20 @@ import Carousel from 'react-native-snap-carousel';
 import {fontFamily} from '../../../constants/fonts';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
-import {MyButton} from '../../../components/MyButton';
+import {MyButton, MyButtonLoader} from '../../../components/MyButton';
 import {MyButton2} from '../../../components/MyButton2';
-const Settings = props => {
-  const refContainer = useRef();
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 
+const Settings = props => {
+  const [gettingLoginStatus, setGettingLoginStatus] = useState();
+  const [userInfo, setUserInfo] = useState();
+  const refContainer = useRef();
+  const [loading, setLoading] = useState(false);
   const [categorylist, setCategorylist] = useState([
     {
       id: 1,
@@ -128,6 +137,38 @@ const Settings = props => {
       </TouchableOpacity>
     );
   };
+
+  const _signOut = async () => {
+    setLoading(true);
+
+    const signuptype = await AsyncStorage.getItem('signuptype');
+    if (signuptype == 'google') {
+      setGettingLoginStatus(true);
+      // Remove user session from the device.
+      try {
+        await GoogleSignin.revokeAccess();
+        await GoogleSignin.signOut();
+        // Removing user Info
+        await AsyncStorage.setItem('userid', '');
+        await AsyncStorage.setItem('signuptype', '');
+        await AsyncStorage.setItem('password', '');
+        props.navigation.navigate('Auth', {screen: 'Splash'});
+        setUserInfo(null);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+      }
+      setGettingLoginStatus(false);
+    } else {
+      await AsyncStorage.setItem('userid', '');
+      await AsyncStorage.setItem('signuptype', '');
+      await AsyncStorage.setItem('password', '');
+      props.navigation.navigate('Auth', {screen: 'Splash'});
+      setLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView style={STYLES.containerJustify}>
       <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} />
@@ -166,19 +207,37 @@ const Settings = props => {
         </View>
         <FlatList data={list} renderItem={renderItem} />
       </View>
-      <MyButton
-        onPress={() => props.navigation.navigate('Auth', {screen: 'Login'})}
-        myStyles={{
-          width: responsiveWidth(80),
-          backgroundColor: appColor.appColorMain,
-          marginBottom: responsiveHeight(4),
-          height: responsiveHeight(7),
-        }}
-        title={'Logout'}
-        itsTextstyle={{
-          color: '#fff',
-        }}
-      />
+      {loading ? (
+        <MyButtonLoader
+          myStyles={{
+            width: responsiveWidth(80),
+            backgroundColor: appColor.appColorMain,
+            marginBottom: responsiveHeight(4),
+            height: responsiveHeight(7),
+          }}
+          title={'Logout'}
+          itsTextstyle={{
+            color: '#fff',
+          }}
+        />
+      ) : (
+        <MyButton
+          onPress={async () => {
+            _signOut();
+          }}
+          myStyles={{
+            width: responsiveWidth(80),
+            backgroundColor: appColor.appColorMain,
+            marginBottom: responsiveHeight(4),
+            height: responsiveHeight(7),
+          }}
+          title={'Logout'}
+          itsTextstyle={{
+            color: '#fff',
+          }}
+        />
+      )}
+
       <RBSheet
         ref={refContainer}
         openDuration={250}
