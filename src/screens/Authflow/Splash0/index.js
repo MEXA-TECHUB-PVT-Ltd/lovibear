@@ -28,7 +28,7 @@ const Splash0 = ({navigation}) => {
     );
     if (userid !== null) {
       setTimeout(() => {
-        navigation.navigate('App');
+        navigation.navigate('CheckUserImage');
       }, 1500);
     } else {
       setTimeout(() => {

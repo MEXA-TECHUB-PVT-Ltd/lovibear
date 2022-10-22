@@ -63,7 +63,7 @@ const Splash = props => {
             response.data.Data.signupType,
           );
           await AsyncStorage.setItem('password', 'googlesignup');
-          props.navigation.navigate('App', {screen: 'PlayScreenScreens'});
+          props.navigation.navigate('CheckUserImage');
         }
       })
       .catch(async function (error) {
@@ -267,11 +267,25 @@ const Splash = props => {
           <TouchableOpacity
             style={styles.button1}
             activeOpacity={0.8}
-            onPress={() => props.navigation.navigate('Login')}>
-            <Text style={styles.txt1}>Login With Email / Phone Number</Text>
+            onPress={() =>
+              props.navigation.navigate('Login', {loginwith: 'email'})
+            }>
+            <Text style={styles.txt1}>Login With Email</Text>
           </TouchableOpacity>
-
-          <View
+          <TouchableOpacity
+            style={[
+              styles.button1,
+              {
+                marginTop: responsiveHeight(2),
+              },
+            ]}
+            activeOpacity={0.8}
+            onPress={() =>
+              props.navigation.navigate('Login', {loginwith: 'phonenumber'})
+            }>
+            <Text style={styles.txt1}>Login With Phone Number</Text>
+          </TouchableOpacity>
+          {/* <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
@@ -280,44 +294,54 @@ const Splash = props => {
               alignSelf: 'center',
               marginTop: responsiveHeight(2),
               marginBottom: responsiveHeight(7),
+            }}> */}
+          <TouchableOpacity
+            style={[
+              styles.button2,
+              {
+                marginTop: responsiveHeight(2),
+              },
+            ]}
+            activeOpacity={0.7}
+            onPress={() => {
+              // _signOut();
+              // props.navigation.navigate('Login');
             }}>
-            <TouchableOpacity
-              style={styles.button2}
-              activeOpacity={0.7}
-              onPress={() => {
-                _signOut();
-                // props.navigation.navigate('Login');
-              }}>
-              <Text style={styles.txt2}>Login With</Text>
-              <Image
-                source={appImages.facebook2}
-                resizeMode="contain"
-                style={{
-                  width: responsiveWidth(6),
-                  height: responsiveWidth(6),
-                  marginLeft: responsiveWidth(2),
-                }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button3}
-              activeOpacity={0.7}
-              onPress={() => {
-                _signIn();
-                // props.navigation.navigate('Login')
-              }}>
-              <Text style={styles.txt3}>Login With</Text>
-              <Image
-                source={appImages.google}
-                resizeMode="contain"
-                style={{
-                  width: responsiveWidth(6),
-                  height: responsiveWidth(6),
-                  marginLeft: responsiveWidth(2),
-                }}
-              />
-            </TouchableOpacity>
-          </View>
+            <Text style={styles.txt2}>Login With</Text>
+            <Image
+              source={appImages.facebook2}
+              resizeMode="contain"
+              style={{
+                width: responsiveWidth(6),
+                height: responsiveWidth(6),
+                marginLeft: responsiveWidth(2),
+              }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button3,
+              {
+                marginTop: responsiveHeight(2),
+              },
+            ]}
+            activeOpacity={0.7}
+            onPress={() => {
+              _signIn();
+              // props.navigation.navigate('Login')
+            }}>
+            <Text style={styles.txt3}>Login With</Text>
+            <Image
+              source={appImages.google}
+              resizeMode="contain"
+              style={{
+                width: responsiveWidth(6),
+                height: responsiveWidth(6),
+                marginLeft: responsiveWidth(2),
+              }}
+            />
+          </TouchableOpacity>
+          {/* </View> */}
           <View
             style={{
               flexDirection: 'row',
@@ -400,7 +424,8 @@ const styles = StyleSheet.create({
     paddingVertical: responsiveHeight(1.6),
     borderRadius: responsiveWidth(100),
     flexDirection: 'row',
-    width: responsiveWidth(38),
+    width: responsiveWidth(80),
+
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -417,9 +442,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderColor: '#909090',
     borderWidth: responsiveWidth(0.2),
-    width: responsiveWidth(38),
+    width: responsiveWidth(80),
+
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: responsiveHeight(2),
   },
   txt4: {
     fontSize: responsiveFontSize(1.8),

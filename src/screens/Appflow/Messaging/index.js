@@ -45,13 +45,76 @@ import {
   Message,
   Actions,
 } from 'react-native-gifted-chat';
+import {io} from 'socket.io-client';
+
 import {MyButton} from '../../../components/MyButton';
 
 import {useFocusEffect} from '@react-navigation/native';
-const Messaging = props => {
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Base_URL} from '../../../Base_URL';
+const Messaging = ({route, navigation}) => {
+  const [myidstate, setMyIdState] = useState('');
+  const [receiveridstate, setReceiverIdState] = useState('');
   const [myindex, setMyindex] = useState();
+  const [mychatid, setMyChatId] = useState();
   const [messageinput, setMessageinput] = useState('');
+  const {userids} = route.params;
   const messagesRef = useRef();
+  const socket = useRef();
+  const [trigger, setTrigger] = useState(false);
+
+  const [messages, setMessages] = useState([]);
+  useEffect(() => {
+    InitiateChat();
+  }, []);
+
+  const SetMessagesFunctions = () => {
+    socket.current = io('http://192.168.10.8:3000');
+    console.log('GETTING MESSAGE');
+    socket.current.on('recieve-message', msg => {
+      console.log('recieve-message', msg);
+      let myvar = msg;
+      console.log('MY VAR===', myvar);
+      setTheName(msg.text);
+      msg && setMessages(prev => [...prev, msg]);
+    });
+  };
+  useEffect(() => {
+    SetMessagesFunctions();
+
+    return () => socket.current.close();
+  }, []);
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     SetMessagesFunctions();
+  //   }, []),
+  // );
+
+  const InitiateChat = async () => {
+    console.log('INITIATING THE CHAT');
+    const userid = await AsyncStorage.getItem('userid');
+    const filterreceiver = userids.filter(item => {
+      return item != userid;
+    });
+    const receiverid = filterreceiver[0];
+    console.log('THE USER ID=======', userid);
+    console.log('THE RECEIVER ID=====', receiverid);
+    socket.current.emit('new-user-add', userid);
+    socket.current.emit('chat-start', {
+      senderId: userid,
+      receiverId: receiverid,
+    });
+    socket.current.on('get-users', data => {
+      console.log('ALL USERS============', data);
+    });
+    socket.current.on('chatId-receive', chatId => {
+      console.log('CHAT ID============', chatId);
+      setMyChatId(chatId);
+    });
+    setMyIdState(userid);
+    setReceiverIdState(receiverid);
+  };
   const imageTakeFromGallery = () => {
     ImagePicker.openPicker({
       mediaType: 'any',
@@ -110,30 +173,22 @@ const Messaging = props => {
   const [imagevisible, setImagevisible] = useState(false);
   const [myfocus, setMyfocus] = useState('');
   const [myimage, setMyimage] = useState('');
-
-  const [messages, setMessages] = useState([
-    {
-      user: 0,
-      time: '12:13',
-      content: 'Hey!',
-    },
-    {
-      user: 1,
-      time: '12:15',
-      content: 'Hello! How are you?',
-    },
-    {
-      user: 0,
-      time: '12:15',
-      content: 'Not bad, what about you?',
-    },
-    {
-      user: 0,
-      time: '12:13',
-      content: 'Hello ???',
-    },
-  ]);
+  const [thename, setTheName] = useState('Kyo');
   const refContainer = useRef();
+
+  const handleSendMsg = async () => {
+    const userid = await AsyncStorage.getItem('Userid');
+    console.log('here', user, predata._id);
+    socket.current.emit('send-msg', {
+      to: predata._id,
+      from: user,
+      message,
+    });
+
+    const msgs = [...messages.reverse()];
+    msgs.push({fromSelf: true, message: message});
+    setMessages(msgs.reverse());
+  };
 
   const [selectedImage, setSelectedImage] = useState('');
   const images = [{uri: selectedImage}];
@@ -144,22 +199,29 @@ const Messaging = props => {
           <TouchableOpacity
             activeOpacity={0.7}
             onLongPress={() => {
-              if (item.user == 0) {
+              if (item.senderId == myidstate) {
                 setMyindex(index);
                 refContainer.current.open();
               } else {
                 null;
               }
             }}
-            style={item.user == 0 ? styles.rightmessage : styles.leftmessage}>
-            <Text style={item.user == 0 ? styles.righttxt : styles.lefttxt}>
-              {item.content}
+            style={
+              item.senderId == myidstate
+                ? styles.rightmessage
+                : styles.leftmessage
+            }>
+            <Text
+              style={
+                item.senderId == myidstate ? styles.righttxt : styles.lefttxt
+              }>
+              {item.text}
             </Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
             onLongPress={() => {
-              if (item.user == 0) {
+              if (item.senderId == myidstate) {
                 setMyindex(index);
                 refContainer.current.open();
               } else {
@@ -167,7 +229,11 @@ const Messaging = props => {
               }
             }}
             activeOpacity={0.7}
-            style={item.user == 0 ? styles.rightcontent : styles.leftcontent}
+            style={
+              item.senderId == myidstate
+                ? styles.rightcontent
+                : styles.leftcontent
+            }
             onPress={() => {
               if (item.duration == undefined) {
                 setSelectedImage(item.media);
@@ -295,7 +361,7 @@ const Messaging = props => {
               }}
             />
             <View style={{marginLeft: responsiveWidth(2.5)}}>
-              <Text style={styles.txt1}>Marlene</Text>
+              <Text style={styles.txt1}>{thename}</Text>
               <Text style={styles.txt2}>Art. Director, 21</Text>
             </View>
           </View>
@@ -388,14 +454,31 @@ const Messaging = props => {
             if (messageinput == null || messageinput == '') {
               null;
             } else {
-              setMessageinput('');
-              let myarr = [...messages];
-              await myarr.push({
-                user: 0,
-                time: '12:31',
-                content: messageinput,
+              // let thearr = [...messages];
+              // thearr.push({
+              //   senderId: myidstate,
+              //   receiverId: receiveridstate,
+              //   text: messageinput,
+              //   chatId: mychatid,
+              // });
+              // setMessages(thearr);
+
+              socket.current.emit('send-message', {
+                senderId: myidstate,
+                receiverId: receiveridstate,
+                text: messageinput,
+                chatId: mychatid,
               });
-              await setMessages(myarr);
+
+              setMessageinput('');
+              setTrigger(!trigger);
+              // let myarr = [...messages];
+              // await myarr.push({
+              //   user: 0,
+              //   time: '12:31',
+              //   content: messageinput,
+              // });
+              // await setMessages(myarr);
             }
           }}>
           <Image source={appImages.sendicon} style={styles.sendiconstyle} />

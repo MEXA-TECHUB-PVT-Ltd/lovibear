@@ -49,7 +49,8 @@ const AddProfileImage = ({route, navigation}) => {
   const [apiarray, setApiArray] = useState([]);
   let myarr = [];
 
-  const {routeFrom, userid, mylat, mylong, email, password} = route.params;
+  const {routeFrom, userid, mylat, mylong, email, password, screenFrom} =
+    route.params;
   const UpdateUserId = async () => {
     await myarr.push({
       name: 'userId',
@@ -154,9 +155,16 @@ const AddProfileImage = ({route, navigation}) => {
           let myresponse = JSON.parse(response.data);
           console.log('MY RESPONSE IMAGE FROM API ============', myresponse);
           if (myresponse.message == 'Updated successfully') {
-            if (routeFrom == 'emailorphone') {
+            if (screenFrom != 'signup') {
+              navigation.navigate('App', {
+                screen: 'PlayScreenScreens',
+              });
+            } else if (routeFrom == 'emailorphone') {
+              console.log('FROM SIMPLE EMAIL / PASSWORD');
               navigation.navigate('Login');
             } else if (routeFrom == 'google') {
+              console.log('FROM GOOGLE');
+
               var axios = require('axios');
               var data = JSON.stringify({
                 email: email,
@@ -345,7 +353,11 @@ const AddProfileImage = ({route, navigation}) => {
         <Text style={styles.maintxt}>Add Profile Image</Text>
         <TouchableOpacity
           activeOpacity={0.85}
-          onPress={() => setImagevisible(true)}
+          onPress={() => {
+            if (myimage != '') {
+              setImagevisible(true);
+            }
+          }}
           style={{
             width: responsiveWidth(44),
             height: responsiveWidth(44),
@@ -371,6 +383,7 @@ const AddProfileImage = ({route, navigation}) => {
           </View>
           <TouchableOpacity
             activeOpacity={0.8}
+            disabled={loading ? true : false}
             onPress={() => showDialog()}
             style={{
               position: 'absolute',
@@ -390,7 +403,13 @@ const AddProfileImage = ({route, navigation}) => {
       </View>
 
       {loading ? (
-        <MyButtonLoader myStyles={styles.buttonstyle} title={'Add'} />
+        <MyButtonLoader
+          myStyles={styles.buttonstyle}
+          title={'Add'}
+          itsTextstyle={{
+            color: '#fff',
+          }}
+        />
       ) : (
         <MyButton
           myStyles={styles.buttonstyle}

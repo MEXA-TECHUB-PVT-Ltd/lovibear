@@ -24,7 +24,35 @@ import {
 } from 'react-native-responsive-dimensions';
 import Carousel from 'react-native-snap-carousel';
 import {fontFamily} from '../../../constants/fonts';
+import {Base_URL} from '../../../Base_URL';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const ChatList = props => {
+  useEffect(() => {
+    GetUserMatches();
+  }, []);
+
+  const GetUserMatches = async () => {
+    const userid = await AsyncStorage.getItem('userid');
+    var axios = require('axios');
+
+    var config = {
+      method: 'get',
+      url: Base_URL + '/matches/getUserMatches/' + userid,
+      headers: {},
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        if (response.data.result.length != 0) {
+          setMatchesList(response.data.result);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  const [matcheslist, setMatchesList] = useState([]);
   const [list, setList] = useState([
     {
       id: 1,
@@ -112,7 +140,11 @@ const ChatList = props => {
   const renderItem2 = ({item, index}) => {
     return (
       <TouchableOpacity
-        onPress={() => props.navigation.navigate('Messaging')}
+        onPress={() => {
+          props.navigation.navigate('Messaging', {
+            userids: item.users,
+          });
+        }}
         activeOpacity={0.8}
         style={{
           marginTop: responsiveHeight(1.7),
@@ -157,7 +189,7 @@ const ChatList = props => {
           }}>
           <Text style={styles.txt1}>Your Matches</Text>
           <FlatList
-            data={list}
+            data={matcheslist}
             renderItem={renderItem2}
             contentContainerStyle={{
               flexGrow: 1,

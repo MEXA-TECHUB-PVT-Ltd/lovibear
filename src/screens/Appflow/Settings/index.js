@@ -39,6 +39,10 @@ const Settings = props => {
   const [userInfo, setUserInfo] = useState();
   const refContainer = useRef();
   const [loading, setLoading] = useState(false);
+  // const [logouttype,setLogoutType] = useState("")
+  useEffect(() => {
+    GoogleSignin.configure();
+  }, []);
   const [categorylist, setCategorylist] = useState([
     {
       id: 1,
@@ -65,19 +69,18 @@ const Settings = props => {
     //   onPress: () => props.navigation.navigate('NotificationsScreens'),
     // },
     {
-      id: 3,
+      id: 2,
       title: 'Privacy policy',
       image: appImages.settingprivacy,
     },
+
     {
-      id: 4,
-      title: 'Buy premium account ',
-      image: appImages.premium,
-    },
-    {
-      id: 5,
+      id: 3,
       title: 'Clear cache',
       image: appImages.settingcache,
+      onPress: async () => {
+        _signOut();
+      },
     },
   ]);
   const renderItemCategory = ({item}) => {
@@ -152,6 +155,7 @@ const Settings = props => {
         await AsyncStorage.setItem('userid', '');
         await AsyncStorage.setItem('signuptype', '');
         await AsyncStorage.setItem('password', '');
+        await AsyncStorage.setItem('profileimage', '');
         props.navigation.navigate('Auth', {screen: 'Splash'});
         setUserInfo(null);
         setLoading(false);
@@ -164,6 +168,8 @@ const Settings = props => {
       await AsyncStorage.setItem('userid', '');
       await AsyncStorage.setItem('signuptype', '');
       await AsyncStorage.setItem('password', '');
+      await AsyncStorage.setItem('profileimage', '');
+
       props.navigation.navigate('Auth', {screen: 'Splash'});
       setLoading(false);
     }

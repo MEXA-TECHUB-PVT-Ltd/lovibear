@@ -20,7 +20,13 @@ import {
 import ImageView from 'react-native-image-viewing';
 import Dialog from 'react-native-dialog';
 import ImagePicker from 'react-native-image-crop-picker';
-
+import {
+  ThumbDouble,
+  RailSelectedDouble,
+  RailDouble,
+  NotchDouble,
+  LabelDouble,
+} from '../../../components/SliderDouble';
 import React, {useEffect, useRef, useState} from 'react';
 import STYLES from '../../STYLES';
 import {appColor, appImages} from '../../../assets/utilities';
@@ -35,6 +41,8 @@ import FastImage from 'react-native-fast-image';
 import {MyButton} from '../../../components/MyButton';
 import Swiper from 'react-native-deck-swiper';
 import LinearGradient from 'react-native-linear-gradient';
+import SliderDouble from 'rn-range-slider';
+
 import {fontFamily} from '../../../constants/fonts';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import {Base_URL} from '../../../Base_URL';
@@ -44,8 +52,30 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import {useSelector, useDispatch} from 'react-redux';
 import {setFromRoute, setRouteCard} from '../../../redux/actions';
+import {useCallback} from 'react';
 
 const PlayScreen = ({route, navigation}) => {
+  const renderThumbdouble = useCallback(() => <ThumbDouble />, []);
+  const renderRaildouble = useCallback(() => <RailDouble />, []);
+  const renderRailSelecteddouble = useCallback(
+    () => <RailSelectedDouble />,
+    [],
+  );
+  const renderLabeldouble = useCallback(
+    value => <LabelDouble text={value} />,
+    [],
+  );
+  const renderNotchdouble = useCallback(() => <NotchDouble />, []);
+  const handleValueChangeDistance = useCallback((low, high) => {
+    setMindistancedouble(low);
+    setMaxdistancedouble(high);
+  }, []);
+  const handleValueChangeDistance2 = useCallback((low2, high2) => {
+    setMindistance(0);
+    setMaxdistance(high2);
+  }, []);
+  const [mindistancedouble, setMindistancedouble] = useState(18);
+  const [maxdistancedouble, setMaxdistancedouble] = useState(60);
   const dispatch = useDispatch();
   const {fromroute, routecard} = useSelector(state => state.userReducer);
   const [mylat, setMylat] = useState();
@@ -60,7 +90,7 @@ const PlayScreen = ({route, navigation}) => {
   const hideModal = () => setVisible(false);
   const [modaltype, setModalType] = useState('');
   const [routefirsttime, setRouteFirstTime] = useState(true);
-  const [pagination, setPagination] = useState(2);
+  const [pagination, setPagination] = useState(1);
   const [bypost, setByPost] = useState('');
   const [minage, setMinAge] = useState(0);
   const [maxage, setMaxAge] = useState(100);
@@ -71,14 +101,13 @@ const PlayScreen = ({route, navigation}) => {
   const [CardsList, setCardsList] = useState([]);
   const refContainer = useRef();
   const [cardIndex, setCardIndex] = useState(0);
-  const [thereference, setReference] = useState(false);
-  var indexreference = '';
-
+  const [thereference, setReference] = useState(true);
+  const [radiusconfirm, setRadiusConfirm] = useState(false);
+  const [confirmage, setConfirmAge] = useState(false);
   useEffect(() => {
-    getLocation();
+    // getLocation();
     getuid();
   }, []);
-
   useFocusEffect(
     React.useCallback(() => {
       const backAction = () => {
@@ -96,17 +125,17 @@ const PlayScreen = ({route, navigation}) => {
   useEffect(() => {
     FromRoutes();
   }, [fromroute, routecard]);
-
   useEffect(() => {
-    FromModal();
-  }, [thereference, bypost, gender, minage, maxage]);
+    SingleCompleteFilter();
+  }, [bypost, gender, minage, maxage, pagination, radiusconfirm, confirmage]);
 
   const getuid = async () => {
     const userid = await AsyncStorage.getItem('userid');
     console.log('THE LOGIN USER ID ===========', userid);
   };
 
-  const getLocation = async () => {
+  const SingleCompleteFilter = async () => {
+    setLoading(true);
     if (Platform.OS === 'ios') {
       Geolocation.requestAuthorization();
       Geolocation.setRNConfiguration({
@@ -119,90 +148,117 @@ const PlayScreen = ({route, navigation}) => {
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       );
     }
-    await Geolocation.getCurrentPosition(
-      position => {
-        console.log(position);
-        setMylat(position.coords.latitude);
-        setMylong(position.coords.longitude);
-        if (firsttime) {
-          setTimeout(() => {
-            Filter(position.coords.latitude, position.coords.longitude);
-          }, 500);
-        } else {
-          setTimeout(() => {
-            FilterPagination(
-              position.coords.latitude,
-              position.coords.longitude,
-            );
-          }, 500);
-        }
-      },
+    Geolocation.getCurrentPosition(async position => {
+      console.log(position);
+      setMylat(position.coords.latitude);
+      setMylong(position.coords.longitude);
+      CompleteFunctionResults(
+        position.coords.latitude,
+        position.coords.longitude,
+      );
       error => {
         console.log(error.code, error.message);
         Alert.alert('Enable Location', 'Your location is required to proceed', [
           {
             text: 'OK',
             onPress: () => {
-              getLocation();
+              SingleCompleteFilter();
             },
           },
         ]);
       },
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-    );
+        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000};
+    });
   };
 
-  const FromModal = async () => {
-    if (thereference == true) {
-      setLoading(true);
-      if (Platform.OS === 'ios') {
-        Geolocation.requestAuthorization();
-        Geolocation.setRNConfiguration({
-          skipPermissionRequests: false,
-          authorizationLevel: 'whenInUse',
-        });
-      }
-      if (Platform.OS === 'android') {
-        await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        );
-      }
-      await Geolocation.getCurrentPosition(
-        position => {
-          console.log(position);
-          setMylat(position.coords.latitude);
-          setMylong(position.coords.longitude);
-          setTimeout(() => {
-            Filter(position.coords.latitude, position.coords.longitude);
-          }, 500);
-        },
-        error => {
-          console.log(error.code, error.message);
-          Alert.alert(
-            'Enable Location',
-            'Your location is required to proceed',
-            [
-              {
-                text: 'OK',
-                onPress: () => {
-                  FromModal();
-                },
-              },
-            ],
-          );
-        },
-        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-      );
-    }
+  const CompleteFunctionResults = async (customlat, customlong) => {
+    console.log('PAGINATION=================', pagination);
+    console.log('GENDER=================', gender);
+    console.log('POST=================', bypost);
+    console.log('MINAGE=================', mindistancedouble);
+    console.log('MAXAGE=================', maxdistancedouble);
+    console.log('CUSTOMLAT=============', customlat);
+    console.log('CUSTOMLAT=============', customlong);
+    console.log('MYRADIUS==============', myradius);
+    console.log('FUNCTION STARTING');
+    const userid = await AsyncStorage.getItem('userid');
+    console.log('THE USER ID====================', userid);
+    var axios = require('axios');
+    var data = JSON.stringify({
+      long: customlong,
+      lat: customlat,
+      radiusInKm: myradius,
+      userId: userid,
+    });
+    var config = {
+      method: 'post',
+      url:
+        Base_URL +
+        '/user/usersInRadius/?page=' +
+        pagination +
+        '&limit=6' +
+        '&gender=' +
+        gender +
+        '&byPosts=' +
+        bypost +
+        '&min_age=' +
+        mindistancedouble +
+        '&max_age=' +
+        maxdistancedouble,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+    console.log('FUNCTION MIDWAY');
+
+    await axios(config)
+      .then(response => {
+        console.log('FUNCTION CONCLUSTION');
+
+        // console.log(JSON.stringify('THE CARD LIST============', response.data));
+        console.log('THE RESPONSE===========', response.data);
+        if (response.data.users.length == 0) {
+          console.log('No Results Found');
+          setEmpty(true);
+          setLoading(false);
+        } else {
+          setCardIndex(0);
+          console.log('THE RESPONSE');
+          // let myarr = response.data.users.filter(item => {
+          //   return item._id !== userid;
+          // });
+          // setCardsList(myarr);
+          setCardsList(response.data.users);
+          console.log('THE CARD LIST================', response.data.users);
+          // var thevar = response.data.users.map(item => {
+          //   return item.document.userName;
+          // });
+          // console.log('THE VAR IN SIMPLE FILTER============', thevar);
+          setEmpty(false);
+          setLoading(false);
+        }
+      })
+      .catch(function (error) {
+        console.log('FUNCTION CONCLUSTION');
+
+        console.log('MY ERROR========', error);
+        console.log(error.response.data);
+        if (error.response.data.message == 'No user found with this query') {
+          console.log('No Results Found');
+          setEmpty(true);
+          setLoading(false);
+        }
+      });
   };
 
   const FromRoutes = async () => {
     console.log('CHECKING ROUTE ==', fromroute);
     console.log('CHECKING ROUTE CARD ==', routecard);
-    console.log('REFERENCE INDEX==========', indexreference);
+    // console.log('REFERENCE INDEX==========', indexreference);
     if (fromroute == 'discover' || fromroute == 'search') {
       console.log('ROUTE FROM ============', fromroute);
-      console.log('REFERENCE INDEX==========', indexreference);
+      // console.log('REFERENCE INDEX==========', indexreference);
       setLoading(true);
       if (routefirsttime == true) {
         let _arr = [...CardsList];
@@ -432,165 +488,6 @@ const PlayScreen = ({route, navigation}) => {
         console.log('THE ERROR ON REWIND====', error.response);
         console.log(error);
         setLoading(false);
-      });
-  };
-
-  const Filter = async (customlat, customlong) => {
-    setFirsttime(false);
-    setCardIndex(0);
-    setReference(false);
-    if (bypost == true) {
-      console.log('BY POST IS TRUE');
-    } else {
-      console.log('BY POST IS FALSE');
-    }
-    console.log('CARD LIST LENGTH=====', CardsList.length);
-    const userid = await AsyncStorage.getItem('userid');
-    console.log('HERE AT FILTER FUNCTION');
-    var axios = require('axios');
-    console.log('MY CUSTOM LAT AND LONG==========', mylat, mylong);
-    var data = JSON.stringify({
-      long: customlong,
-      lat: customlat,
-      radiusInKm: myradius,
-    });
-    var config = {
-      method: 'post',
-      url:
-        Base_URL +
-        '/user/usersInRadius/?page=1' +
-        '&limit=8' +
-        '&gender=' +
-        gender +
-        '&byPosts=' +
-        bypost +
-        '&min_age=' +
-        minage +
-        '&max_age=' +
-        maxage,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: data,
-    };
-
-    await axios(config)
-      .then(function (response) {
-        // console.log(JSON.stringify('THE CARD LIST============', response.data));
-        if (response.data.message == 'No user found with this query') {
-          console.log('No Results Found');
-          setLoading(false);
-          setEmpty(true);
-        } else {
-          let myarr = response.data.users.filter(item => {
-            return item._id !== userid;
-          });
-          setCardsList(myarr);
-          // setCardsList(response.data.users);
-
-          console.log('THE CARD LIST================', response.data.users);
-          var thevar = response.data.users.map(item => {
-            return item.document.userName;
-          });
-
-          console.log('THE VAR IN SIMPLE FILTER============', thevar);
-          setEmpty(false);
-
-          setLoading(false);
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-        console.log(error.response.data);
-        if (error.response.data.message == 'No user found with this query') {
-          console.log('No Results Found');
-          setEmpty(true);
-
-          setLoading(false);
-        }
-      });
-  };
-
-  const FilterPagination = async (customlat, customlong) => {
-    setRouteFirstTime(true);
-    setLoading(true);
-    if (bypost == true) {
-      console.log('BY POST IN PAGINATION IS TRUE');
-    } else {
-      console.log('BY POST IN PAGINATION IS FALSE');
-    }
-    console.log('CARD LIST LENGTH=====', CardsList.length);
-    const userid = await AsyncStorage.getItem('userid');
-    console.log('HERE AT FILTER FUNCTION');
-    var axios = require('axios');
-    // console.log('MY PAGINATION LAT AND LONG==========', mylat, mylong);
-    var data = JSON.stringify({
-      long: customlong,
-      lat: customlat,
-      radiusInKm: myradius,
-    });
-    var config = {
-      method: 'post',
-      url:
-        Base_URL +
-        '/user/usersInRadius/?page=' +
-        pagination +
-        '&limit=8' +
-        '&gender=' +
-        gender +
-        '&byPosts=' +
-        bypost +
-        '&min_age=' +
-        minage +
-        '&max_age=' +
-        maxage,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: data,
-    };
-
-    await axios(config)
-      .then(function (response) {
-        console
-          .log
-          // JSON.stringify('THE CARD LIST PAGINATION============', response.data),
-          ();
-        if (response.data.message == 'No user found with this query') {
-          console.log('No Results Found');
-          setEmpty(true);
-          setLoading(false);
-        } else {
-          setCardIndex(0);
-          let myarr = response.data.users.filter(item => {
-            return item._id !== userid;
-          });
-          // setCardsList(response.data.users);
-          setCardsList(myarr);
-
-          var thevar = response.data.users.map(item => {
-            return item.document.userName;
-          });
-          console.log('THE VAR============', thevar);
-
-          console.log(
-            'THE CARD LIST PAGINATION================',
-            response.data.users,
-          );
-          setEmpty(false);
-
-          setLoading(false);
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-        console.log(error.response.data);
-        if (error.response.data.message == 'No user found with this query') {
-          console.log('No Results Found');
-          setEmpty(true);
-
-          setLoading(false);
-        }
       });
   };
 
@@ -1017,10 +914,7 @@ const PlayScreen = ({route, navigation}) => {
               renderCard={item => Card(item)}
               ref={swiperRef}
               onSwipedAll={() => {
-                // setEmpty(true);
-                setLoading(true);
                 setPagination(pagination + 1);
-                getLocation();
               }}
             />
           )}
@@ -1049,23 +943,21 @@ const PlayScreen = ({route, navigation}) => {
           </TouchableOpacity>
           <TouchableOpacity
             disabled={
-              processing == true ||
-              loading == true ||
-              undostatus == false ||
-              cardIndex == 0
-                ? true
+              processing == true || loading == true || undostatus == false
+                ? //     ||  cardIndex == 0
+                  true
                 : false
             }
             style={styles.buttonview3}
             activeOpacity={0.7}
             onPress={() => {
               if (undostatus == true) {
-                if (cardIndex !== 0) {
-                  console.log('HERE AT UNDO BUTTON PRESS');
-                  RewindCardApi();
-                  setEmpty(false);
-                  setCardIndex(cardIndex - 1);
-                }
+                // if (cardIndex !== 0) {
+                console.log('HERE AT UNDO BUTTON PRESS');
+                RewindCardApi();
+                setEmpty(false);
+                setCardIndex(cardIndex - 1);
+                // }
               }
             }}>
             <Image
@@ -1146,141 +1038,296 @@ const PlayScreen = ({route, navigation}) => {
         visible={visible}
         onDismiss={hideModal}
         contentContainerStyle={{flex: 1}}>
-        {modaltype == 'posts' ? (
-          <View
-            style={{
-              backgroundColor: '#fff',
-              alignItems: 'center',
-              width: responsiveWidth(80),
-              alignSelf: 'center',
-            }}>
-            <Text
+        <View
+          style={{
+            // backgroundColor: 'red',
+            width: responsiveWidth(80),
+            alignSelf: 'center',
+            borderRadius: responsiveWidth(2),
+            overflow: 'hidden',
+          }}>
+          {modaltype == 'posts' ? (
+            <View
               style={{
-                paddingTop: responsiveHeight(4),
-                paddingBottom: responsiveHeight(5),
+                backgroundColor: '#fff',
+                alignItems: 'center',
+                width: responsiveWidth(80),
+                alignSelf: 'center',
               }}>
-              Sort results by post?
-            </Text>
+              <Text
+                style={{
+                  paddingTop: responsiveHeight(4),
+                  paddingBottom: responsiveHeight(5),
+                  fontFamily: fontFamily.Baskerville_Old_Face,
+                  color: appColor.appColorMain,
+                  fontSize: responsiveFontSize(2.5),
+                }}>
+                Sort results by post?
+              </Text>
+              <View
+                style={{
+                  width: responsiveWidth(80),
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-around',
+                  paddingBottom: responsiveHeight(5),
+                }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    // setPagination(0);
+                    hideModal();
+
+                    setByPost(true);
+                    // postreference = true;
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: fontFamily.Baskerville_Old_Face,
+                      color: appColor.appColorMain,
+                      fontSize: responsiveFontSize(2.5),
+                    }}>
+                    Yes
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    // setPagination(0);
+                    hideModal();
+
+                    setByPost('');
+                    // postreference = '';
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: fontFamily.Baskerville_Old_Face,
+                      color: appColor.appColorMain,
+                      fontSize: responsiveFontSize(2.5),
+                    }}>
+                    No
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : modaltype == 'bio' ? (
+            <View
+              style={{
+                backgroundColor: '#fff',
+                alignItems: 'center',
+                width: responsiveWidth(80),
+                alignSelf: 'center',
+              }}>
+              <Text
+                style={{
+                  marginVertical: responsiveHeight(2),
+
+                  fontFamily: fontFamily.Baskerville_Old_Face,
+                  color: appColor.appColorMain,
+                  fontSize: responsiveFontSize(2.5),
+                }}>
+                Sort by gender?
+              </Text>
+              <View
+                style={{
+                  width: responsiveWidth(80),
+
+                  alignItems: 'center',
+                }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    hideModal();
+
+                    setGender('male');
+                  }}
+                  style={{
+                    marginBottom: responsiveHeight(2),
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: fontFamily.Baskerville_Old_Face,
+                      color: appColor.appColorMain,
+                      fontSize: responsiveFontSize(2.5),
+                    }}>
+                    Male
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    hideModal();
+
+                    setGender('female');
+                  }}
+                  style={{}}>
+                  <Text
+                    style={{
+                      fontFamily: fontFamily.Baskerville_Old_Face,
+                      color: appColor.appColorMain,
+                      fontSize: responsiveFontSize(2.5),
+                    }}>
+                    Female
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    hideModal();
+
+                    setGender('');
+                  }}
+                  style={{
+                    marginVertical: responsiveHeight(2),
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: fontFamily.Baskerville_Old_Face,
+                      color: appColor.appColorMain,
+                      fontSize: responsiveFontSize(2.5),
+                    }}>
+                    Any
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : modaltype == 'location' ? (
+            <View
+              style={{
+                backgroundColor: '#fff',
+                alignItems: 'center',
+                width: responsiveWidth(80),
+                alignSelf: 'center',
+                paddingVertical: responsiveHeight(2),
+              }}>
+              <Text
+                style={{
+                  fontFamily: fontFamily.Baskerville_Old_Face,
+                  color: appColor.appColorMain,
+                  fontSize: responsiveFontSize(2.5),
+                }}>
+                Enter Radius
+              </Text>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <TextInput
+                  maxLength={6}
+                  keyboardType="numeric"
+                  style={{
+                    backgroundColor: '#F2F2F2',
+                    paddingHorizontal: responsiveWidth(3),
+                    marginVertical: responsiveHeight(2.5),
+                    fontFamily: fontFamily.Baskerville_Old_Face,
+                    color: appColor.appColorMain,
+                    fontSize: responsiveFontSize(2.5),
+                  }}
+                  value={myradius}
+                  onChangeText={text => {
+                    setMyRadius(text);
+                  }}
+                  onSubmitEditing={() => {
+                    // hideModal();
+                    // setRadiusConfirm(!radiusconfirm);
+                  }}
+                />
+                <Text
+                  style={{
+                    fontFamily: fontFamily.Baskerville_Old_Face,
+                    color: appColor.appColorMain,
+                    fontSize: responsiveFontSize(2.5),
+                    marginLeft: responsiveWidth(2),
+                  }}>
+                  KM
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  hideModal();
+                  setRadiusConfirm(!radiusconfirm);
+                }}>
+                <Text
+                  style={{
+                    fontFamily: fontFamily.Baskerville_Old_Face,
+                    color: appColor.appColorMain,
+                    fontSize: responsiveFontSize(2.5),
+                  }}>
+                  Submit
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ) : modaltype == 'age' ? (
             <View
               style={{
                 width: responsiveWidth(80),
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-around',
-                paddingBottom: responsiveHeight(5),
+                backgroundColor: '#fff',
+                paddingVertical: responsiveHeight(2.5),
               }}>
+              <Text
+                style={{
+                  fontFamily: fontFamily.Baskerville_Old_Face,
+                  color: appColor.appColorMain,
+                  fontSize: responsiveFontSize(2.5),
+                  alignSelf: 'center',
+                }}>
+                Sort by age
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  paddingHorizontal: responsiveWidth(5.5),
+                }}>
+                <Text
+                  style={{
+                    fontFamily: fontFamily.Baskerville_Old_Face,
+                    color: appColor.appColorMain,
+                    fontSize: responsiveFontSize(2.5),
+                  }}>
+                  {mindistancedouble}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: fontFamily.Baskerville_Old_Face,
+                    color: appColor.appColorMain,
+                    fontSize: responsiveFontSize(2.5),
+                  }}>
+                  {maxdistancedouble}
+                </Text>
+              </View>
+              <SliderDouble
+                style={{
+                  paddingVertical: responsiveHeight(2.5),
+                  width: responsiveWidth(70),
+                  alignSelf: 'center',
+                }}
+                min={18}
+                max={80}
+                step={1}
+                // disableRange
+                high={maxdistancedouble}
+                low={mindistancedouble}
+                // selectedMaximum={maxdistancedouble}
+                floatingLabel
+                renderThumb={renderThumbdouble}
+                renderRail={renderRaildouble}
+                renderRailSelected={renderRailSelecteddouble}
+                onValueChanged={handleValueChangeDistance}
+                // renderNotch={renderNotchdouble}
+                // renderLabel={renderLabeldouble}
+              />
               <TouchableOpacity
                 onPress={() => {
                   hideModal();
-                  setReference(true);
-
-                  setByPost(true);
-                  // postreference = true;
-                }}>
-                <Text>Yes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  hideModal();
-                  setReference(true);
-
-                  setByPost('');
-                  // postreference = '';
-                }}>
-                <Text>No</Text>
+                  setConfirmAge(!confirmage);
+                }}
+                style={{alignSelf: 'center'}}>
+                <Text
+                  style={{
+                    fontFamily: fontFamily.Baskerville_Old_Face,
+                    color: appColor.appColorMain,
+                    fontSize: responsiveFontSize(2.5),
+                  }}>
+                  Submit
+                </Text>
               </TouchableOpacity>
             </View>
-          </View>
-        ) : modaltype == 'bio' ? (
-          <View
-            style={{
-              backgroundColor: '#fff',
-              alignItems: 'center',
-              width: responsiveWidth(80),
-              alignSelf: 'center',
-            }}>
-            <Text
-              style={{
-                paddingTop: responsiveHeight(4),
-                paddingBottom: responsiveHeight(2),
-              }}>
-              Sort by gender
-            </Text>
-            <View
-              style={{
-                width: responsiveWidth(80),
-
-                alignItems: 'center',
-              }}>
-              <TouchableOpacity
-                onPress={() => {
-                  hideModal();
-                  setReference(true);
-                  setGender('male');
-                }}
-                style={{
-                  marginVertical: responsiveHeight(2),
-                }}>
-                <Text>Male</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  hideModal();
-                  setReference(true);
-                  setGender('female');
-                }}
-                style={{
-                  marginVertical: responsiveHeight(2),
-                }}>
-                <Text>Female</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  hideModal();
-                  // setReference(true);
-                  // setGender("female")
-                }}
-                style={{
-                  marginVertical: responsiveHeight(2),
-                }}>
-                <Text>Prefer not to say</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ) : modaltype == 'location' ? (
-          <View
-            style={{
-              backgroundColor: '#fff',
-              alignItems: 'center',
-              width: responsiveWidth(80),
-              alignSelf: 'center',
-              paddingVertical: responsiveHeight(2),
-            }}>
-            <Text>Enter Radius</Text>
-            <TextInput
-              style={{
-                backgroundColor: 'lightgray',
-                paddingHorizontal: responsiveWidth(3),
-                marginVertical: responsiveHeight(2.5),
-              }}
-              value={myradius}
-              onChangeText={text => {
-                setMyRadius(text);
-              }}
-              onSubmitEditing={() => {
-                hideModal();
-                setReference(true);
-              }}
-            />
-            <TouchableOpacity
-              onPress={() => {
-                hideModal();
-                setReference(true);
-              }}>
-              <Text>Submit</Text>
-            </TouchableOpacity>
-          </View>
-        ) : null}
+          ) : null}
+        </View>
       </Modal>
     </SafeAreaView>
   );

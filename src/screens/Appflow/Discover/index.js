@@ -34,6 +34,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setFromRoute, setRouteCard} from '../../../redux/actions';
 import {useFocusEffect} from '@react-navigation/native';
 import {ActivityIndicator} from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Discover = props => {
   const [loading, setLoading] = useState(false);
@@ -85,11 +86,13 @@ const Discover = props => {
     );
   };
   const GetAllUsers = async (mylat, mylong) => {
+    const userid = await AsyncStorage.getItem('userid');
     var axios = require('axios');
     var data = JSON.stringify({
       long: mylong,
       lat: mylat,
       radiusInKm: '50000',
+      userId: userid,
     });
 
     var config = {
@@ -106,7 +109,7 @@ const Discover = props => {
     await axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
-        if (response.data.message == 'No user found with this query') {
+        if (response.data.users.length == 0) {
           setEmpty(true);
           setLoading(false);
         } else {
@@ -119,7 +122,6 @@ const Discover = props => {
         if (error.response.data.message == 'No user found with this query') {
           console.log('No Results Found');
           setEmpty(true);
-
           setLoading(false);
         }
         console.log(error);

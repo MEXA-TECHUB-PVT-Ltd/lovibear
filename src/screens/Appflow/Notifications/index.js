@@ -37,6 +37,17 @@ const Notifications = props => {
     }, []),
   );
 
+  //   const ChangeStatus = ({itemSelected,index}) =>{
+  // const newData = list.map((item)=>{
+  //   if(itemSelected == item)
+  //   {
+  //     return
+
+  //   }
+  // })
+
+  //   }
+
   const GetNotifications = async () => {
     setLoading(true);
     const userid = await AsyncStorage.getItem('userid');
@@ -74,23 +85,26 @@ const Notifications = props => {
   };
 
   const [list, setList] = useState([]);
-  const renderItem = ({item}) => {
+  const renderItem = ({item, index}) => {
     return (
       <TouchableOpacity
         // onPress={() => props.navigation.navigate('Messaging')}
+
         onPress={() => {
-          item.id == 1 ? props.navigation.navigate('Bingo') : null;
+          ChangeStatus(item, index);
+          // item.id == 1 ? props.navigation.navigate('Bingo') : null;
         }}
         activeOpacity={0.7}
         style={{
+          backgroundColor: item.readStatus == false ? '#F1F1F1' : '#fff',
           marginBottom: responsiveHeight(2.5),
+          borderRadius: responsiveWidth(1),
           flexDirection: 'row',
-
           alignItems: 'center',
         }}>
         <View
           style={{
-            // backgroundColor: '#fff',
+            backgroundColor: 'gray',
             shadowColor: '#000',
             shadowOffset: {
               width: 0,
@@ -98,8 +112,7 @@ const Notifications = props => {
             },
             shadowOpacity: 0.44,
             shadowRadius: 10.32,
-
-            elevation: 16,
+            elevation: 6,
             width: responsiveWidth(21),
             height: responsiveWidth(21),
             borderRadius: responsiveWidth(99),

@@ -32,7 +32,7 @@ import {
 } from '@react-native-google-signin/google-signin';
 import {Base_URL} from '../../../Base_URL';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-const Login = props => {
+const Login = ({route, navigation}) => {
   let regchecknumber = /^[0-9]*$/;
   let reg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w\w+)+$/;
   let regphone =
@@ -50,9 +50,13 @@ const Login = props => {
   const [checkpassword, setCheckpassword] = useState(false);
   const [firstchar, setFirstChar] = useState('');
   const [loading, setLoading] = useState(false);
+  const {loginwith} = route.params;
+  console.log('LOGIN WITH============', loginwith);
   useFocusEffect(
     React.useCallback(() => {
       setSoftinput(true);
+      // setEmailerror(false);
+      // setPassworderror(false);
     }, []),
   );
 
@@ -126,9 +130,19 @@ const Login = props => {
               response.data.Data.signupType,
             );
             await AsyncStorage.setItem('password', password);
-            // await AsyncStorage.setItem('userid', response.data.Data._id);
 
-            props.navigation.navigate('App', {screen: 'PlayScreenScreens'});
+            if (response.data.Data.profileImage == undefined) {
+              console.log('PROFILE IMAGE UNDEFINED');
+              await AsyncStorage.setItem('profileimage', '');
+            } else {
+              await AsyncStorage.setItem(
+                'profileimage',
+                response.data.Data.profileImage.userPicUrl,
+              );
+            }
+
+            // await AsyncStorage.setItem('userid', response.data.Data._id);
+            navigation.navigate('CheckUserImage');
             console.log('MY LOADER=======', loading);
             setLoading(false);
           }
@@ -146,7 +160,7 @@ const Login = props => {
             setLoading(false);
           } else if ('"password" length must be at least 6 characters long') {
             setCheckpassword(true);
-            setPassworderror('Wrong Length');
+            setPassworderror('Password length must be atleast 6 digits');
             setLoading(false);
           }
           setLoading(false);
@@ -242,8 +256,10 @@ const Login = props => {
                 setCheckemail(false);
                 if (text !== '' && regchecknumber.test(text)) {
                   setFirstChar('+');
+                  setCheckpassword(false);
                 } else {
                   setFirstChar('');
+                  setCheckpassword(false);
                 }
               }}
               placeholderTextColor={'#8D8D8D'}
@@ -308,7 +324,7 @@ const Login = props => {
           <TouchableOpacity
             style={styles.forgetview}
             activeOpacity={0.6}
-            onPress={() => props.navigation.navigate('ForgotPassword')}>
+            onPress={() => navigation.navigate('ForgotPassword')}>
             <Text style={styles.forgettxt}>Forgot Password?{'  '}</Text>
           </TouchableOpacity>
         </View>
@@ -390,7 +406,7 @@ const Login = props => {
             <TouchableOpacity
               activeOpacity={0.7}
               onPress={() =>
-                props.navigation.navigate('SignUp', {
+                navigation.navigate('SignUp', {
                   routeFrom: 'emailorphone',
                   userInfo: 'null',
                 })

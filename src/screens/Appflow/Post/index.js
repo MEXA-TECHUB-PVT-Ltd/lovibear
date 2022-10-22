@@ -41,7 +41,7 @@ const Post = props => {
   const [visible, setIsVisible] = useState(false);
   const [viewimages, setViewImages] = useState([]);
   const images = viewimages;
-
+  const [empty, setEmpty] = useState(false);
   const GetUser = async () => {
     const userid = await AsyncStorage.getItem('userid');
     var axios = require('axios');
@@ -72,16 +72,17 @@ const Post = props => {
     };
     await axios(config)
       .then(function (response) {
-        console.log(JSON.stringify(response.data));
-        if (response.data.message != 'Posts not found for this user') {
+        console.log('THIS ONE=========', JSON.stringify(response.data));
+        if (response.data.result.length != 0) {
           setList(response.data.result);
-          // let myarr = response.data.result.map(item=>{
-          //   return item.postImages
-          // })
+          setEmpty(false);
+        } else {
+          setEmpty(true);
         }
       })
       .catch(function (error) {
         console.log(error);
+        setEmpty(true);
       });
   };
 
@@ -209,6 +210,7 @@ const Post = props => {
           // paddingHorizontal: responsiveWidth(5),
           alignSelf: 'center',
           zIndex: 1,
+          flexGrow: 1,
         }}>
         <View
           style={{
@@ -299,7 +301,7 @@ const Post = props => {
           <View
             style={{
               alignSelf: 'center',
-              paddingRight: responsiveWidth(13),
+              // paddingRight: responsiveWidth(13),
               paddingTop: responsiveHeight(1.1),
               alignItems: 'flex-end',
             }}>
@@ -309,6 +311,7 @@ const Post = props => {
                 fontFamily: fontFamily.Baskerville_Old_Face,
                 fontSize: responsiveFontSize(2.8),
                 marginBottom: responsiveHeight(0.5),
+                textAlign: 'center',
               }}>
               {userDetails == undefined ? '' : userDetails[0].userName}
             </Text>
@@ -322,19 +325,40 @@ const Post = props => {
             </Text> */}
           </View>
         </View>
-        <FlatList
-          data={list}
-          renderItem={renderItem}
-          contentContainerStyle={{}}
-          numColumns={2}
-          scrollEnabled={false}
-          showsVerticalScrollIndicator={false}
-          columnWrapperStyle={{
-            justifyContent: 'space-between',
-            width: responsiveWidth(90),
-            alignSelf: 'center',
-          }}
-        />
+        {empty ? (
+          <View
+            style={{
+              width: responsiveWidth(80),
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignSelf: 'center',
+              // marginBottom: responsiveHeight(5),
+              marginTop: responsiveHeight(8),
+            }}>
+            <Text
+              style={{
+                fontFamily: fontFamily.Baskerville_Old_Face,
+                color: appColor.appColorMain,
+                fontSize: responsiveFontSize(3.2),
+              }}>
+              You have no posts
+            </Text>
+          </View>
+        ) : (
+          <FlatList
+            data={list}
+            renderItem={renderItem}
+            contentContainerStyle={{}}
+            numColumns={2}
+            scrollEnabled={false}
+            showsVerticalScrollIndicator={false}
+            columnWrapperStyle={{
+              justifyContent: 'space-between',
+              width: responsiveWidth(90),
+              alignSelf: 'center',
+            }}
+          />
+        )}
         <ImageView
           images={images}
           imageIndex={0}

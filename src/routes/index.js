@@ -16,15 +16,15 @@ import {useRef} from 'react';
 
 const AppStack = createStackNavigator();
 const AppNavigation = props => {
-  // const myref = useRef();
+  const myref = useRef();
   // console.log('MY REF=============', myref);
-  // messaging().onNotificationOpenedApp(remoteMessage => {
-  //   console.log(
-  //     'Notification caused app to open from background state:',
-  //     remoteMessage.notification,
-  //   );
-  //   myref.current.navigate('NotificationsScreens');
-  // });
+  messaging().onNotificationOpenedApp(remoteMessage => {
+    console.log(
+      'Notification caused app to open from background state:',
+      remoteMessage.notification,
+    );
+    myref.current.navigate('NotificationsScreens');
+  });
   // const [mode,setMode] = useState(false)
   // useEffect(()=>{
   //   let eventListener = EventRegister.addEventListener("changeTheme",(data)=>
@@ -37,7 +37,7 @@ const AppNavigation = props => {
   // })
   return (
     <Provider store={Store}>
-      <NavigationContainer>
+      <NavigationContainer ref={myref}>
         <AppStack.Navigator screenOptions={{headerShown: false}}>
           <AppStack.Screen name={'Auth'} component={AuthApp} />
           <AppStack.Screen name={'App'} component={App} />

@@ -23,6 +23,7 @@ import VideoScreen from './Appflow/VideoScreen';
 import UpdatePasswordInApp from './Appflow/UpdatePasswordInApp';
 import Splash0 from './Authflow/Splash0';
 import ImageChecker from './Appflow/ImageChecker';
+import CheckUserImage from './Authflow/CheckUserImage';
 export {
   PlayScreen,
   Post,
@@ -51,4 +52,5 @@ export {
   AddProfileImage,
   Subscribe,
   Splash0,
+  CheckUserImage,
 };

@@ -310,15 +310,27 @@ const SignUp = ({navigation, route}) => {
           setLoading(false);
         } else {
           setLoading(false);
-
-          navigation.navigate('AddProfileImage', {
-            routeFrom: routeFrom,
-            userid: result.result._id,
-            mylong: result.result.location.coordinates[0],
-            mylat: result.result.location.coordinates[1],
-            email: userInfo.email,
-            password: userInfo.id,
-          });
+          if (routeFrom == 'google') {
+            navigation.navigate('AddProfileImage', {
+              routeFrom: routeFrom,
+              userid: result.result._id,
+              mylong: result.result.location.coordinates[0],
+              mylat: result.result.location.coordinates[1],
+              email: userInfo.email,
+              password: userInfo.id,
+              screenFrom: 'signup',
+            });
+          } else {
+            navigation.navigate('AddProfileImage', {
+              routeFrom: routeFrom,
+              userid: result.result._id,
+              mylong: result.result.location.coordinates[0],
+              mylat: result.result.location.coordinates[1],
+              email: result.result.email,
+              password: password,
+              screenFrom: 'signup',
+            });
+          }
         }
       })
 
