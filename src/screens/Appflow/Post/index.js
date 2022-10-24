@@ -142,7 +142,42 @@ const Post = props => {
 
   return (
     <SafeAreaView style={STYLES.container}>
-      <MyHeart
+      <TouchableOpacity
+        onPress={() => props.navigation.navigate('AddPhoto')}
+        activeOpacity={0.7}
+        style={{
+          flexDirection: 'row',
+          position: 'absolute',
+          alignSelf: 'center',
+          backgroundColor: appColor.appColorMain,
+          alignItems: 'center',
+          width: responsiveWidth(40),
+          justifyContent: 'space-between',
+          paddingHorizontal: responsiveWidth(5),
+          borderRadius: responsiveWidth(100),
+          bottom: responsiveHeight(4),
+          paddingVertical: responsiveHeight(0.4),
+          zIndex: 1,
+        }}>
+        <Text
+          style={{
+            fontFamily: fontFamily.Calibri_Bold,
+            fontSize: responsiveFontSize(3.8),
+            color: '#fff',
+            marginTop: responsiveHeight(-0.6),
+          }}>
+          +
+        </Text>
+        <Text
+          style={{
+            fontFamily: fontFamily.Baskerville_Old_Face,
+            fontSize: responsiveFontSize(2.6),
+            color: '#fff',
+          }}>
+          Add Photo
+        </Text>
+      </TouchableOpacity>
+      {/* <MyHeart
         type={'red'}
         myStyles={{
           top: responsiveHeight(12),
@@ -195,7 +230,7 @@ const Post = props => {
         }}
         width={responsiveWidth(13)}
         height={responsiveWidth(13)}
-      />
+      /> */}
 
       <StatusBar
         hidden={false}
@@ -209,35 +244,14 @@ const Post = props => {
           backgroundColor: 'transparent',
           // paddingHorizontal: responsiveWidth(5),
           alignSelf: 'center',
-          zIndex: 1,
+
           flexGrow: 1,
         }}>
         <View
           style={{
             width: responsiveWidth(100),
-            height: responsiveHeight(40),
-            justifyContent: 'flex-end',
             alignSelf: 'center',
             marginBottom: responsiveHeight(2),
-          }}>
-          <Image
-            source={appImages.third}
-            style={{
-              width: responsiveWidth(125),
-              height: responsiveHeight(70),
-              right: responsiveWidth(-3),
-              alignSelf: 'flex-end',
-            }}
-            resizeMode={'stretch'}
-          />
-        </View>
-        <View
-          style={{
-            width: responsiveWidth(100),
-            height: responsiveHeight(70),
-            alignSelf: 'center',
-            marginBottom: responsiveHeight(2),
-            position: 'absolute',
             backgroundColor: 'transparent',
           }}>
           <View
@@ -248,17 +262,15 @@ const Post = props => {
               paddingHorizontal: responsiveWidth(6.5),
               marginTop: responsiveHeight(1.3),
             }}>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => props.navigation.navigate('AddPhoto')}>
-              <Image
-                source={appImages.addpost}
-                style={{
-                  width: responsiveWidth(6.8),
-                  height: responsiveWidth(6.8),
-                }}
-              />
-            </TouchableOpacity>
+            <Text
+              style={{
+                color: appColor.appColorMain,
+                fontFamily: fontFamily.Baskerville_Old_Face,
+                fontSize: responsiveFontSize(2.8),
+              }}>
+              My Profile
+            </Text>
+
             <TouchableOpacity
               activeOpacity={0.7}
               onPress={() => props.navigation.navigate('Settings')}>
@@ -267,6 +279,7 @@ const Post = props => {
                 style={{
                   width: responsiveWidth(6.5),
                   height: responsiveWidth(6.5),
+                  tintColor: appColor.appColorMain,
                 }}
               />
             </TouchableOpacity>
@@ -278,9 +291,9 @@ const Post = props => {
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: responsiveWidth(100),
-              backgroundColor: '#fff',
+              backgroundColor: appColor.appColorMain,
               alignSelf: 'center',
-              marginTop: responsiveHeight(-2.6),
+              marginTop: responsiveHeight(1),
               overflow: 'hidden',
             }}>
             <Image
@@ -302,12 +315,12 @@ const Post = props => {
             style={{
               alignSelf: 'center',
               // paddingRight: responsiveWidth(13),
-              paddingTop: responsiveHeight(1.1),
+              paddingTop: responsiveHeight(1.5),
               alignItems: 'flex-end',
             }}>
             <Text
               style={{
-                color: '#fff',
+                color: appColor.appColorMain,
                 fontFamily: fontFamily.Baskerville_Old_Face,
                 fontSize: responsiveFontSize(2.8),
                 marginBottom: responsiveHeight(0.5),
@@ -348,7 +361,7 @@ const Post = props => {
           <FlatList
             data={list}
             renderItem={renderItem}
-            contentContainerStyle={{}}
+            contentContainerStyle={{marginBottom: responsiveHeight(10)}}
             numColumns={2}
             scrollEnabled={false}
             showsVerticalScrollIndicator={false}

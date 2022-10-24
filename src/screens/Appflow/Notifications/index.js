@@ -37,16 +37,45 @@ const Notifications = props => {
     }, []),
   );
 
-  //   const ChangeStatus = ({itemSelected,index}) =>{
-  // const newData = list.map((item)=>{
-  //   if(itemSelected == item)
-  //   {
-  //     return
+  const ChangeStatus = async (itemSelected, index) => {
+    const newData = list.map(item => {
+      if (item._id == itemSelected._id) {
+        return {
+          ...item,
+          readStatus: true,
+        };
+      }
+      return {
+        ...item,
+        readStatus: item.readStatus,
+      };
+    });
+    setList(newData);
+    if (itemSelected.readStatus == false) {
+      var axios = require('axios');
+      var data = JSON.stringify({
+        notification_id: itemSelected._id,
+        readStatus: true,
+      });
 
-  //   }
-  // })
+      var config = {
+        method: 'put',
+        url: Base_URL + '/notification/changeNotificationReadStatus',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: data,
+      };
 
-  //   }
+      axios(config)
+        .then(function (response) {
+          console.log(JSON.stringify(response.data));
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  };
 
   const GetNotifications = async () => {
     setLoading(true);

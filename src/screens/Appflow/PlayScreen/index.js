@@ -91,6 +91,7 @@ const PlayScreen = ({route, navigation}) => {
   const [modaltype, setModalType] = useState('');
   const [routefirsttime, setRouteFirstTime] = useState(true);
   const [pagination, setPagination] = useState(1);
+  const [paginationref, setPaginationRef] = useState(false);
   const [bypost, setByPost] = useState('');
   const [minage, setMinAge] = useState(0);
   const [maxage, setMaxAge] = useState(100);
@@ -127,7 +128,15 @@ const PlayScreen = ({route, navigation}) => {
   }, [fromroute, routecard]);
   useEffect(() => {
     SingleCompleteFilter();
-  }, [bypost, gender, minage, maxage, pagination, radiusconfirm, confirmage]);
+  }, [
+    bypost,
+    gender,
+    minage,
+    maxage,
+    paginationref,
+    radiusconfirm,
+    confirmage,
+  ]);
 
   const getuid = async () => {
     const userid = await AsyncStorage.getItem('userid');
@@ -246,6 +255,7 @@ const PlayScreen = ({route, navigation}) => {
         console.log(error.response.data);
         if (error.response.data.message == 'No user found with this query') {
           console.log('No Results Found');
+          setPagination(1);
           setEmpty(true);
           setLoading(false);
         }
@@ -660,7 +670,10 @@ const PlayScreen = ({route, navigation}) => {
             {item.document.userName}, {parseInt(item.Age)}
           </Text>
           <Text style={styles.txt2}>
-            {item.document.dist.distance_km.toFixed(2)} km,
+            {item.document.dist.distance_km.toString().charAt(0) == 0
+              ? 'Less than 1 km ,'
+              : item.document.dist.distance_km.toFixed(1) + 'km ,'}
+
             {' ' + item.document.profession}
           </Text>
         </LinearGradient>
@@ -915,6 +928,7 @@ const PlayScreen = ({route, navigation}) => {
               ref={swiperRef}
               onSwipedAll={() => {
                 setPagination(pagination + 1);
+                setPaginationRef(!paginationref);
               }}
             />
           )}

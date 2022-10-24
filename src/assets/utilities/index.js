@@ -78,6 +78,9 @@ const appImages = {
   gendericon: require(IMAGES_DIR + 'gendericon.png'),
   noimg: require(IMAGES_DIR + 'noimg.jpg'),
   splashicon: require(IMAGES_DIR + 'splashicon.png'),
+  gender: require(IMAGES_DIR + 'gender.png'),
+  phone: require(IMAGES_DIR + 'phone.png'),
+  profession: require(IMAGES_DIR + 'profession.png'),
 };
 const appColor = {
   appColorMain: '#FF0047',

@@ -10,6 +10,8 @@ import {
   Subscribe,
   Splash0,
   CheckUserImage,
+  LoginWithPhone,
+  SignUpWithPhone,
 } from '../../screens';
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -31,6 +33,8 @@ const AuthApp = () => {
       <AuthStack.Screen name={'AddProfileImage'} component={AddProfileImage} />
       <AuthStack.Screen name={'Subscribe'} component={Subscribe} />
       <AuthStack.Screen name={'CheckUserImage'} component={CheckUserImage} />
+      <AuthStack.Screen name={'LoginWithPhone'} component={LoginWithPhone} />
+      <AuthStack.Screen name={'SignUpWithPhone'} component={SignUpWithPhone} />
     </AuthStack.Navigator>
   );
 };

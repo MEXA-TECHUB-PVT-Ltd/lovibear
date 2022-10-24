@@ -140,7 +140,28 @@ const Splash2 = props => {
                 marginRight: responsiveWidth(3),
               }}
             />
-            <Text style={styles.txt1}>SignUp With Email / Phone No.</Text>
+            <Text style={styles.txt1}>SignUp With Email Address</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button1}
+            activeOpacity={0.8}
+            onPress={() =>
+              props.navigation.navigate('SignUpWithPhone', {
+                routeFrom: 'emailorphone',
+                userInfo: 'null',
+              })
+            }>
+            <FastImage
+              source={appImages.signupphone}
+              resizeMode="contain"
+              style={{
+                width: responsiveWidth(7),
+                height: responsiveWidth(7),
+                marginLeft: responsiveWidth(3),
+                marginRight: responsiveWidth(3),
+              }}
+            />
+            <Text style={styles.txt1}>SignUp With Phone Number</Text>
           </TouchableOpacity>
           {/* <TouchableOpacity
             style={styles.button1}
@@ -240,7 +261,7 @@ const styles = StyleSheet.create({
     // paddingHorizontal: responsiveWidth(1),
     paddingVertical: responsiveHeight(1.4),
     borderRadius: responsiveWidth(100),
-    marginBottom: responsiveHeight(8),
+    marginBottom: responsiveHeight(3.5),
     overflow: 'hidden',
   },
   txt2: {

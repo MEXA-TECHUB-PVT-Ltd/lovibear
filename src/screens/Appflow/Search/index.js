@@ -34,6 +34,7 @@ import Geolocation from 'react-native-geolocation-service';
 import {useDispatch, useSelector} from 'react-redux';
 import {setFromRoute, setRouteCard} from '../../../redux/actions';
 import {ActivityIndicator} from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Search = ({route, navigation}) => {
   const dispatch = useDispatch();
@@ -107,9 +108,11 @@ const Search = ({route, navigation}) => {
 
   const SearchApi = async (mylat, mylong) => {
     var axios = require('axios');
+    const userId = await AsyncStorage.getItem('userid');
     var data = JSON.stringify({
       long: mylong,
       lat: mylat,
+      userId: userId,
     });
 
     var config = {
@@ -145,6 +148,7 @@ const Search = ({route, navigation}) => {
   };
 
   const renderItem = ({item}) => {
+    console.log('THE ITEM=======', item.swipedStatus);
     return (
       <TouchableOpacity
         // onPress={() => props.navigation.navigate('Messaging')}
@@ -153,6 +157,7 @@ const Search = ({route, navigation}) => {
           dispatch(setRouteCard(item));
           navigation.navigate('PlayScreen');
         }}
+        disabled={item.swipedStatus == 'true' ? true : false}
         activeOpacity={0.85}
         style={{
           borderRadius: responsiveWidth(5),
@@ -191,7 +196,9 @@ const Search = ({route, navigation}) => {
             {item.document.userName}, {parseInt(item.Age)}
           </Text>
           <Text style={styles.info2}>
-            {item.document.dist.distance_km.toFixed(2)} km,{' '}
+            {item.document.dist.distance_km.toString().charAt(0) == 0
+              ? 'Less than 1 km , '
+              : item.document.dist.distance_km.toFixed(1) + 'km , '}
             {item.document.profession}
           </Text>
         </LinearGradient>
@@ -202,60 +209,6 @@ const Search = ({route, navigation}) => {
   return (
     <SafeAreaView style={STYLES.container}>
       <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} />
-      <MyHeart
-        type={'red'}
-        myStyles={{
-          top: responsiveHeight(12),
-          left: responsiveWidth(4),
-        }}
-      />
-      <MyHeart
-        type={'red'}
-        myStyles={{
-          top: responsiveHeight(10),
-          right: responsiveWidth(-4.7),
-        }}
-        shadow={false}
-      />
-      <MyHeart
-        type={'red'}
-        myStyles={{
-          top: responsiveHeight(30),
-          left: responsiveWidth(-3),
-        }}
-      />
-      <MyHeart
-        type={'red'}
-        scaleX={1}
-        shadow={false}
-        myStyles={{
-          top: responsiveHeight(50),
-          left: responsiveWidth(4),
-        }}
-        width={responsiveWidth(4)}
-        height={responsiveWidth(4)}
-      />
-      <MyHeart
-        type={'red'}
-        // scaleX={1}
-        myStyles={{
-          bottom: responsiveHeight(5),
-          left: responsiveWidth(-1.4),
-        }}
-        shadow={false}
-        width={responsiveWidth(4)}
-        height={responsiveWidth(4)}
-      />
-      <MyHeart
-        type={'red'}
-        scaleX={1}
-        myStyles={{
-          bottom: responsiveHeight(3),
-          right: responsiveWidth(-6),
-        }}
-        width={responsiveWidth(13)}
-        height={responsiveWidth(13)}
-      />
       <View
         style={{
           flex: 1,

@@ -30,6 +30,7 @@ import {MyButton, MyButtonLoader} from '../../../components/MyButton';
 import {fontFamily} from '../../../constants/fonts';
 import {Base_URL} from '../../../Base_URL';
 import RNFetchBlob from 'rn-fetch-blob';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AddProfileImage = ({route, navigation}) => {
   useFocusEffect(
@@ -155,6 +156,14 @@ const AddProfileImage = ({route, navigation}) => {
           let myresponse = JSON.parse(response.data);
           console.log('MY RESPONSE IMAGE FROM API ============', myresponse);
           if (myresponse.message == 'Updated successfully') {
+            console.log(
+              'IMAGE ON SIGNUP API ============',
+              myresponse.updatedResult.profileImage.userPicUrl,
+            );
+            await AsyncStorage.setItem(
+              'profileimage',
+              myresponse.updatedResult.profileImage.userPicUrl,
+            );
             if (screenFrom != 'signup') {
               navigation.navigate('App', {
                 screen: 'PlayScreenScreens',

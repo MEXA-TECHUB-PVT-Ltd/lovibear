@@ -33,10 +33,16 @@ import Geolocation from 'react-native-geolocation-service';
 import {useDispatch, useSelector} from 'react-redux';
 import {setFromRoute, setRouteCard} from '../../../redux/actions';
 import {useFocusEffect} from '@react-navigation/native';
-import {ActivityIndicator} from 'react-native-paper';
+import {ActivityIndicator, Modal} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Discover = props => {
+  const [myradius, setMyRadius] = useState('100');
+  const [radiusconfirm, setRadiusConfirm] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+
   const [loading, setLoading] = useState(false);
   const [empty, setEmpty] = useState(false);
   const dispatch = useDispatch();
@@ -47,7 +53,7 @@ const Discover = props => {
   useFocusEffect(
     React.useCallback(() => {
       getLocation();
-    }, []),
+    }, [radiusconfirm]),
   );
   const getLocation = async () => {
     setLoading(true);
@@ -86,12 +92,14 @@ const Discover = props => {
     );
   };
   const GetAllUsers = async (mylat, mylong) => {
+    console.log('MYRADIUS==============', myradius);
+
     const userid = await AsyncStorage.getItem('userid');
     var axios = require('axios');
     var data = JSON.stringify({
       long: mylong,
       lat: mylat,
-      radiusInKm: '50000',
+      radiusInKm: myradius,
       userId: userid,
     });
 
@@ -174,7 +182,10 @@ const Discover = props => {
             {item.document.userName}, {parseInt(item.Age)}
           </Text>
           <Text style={styles.info2}>
-            {item.document.dist.distance_km.toFixed(2)} km,{' '}
+            {item.document.dist.distance_km.toString().charAt(0) == 0
+              ? 'Less than 1 km , '
+              : item.document.dist.distance_km.toFixed(1) + 'km , '}
+
             {item.document.profession}
           </Text>
         </LinearGradient>
@@ -185,60 +196,6 @@ const Discover = props => {
   return (
     <SafeAreaView style={STYLES.container}>
       <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'} />
-      <MyHeart
-        type={'red'}
-        myStyles={{
-          top: responsiveHeight(12),
-          left: responsiveWidth(4),
-        }}
-      />
-      <MyHeart
-        type={'red'}
-        myStyles={{
-          top: responsiveHeight(10),
-          right: responsiveWidth(-4.7),
-        }}
-        shadow={false}
-      />
-      <MyHeart
-        type={'red'}
-        myStyles={{
-          top: responsiveHeight(30),
-          left: responsiveWidth(-3),
-        }}
-      />
-      <MyHeart
-        type={'red'}
-        scaleX={1}
-        shadow={false}
-        myStyles={{
-          top: responsiveHeight(50),
-          left: responsiveWidth(4),
-        }}
-        width={responsiveWidth(4)}
-        height={responsiveWidth(4)}
-      />
-      <MyHeart
-        type={'red'}
-        // scaleX={1}
-        myStyles={{
-          bottom: responsiveHeight(5),
-          left: responsiveWidth(-1.4),
-        }}
-        shadow={false}
-        width={responsiveWidth(4)}
-        height={responsiveWidth(4)}
-      />
-      <MyHeart
-        type={'red'}
-        scaleX={1}
-        myStyles={{
-          bottom: responsiveHeight(3),
-          right: responsiveWidth(-6),
-        }}
-        width={responsiveWidth(13)}
-        height={responsiveWidth(13)}
-      />
       <View
         style={{
           flex: 1,
@@ -258,9 +215,28 @@ const Discover = props => {
             justifyContent: 'space-between',
           }}>
           <Text style={styles.txt1}>Discover</Text>
-          {loading ? (
-            <ActivityIndicator color={appColor.appColorMain} size={'small'} />
-          ) : null}
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {loading ? (
+              <ActivityIndicator
+                color={appColor.appColorMain}
+                size={'small'}
+                style={{marginRight: responsiveWidth(6)}}
+              />
+            ) : null}
+            <TouchableOpacity
+              onPress={() => {
+                showModal();
+              }}>
+              <Image
+                source={appImages.locationoption}
+                style={{
+                  width: responsiveWidth(5),
+                  height: responsiveWidth(5),
+                  resizeMode: 'contain',
+                }}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
 
         {empty ? (
@@ -294,6 +270,83 @@ const Discover = props => {
             }}
           />
         )}
+        <Modal
+          dismissable={true}
+          visible={visible}
+          onDismiss={hideModal}
+          contentContainerStyle={{flex: 1}}>
+          <View
+            style={{
+              // backgroundColor: 'red',
+              width: responsiveWidth(80),
+              alignSelf: 'center',
+              borderRadius: responsiveWidth(2),
+              overflow: 'hidden',
+            }}>
+            <View
+              style={{
+                backgroundColor: '#fff',
+                alignItems: 'center',
+                width: responsiveWidth(80),
+                alignSelf: 'center',
+                paddingVertical: responsiveHeight(2),
+              }}>
+              <Text
+                style={{
+                  fontFamily: fontFamily.Baskerville_Old_Face,
+                  color: appColor.appColorMain,
+                  fontSize: responsiveFontSize(2.5),
+                }}>
+                Enter Radius
+              </Text>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <TextInput
+                  maxLength={6}
+                  keyboardType="numeric"
+                  style={{
+                    backgroundColor: '#F2F2F2',
+                    paddingHorizontal: responsiveWidth(3),
+                    marginVertical: responsiveHeight(2.5),
+                    fontFamily: fontFamily.Baskerville_Old_Face,
+                    color: appColor.appColorMain,
+                    fontSize: responsiveFontSize(2.5),
+                  }}
+                  value={myradius}
+                  onChangeText={text => {
+                    setMyRadius(text);
+                  }}
+                  onSubmitEditing={() => {
+                    // hideModal();
+                    // setRadiusConfirm(!radiusconfirm);
+                  }}
+                />
+                <Text
+                  style={{
+                    fontFamily: fontFamily.Baskerville_Old_Face,
+                    color: appColor.appColorMain,
+                    fontSize: responsiveFontSize(2.5),
+                    marginLeft: responsiveWidth(2),
+                  }}>
+                  KM
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  hideModal();
+                  setRadiusConfirm(!radiusconfirm);
+                }}>
+                <Text
+                  style={{
+                    fontFamily: fontFamily.Baskerville_Old_Face,
+                    color: appColor.appColorMain,
+                    fontSize: responsiveFontSize(2.5),
+                  }}>
+                  Submit
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </SafeAreaView>
   );

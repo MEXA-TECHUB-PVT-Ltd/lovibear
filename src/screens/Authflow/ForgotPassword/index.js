@@ -33,14 +33,31 @@ const ForgotPassword = props => {
   const emailinputref = useRef();
   const [email, setEmail] = useState('');
   const [softinput, setSoftinput] = useState(false);
-
+  const [checkemail, setCheckemail] = useState(false);
+  const [emailerror, setEmailerror] = useState(false);
   useFocusEffect(
     React.useCallback(() => {
       setSoftinput(true);
     }, []),
   );
 
-  const ForgotPasswordApi = () => {
+  const Validations = async () => {
+    if (email == '') {
+      setCheckemail(true);
+      setEmailerror('Enter Valid Email');
+      return false;
+    }
+    if (reg.test(email) == false) {
+      setCheckemail(true);
+      setEmailerror('Enter Valid Email');
+      return false;
+    }
+    if (checkemail == false) {
+      ForgotPasswordApi();
+    }
+  };
+
+  const ForgotPasswordApi = async () => {
     var axios = require('axios');
     var data = JSON.stringify({
       userEmailAddress: email.toLowerCase(),
@@ -55,7 +72,7 @@ const ForgotPassword = props => {
       data: data,
     };
 
-    axios(config)
+    await axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
         if (response.data.message != 'No one found with This Email address')
@@ -157,7 +174,7 @@ const ForgotPassword = props => {
               autoFocus
               selectionColor={appColor.appColorMain}
               placeholderTextColor={'#8D8D8D'}
-              placeholder="Email Address / Phone No"
+              placeholder="Email Address"
               style={styles.txtinputemail}
               onFocus={() => setMyfocus('email')}
               onBlur={() => setMyfocus('')}
@@ -166,6 +183,10 @@ const ForgotPassword = props => {
               }}
             />
           </View>
+
+          {checkemail ? (
+            <Text style={styles.errortxt}>{emailerror}</Text>
+          ) : null}
         </View>
 
         <View
@@ -228,7 +249,7 @@ const ForgotPassword = props => {
           <MyButton
             title={'SEND CODE'}
             onPress={() => {
-              ForgotPasswordApi();
+              Validations();
             }}
           />
 
@@ -313,5 +334,13 @@ const styles = StyleSheet.create({
     color: '#080808',
     fontFamily: fontFamily.Baskerville_Old_Face,
     fontSize: responsiveFontSize(1.95),
+  },
+  errortxt: {
+    width: responsiveWidth(83),
+    alignSelf: 'center',
+    color: 'red',
+    fontFamily: fontFamily.Baskerville_Old_Face,
+    fontSize: responsiveFontSize(2),
+    marginTop: responsiveHeight(1),
   },
 });

@@ -48,10 +48,8 @@ const Login = ({route, navigation}) => {
   const [passworderror, setPassworderror] = useState('');
   const [checkemail, setCheckemail] = useState(false);
   const [checkpassword, setCheckpassword] = useState(false);
-  const [firstchar, setFirstChar] = useState('');
   const [loading, setLoading] = useState(false);
-  const {loginwith} = route.params;
-  console.log('LOGIN WITH============', loginwith);
+
   useFocusEffect(
     React.useCallback(() => {
       setSoftinput(true);
@@ -66,20 +64,10 @@ const Login = ({route, navigation}) => {
       setEmailerror('Enter Valid Email');
       return false;
     }
-
-    if (regphone.test(firstchar + email) == false) {
-      console.log('IN FIRST');
-      if (regchecknumber.test(email)) {
-        console.log(' IN NUMBER CHECK ');
-        console.log(firstchar + email);
-        setCheckemail(true);
-        setEmailerror('Enter Valid Phone Number');
-        return false;
-      } else if (reg.test(email) == false) {
-        setCheckemail(true);
-        setEmailerror('Enter Valid Email');
-        return false;
-      }
+    if (reg.test(email) == false) {
+      setCheckemail(true);
+      setEmailerror('Enter Valid Email');
+      return false;
     }
     if (password == '') {
       setCheckpassword(true);
@@ -87,25 +75,12 @@ const Login = ({route, navigation}) => {
       return false;
     }
     if (checkpassword == false && checkemail == false) {
-      let signuptype;
-      if (regchecknumber.test(email)) {
-        signuptype = 'phoneNumber';
-      } else {
-        signuptype = 'email';
-      }
-      // props.navigation.navigate('App', {screen: 'PlayScreenScreens'})
+      var data = JSON.stringify({
+        email: email.toLowerCase(),
+        password: password,
+      });
+
       var axios = require('axios');
-      if (signuptype == 'phoneNumber') {
-        var data = JSON.stringify({
-          phoneNumber: '+' + email,
-          password: password,
-        });
-      } else {
-        var data = JSON.stringify({
-          email: email.toLowerCase(),
-          password: password,
-        });
-      }
 
       var config = {
         method: 'post',
@@ -204,7 +179,8 @@ const Login = ({route, navigation}) => {
               }}
             />
           </View>
-          <Text style={styles.maintxt}>LOGIN</Text>
+          <Text style={styles.maintxt}>LOGIN WITH YOUR EMAIL ADDRESS</Text>
+
           <MyHeart
             myStyles={{
               left: responsiveWidth(-3.6),
@@ -239,34 +215,18 @@ const Login = ({route, navigation}) => {
                 marginLeft: responsiveWidth(5),
               }}
             />
-            <Text
-              style={{
-                paddingLeft: responsiveWidth(3),
-                color: '#080808',
-                fontFamily: fontFamily.Baskerville_Old_Face,
-                fontSize: responsiveFontSize(2),
-              }}>
-              {firstchar}
-            </Text>
 
             <TextInput
               value={email}
               onChangeText={text => {
                 setEmail(text);
                 setCheckemail(false);
-                if (text !== '' && regchecknumber.test(text)) {
-                  setFirstChar('+');
-                  setCheckpassword(false);
-                } else {
-                  setFirstChar('');
-                  setCheckpassword(false);
-                }
               }}
               placeholderTextColor={'#8D8D8D'}
               showSoftInputOnFocus={softinput}
               autoFocus
               selectionColor={appColor.appColorMain}
-              placeholder="Email Address / Phone No"
+              placeholder="Email Address"
               style={styles.txtinputemail}
               onFocus={() => setMyfocus('email')}
               onBlur={() => setMyfocus('')}
@@ -359,7 +319,7 @@ const Login = ({route, navigation}) => {
         </View>
         <View
           style={{
-            height: responsiveHeight(28),
+            height: responsiveHeight(30),
             overflow: 'hidden',
             marginTop: responsiveHeight(8),
             // justifyContent: 'flex-end',
@@ -378,7 +338,7 @@ const Login = ({route, navigation}) => {
         </View>
         <View
           style={{
-            height: responsiveHeight(20),
+            height: responsiveHeight(22),
             position: 'absolute',
 
             width: responsiveWidth(100),
@@ -414,6 +374,14 @@ const Login = ({route, navigation}) => {
               <Text style={styles.txt4}>Sign up</Text>
             </TouchableOpacity>
           </View>
+          <Text style={[styles.txt4, {marginVertical: responsiveHeight(0.4)}]}>
+            Or
+          </Text>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => navigation.navigate('LoginWithPhone')}>
+            <Text style={styles.txt4}>Login with Phone Number</Text>
+          </TouchableOpacity>
           <MyHeart
             myStyles={{
               right: responsiveWidth(2),
@@ -455,7 +423,10 @@ const styles = StyleSheet.create({
   },
   maintxt: {
     color: appColor.appColorMain,
-    fontSize: responsiveFontSize(3.2),
+    fontSize: responsiveFontSize(3),
+    lineHeight: responsiveHeight(4.3),
+    width: responsiveWidth(75),
+    textAlign: 'center',
 
     alignSelf: 'center',
     fontFamily: fontFamily.Baskerville_Old_Face,
@@ -488,6 +459,7 @@ const styles = StyleSheet.create({
     color: '#080808',
     fontFamily: fontFamily.Baskerville_Old_Face,
     fontSize: responsiveFontSize(2),
+    paddingLeft: responsiveWidth(3),
   },
   txtinputpassword: {
     width: responsiveWidth(59.5),

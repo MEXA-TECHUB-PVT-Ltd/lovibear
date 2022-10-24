@@ -68,7 +68,6 @@ const SignUp = ({navigation, route}) => {
   const [profession, setProfession] = useState('');
   const [gender, setGender] = useState('');
   const [username, setUsername] = useState('');
-  const [firstchar, setFirstChar] = useState('');
   const [apiformatdate, setApiFormatDate] = useState('');
   const [mylat, setMylat] = useState();
   const [mylong, setMylong] = useState();
@@ -169,26 +168,21 @@ const SignUp = ({navigation, route}) => {
       setEmailerror('Enter Valid Email');
       return false;
     }
-    if (regphone.test(firstchar + email) == false) {
-      console.log('IN FIRST');
-      if (regchecknumber.test(email)) {
-        console.log(' IN NUMBER CHECK ');
-        console.log(firstchar + email);
-        setCheckemail(true);
-        setEmailerror('Enter Valid Phone Number');
-        return false;
-      } else if (reg.test(email) == false) {
-        setCheckemail(true);
-        setEmailerror('Enter Valid Email');
-        return false;
-      }
+    if (reg.test(email) == false) {
+      setCheckemail(true);
+      setEmailerror('Enter Valid Email');
+      return false;
     }
     if (gender == '') {
       setCheckgender(true);
       setGendererror('Select Gender');
       return false;
     }
-
+    if (profession == '') {
+      setCheckprofession(true);
+      setProfessionerror('Enter Profession');
+      return false;
+    }
     if (password == '') {
       setCheckpassword(true);
       setPassworderror('Enter Valid Password');
@@ -199,6 +193,7 @@ const SignUp = ({navigation, route}) => {
       setConfirmPassworderror("Password Doesn't Match");
       return false;
     }
+
     if (moment().diff(moment(mydate, 'DD-MM-YYYY'), 'years') < 18) {
       refContainer.current.open();
       return false;
@@ -207,7 +202,6 @@ const SignUp = ({navigation, route}) => {
       refContainer.current.open();
       return false;
     }
-
     if (
       checkpassword == false &&
       checkemail == false &&
@@ -216,46 +210,15 @@ const SignUp = ({navigation, route}) => {
       mydate !== '' &&
       moment().diff(moment(mydate, 'DD-MM-YYYY'), 'years') > 18
     ) {
-      let signuptype;
-      if (regchecknumber.test(email)) {
-        signuptype = 'phoneNumber';
-      } else {
-        signuptype = 'email';
-      }
-
-      // props.navigation.navigate('AddProfileImage', {
-      //   username: username,
-      //   email: email,
-      //   password: password,
-      //   apiformatdate: apiformatdate,
-      //   signuptype: signuptype,
-      //   mylat: mylat,
-      //   mylong: mylong,
-      //   gender: apigender,
-      //   profession: profession,
-      // });
-      SignUpApi(signuptype);
+      SignUpApi();
     }
   };
 
-  const SignUpApi = async signuptype => {
+  const SignUpApi = async () => {
     setLoading(true);
     const myfcm = await AsyncStorage.getItem('Device_id');
     var formdata = new FormData();
-    if (signuptype == 'phoneNumber') {
-      formdata.append('userName', username);
-      formdata.append('password', password);
-      formdata.append('gender', apigender);
-      formdata.append('dateOfBirth', apiformatdate);
-      formdata.append('profession', profession);
-      formdata.append(
-        'location',
-        ' {"coordinates":[' + mylong + ',' + mylat + '] }',
-      );
-      formdata.append('fcmToken', myfcm);
-      formdata.append('phoneNumber', '+' + email);
-      formdata.append('signupType', signuptype);
-    } else if (routeFrom == 'google') {
+    if (routeFrom == 'google') {
       formdata.append('userName', username);
       formdata.append('password', password);
       formdata.append('gender', apigender);
@@ -281,7 +244,7 @@ const SignUp = ({navigation, route}) => {
       );
       formdata.append('fcmToken', myfcm);
       formdata.append('email', email.toLowerCase());
-      formdata.append('signupType', signuptype);
+      formdata.append('signupType', 'email');
       formdata.append('userEmailAddress', email.toLowerCase());
     }
 
@@ -310,27 +273,27 @@ const SignUp = ({navigation, route}) => {
           setLoading(false);
         } else {
           setLoading(false);
-          if (routeFrom == 'google') {
-            navigation.navigate('AddProfileImage', {
-              routeFrom: routeFrom,
-              userid: result.result._id,
-              mylong: result.result.location.coordinates[0],
-              mylat: result.result.location.coordinates[1],
-              email: userInfo.email,
-              password: userInfo.id,
-              screenFrom: 'signup',
-            });
-          } else {
-            navigation.navigate('AddProfileImage', {
-              routeFrom: routeFrom,
-              userid: result.result._id,
-              mylong: result.result.location.coordinates[0],
-              mylat: result.result.location.coordinates[1],
-              email: result.result.email,
-              password: password,
-              screenFrom: 'signup',
-            });
-          }
+          // if (routeFrom == 'google') {
+          navigation.navigate('AddProfileImage', {
+            routeFrom: routeFrom,
+            userid: result.result._id,
+            mylong: result.result.location.coordinates[0],
+            mylat: result.result.location.coordinates[1],
+            email: userInfo.email,
+            password: userInfo.id,
+            screenFrom: 'signup',
+          });
+          // } else {
+          //   navigation.navigate('AddProfileImage', {
+          //     routeFrom: routeFrom,
+          //     userid: result.result._id,
+          //     mylong: result.result.location.coordinates[0],
+          //     mylat: result.result.location.coordinates[1],
+          //     email: result.result.email,
+          //     password: password,
+          //     screenFrom: 'signup',
+          //   });
+          // }
         }
       })
 
@@ -453,31 +416,16 @@ const SignUp = ({navigation, route}) => {
                 marginLeft: responsiveWidth(5),
               }}
             />
-            <Text
-              style={{
-                paddingLeft: responsiveWidth(3),
-                color: '#080808',
-                fontFamily: fontFamily.Baskerville_Old_Face,
-                fontSize: responsiveFontSize(2),
-              }}>
-              {firstchar}
-            </Text>
-
             <TextInput
               editable={routeFrom == 'google' ? false : true}
               value={email}
               onChangeText={text => {
                 setEmail(text);
                 setCheckemail(false);
-                if (text !== '' && regchecknumber.test(text)) {
-                  setFirstChar('+');
-                } else {
-                  setFirstChar('');
-                }
               }}
               placeholderTextColor={'#8D8D8D'}
               selectionColor={appColor.appColorMain}
-              placeholder="Email Address / Phone No With CC"
+              placeholder="Email Address"
               style={styles.txtinputemail}
               onFocus={() => setMyfocus('email')}
               onBlur={() => setMyfocus('')}
@@ -934,6 +882,7 @@ const styles = StyleSheet.create({
     color: '#080808',
     fontFamily: fontFamily.Baskerville_Old_Face,
     fontSize: responsiveFontSize(2),
+    paddingLeft: responsiveWidth(3),
   },
   txtinputusername: {
     width: responsiveWidth(70),

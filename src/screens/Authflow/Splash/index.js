@@ -267,9 +267,7 @@ const Splash = props => {
           <TouchableOpacity
             style={styles.button1}
             activeOpacity={0.8}
-            onPress={() =>
-              props.navigation.navigate('Login', {loginwith: 'email'})
-            }>
+            onPress={() => props.navigation.navigate('Login')}>
             <Text style={styles.txt1}>Login With Email</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -280,9 +278,7 @@ const Splash = props => {
               },
             ]}
             activeOpacity={0.8}
-            onPress={() =>
-              props.navigation.navigate('Login', {loginwith: 'phonenumber'})
-            }>
+            onPress={() => props.navigation.navigate('LoginWithPhone')}>
             <Text style={styles.txt1}>Login With Phone Number</Text>
           </TouchableOpacity>
           {/* <View

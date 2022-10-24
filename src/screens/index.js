@@ -24,6 +24,9 @@ import UpdatePasswordInApp from './Appflow/UpdatePasswordInApp';
 import Splash0 from './Authflow/Splash0';
 import ImageChecker from './Appflow/ImageChecker';
 import CheckUserImage from './Authflow/CheckUserImage';
+import LoginWithPhone from './Authflow/LoginWithPhone';
+import SignUpWithPhone from './Authflow/SignUpWithPhone';
+
 export {
   PlayScreen,
   Post,
@@ -53,4 +56,6 @@ export {
   Subscribe,
   Splash0,
   CheckUserImage,
+  LoginWithPhone,
+  SignUpWithPhone,
 };
