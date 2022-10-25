@@ -277,14 +277,15 @@ const EditProfile = props => {
     };
 
     fetch(Base_URL + '/user/updateUserProfile', requestOptions)
-      .then(response => response.text())
-      .then(result => {
+      .then(response => response.json())
+      .then(async result => {
         console.log(result);
         if (isselected == true) {
           UpdateImage();
         } else {
-          Toast.show('Profile Updated', Toast.SHORT);
+          console.log('MY RESULT===========', result.updatedResult.email);
 
+          Toast.show('Profile Updated', Toast.SHORT);
           setLoading(false);
         }
       })
@@ -318,10 +319,18 @@ const EditProfile = props => {
           selectedImage,
         ],
       )
-        .then(response => {
+        .then(async response => {
           console.log('response:', response.data);
           let myresponse = JSON.parse(response.data);
           console.log('MY RESPONSE IMAGE FROM API ============', myresponse);
+          await AsyncStorage.setItem(
+            'profileimage',
+            myresponse.updatedResult.profileImage.userPicUrl,
+          );
+          console.log(
+            'UPDATED IMAGE LINK===========',
+            myresponse.updatedResult.profileImage.userPicUrl,
+          );
           Toast.show('Profile Updated', Toast.SHORT);
           setLoading(false);
         })
@@ -545,7 +554,7 @@ const EditProfile = props => {
             </Text>
 
             <TextInput
-              editable={mysignuptype == 'google' ? false : true}
+              editable={false}
               value={email}
               onChangeText={text => {
                 setEmail(text);

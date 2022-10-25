@@ -866,6 +866,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+
   passwordparent: {
     borderRadius: responsiveWidth(3),
     borderWidth: responsiveWidth(0.3),
@@ -935,7 +936,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   genderselecttxt: {
-    color: '#000000',
+    color: appColor.appColorMain,
     fontFamily: fontFamily.Baskerville_Old_Face,
     fontSize: responsiveFontSize(2.3),
   },

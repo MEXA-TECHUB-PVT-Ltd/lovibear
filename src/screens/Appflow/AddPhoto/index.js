@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import Right from 'react-native-vector-icons/FontAwesome';
+import Dialog from 'react-native-dialog';
 import FastImage from 'react-native-fast-image';
 import ImagePicker from 'react-native-image-crop-picker';
 import STYLES from '../../STYLES';
@@ -49,6 +50,14 @@ const AddPhoto = props => {
 
   //   console.log('PUTTING UID ========', apiarr);
   // };
+  const [visible, setVisible] = useState(false);
+  const showDialog = () => {
+    setVisible(true);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
   const refContainer = useRef();
   const [categorylist, setCategorylist] = useState([
     {
@@ -102,18 +111,20 @@ const AddPhoto = props => {
   ]);
   const [myimage, setMyimage] = useState('');
   const imageTakeFromGallery = () => {
+    handleCancel();
+
     ImagePicker.openPicker({
       cropping: false,
       mediaType: 'photo',
     }).then(async image => {
       var filename = image.path.substring(image.path.lastIndexOf('/') + 1);
-      let arr = mylist;
+      let arr = [...mylist];
       await arr.unshift({
         image: image.path,
       });
-      await setMylist([...arr]);
-      apiarr = apiImagesList;
-      await apiarr.push({
+      await setMylist(arr);
+      apiarr = [...apiImagesList];
+      await apiarr.unshift({
         name: 'postImages',
         filename: filename,
         type: image.mime,
@@ -126,27 +137,28 @@ const AddPhoto = props => {
       console.log('ARR LENGTH', arr.length);
       if (arr.length > 9) {
         console.log('FOR POP===========');
-        let arr = mylist;
+        let arr = [...Animatedmylist];
         await arr.pop();
-        setMylist([...arr]);
+        setMylist(arr);
       }
     });
   };
   const imageTakeFromCamera = () => {
+    handleCancel();
     ImagePicker.openCamera({
       cropping: false,
       mediaType: 'photo',
     }).then(async image => {
       var filename = image.path.substring(image.path.lastIndexOf('/') + 1);
 
-      let arr = mylist;
+      let arr = [...mylist];
       await arr.unshift({
         image: image.path,
       });
-      await setMylist([...arr]);
+      await setMylist(arr);
 
-      apiarr = apiImagesList;
-      await apiarr.push({
+      apiarr = [...apiImagesList];
+      await apiarr.unshift({
         name: 'postImages',
         filename: filename,
         type: image.mime,
@@ -160,9 +172,9 @@ const AddPhoto = props => {
       console.log('ARR LENGTH', arr.length);
       if (arr.length > 9) {
         console.log('FOR POP===========');
-        let arr = mylist;
+        let arr = [...mylist];
         await arr.pop();
-        setMylist([...arr]);
+        setMylist(arr);
       }
     });
   };
@@ -170,7 +182,12 @@ const AddPhoto = props => {
   const removeImage = index => {
     let arr = [...mylist];
     arr.splice(index, 1);
-    setMylist([...arr]);
+    setMylist(arr);
+    let arr2 = [...apiImagesList];
+    arr2.splice(index, 1);
+    setApiImagesList(arr2);
+    console.log('AFTER DELETION LIST========', mylist);
+    console.log('AFTER DELETION API LIST========', apiImagesList);
   };
 
   const UploadMedia = async () => {
@@ -224,11 +241,9 @@ const AddPhoto = props => {
           marginBottom: responsiveHeight(2),
           marginRight: responsiveWidth(2.8),
         }}>
-        {/* {
-            item.flag == false 
-            ?
-            <TouchableOpacity
-            onPress={() => alert('Pressed')}
+        {item.flag != true ? (
+          <TouchableOpacity
+            onPress={() => removeImage(index)}
             style={{
               width: responsiveWidth(5),
               height: responsiveWidth(5),
@@ -250,12 +265,11 @@ const AddPhoto = props => {
               }}
             />
           </TouchableOpacity>
-          : null
-          }
-       */}
+        ) : null}
+
         <TouchableOpacity
           onPress={() => {
-            refContainer.current.open();
+            showDialog();
           }}
           activeOpacity={0.7}
           disabled={item.flag || loading ? false : true}
@@ -426,6 +440,49 @@ const AddPhoto = props => {
             </View>
           </View>
         </RBSheet>
+        <Dialog.Container
+          visible={visible}
+          verticalButtons={true}
+          onRequestClose={() => handleCancel()}>
+          <Dialog.Title
+            style={{
+              fontFamily: fontFamily.Baskerville_Old_Face,
+              alignSelf: 'center',
+              color: appColor.appColorMain,
+            }}>
+            Upload Photos Or Videos
+          </Dialog.Title>
+          {/* <Dialog.Description>
+            Take a photo or choose from your library
+          </Dialog.Description> */}
+          <Dialog.Button
+            style={{
+              fontFamily: fontFamily.Baskerville_Old_Face,
+              alignSelf: 'center',
+            }}
+            label="Take a Photo"
+            onPress={imageTakeFromCamera}
+            color={appColor.appColorMain}
+          />
+          <Dialog.Button
+            style={{
+              fontFamily: fontFamily.Baskerville_Old_Face,
+              alignSelf: 'center',
+            }}
+            label="Choose from Gallery"
+            onPress={imageTakeFromGallery}
+            color={appColor.appColorMain}
+          />
+          <Dialog.Button
+            style={{
+              fontFamily: fontFamily.Baskerville_Old_Face,
+              alignSelf: 'center',
+            }}
+            label="Cancel"
+            onPress={handleCancel}
+            color={appColor.appColorMain}
+          />
+        </Dialog.Container>
       </ScrollView>
     </SafeAreaView>
   );

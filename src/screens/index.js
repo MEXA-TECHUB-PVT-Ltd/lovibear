@@ -26,6 +26,7 @@ import ImageChecker from './Appflow/ImageChecker';
 import CheckUserImage from './Authflow/CheckUserImage';
 import LoginWithPhone from './Authflow/LoginWithPhone';
 import SignUpWithPhone from './Authflow/SignUpWithPhone';
+import ViewMatchProfile from './Appflow/ViewMatchProfile';
 
 export {
   PlayScreen,
@@ -43,6 +44,7 @@ export {
   VideoScreen,
   UpdatePasswordInApp,
   ImageChecker,
+  ViewMatchProfile,
 };
 export {
   Splash,

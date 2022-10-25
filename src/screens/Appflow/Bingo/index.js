@@ -28,7 +28,9 @@ import {fontFamily} from '../../../constants/fonts';
 import {MyButton} from '../../../components/MyButton';
 import LinearGradient from 'react-native-linear-gradient';
 import MyHeart from '../../../components/MyHeart';
-const Bingo = props => {
+const Bingo = ({route, navigation}) => {
+  const {userdata} = route.params;
+  console.log('MY USER DATA==============', userdata);
   return (
     <SafeAreaView style={[STYLES.container]}>
       <StatusBar
@@ -238,10 +240,10 @@ const Bingo = props => {
               myStyles={styles.button1}
               title={'Send Message'}
               itsTextstyle={styles.txt3}
-              onPress={() => props.navigation.navigate('Messaging')}
+              onPress={() => navigation.navigate('Messaging')}
             />
             <TouchableOpacity
-              onPress={() => props.navigation.navigate('PlayScreen')}
+              onPress={() => navigation.navigate('PlayScreen')}
               activeOpacity={0.6}
               style={{
                 borderRadius: responsiveWidth(100),

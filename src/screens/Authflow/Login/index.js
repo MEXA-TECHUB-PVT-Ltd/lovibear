@@ -25,6 +25,8 @@ import {useFocusEffect} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import {MyButton, MyButtonLoader} from '../../../components/MyButton';
 import {fontFamily} from '../../../constants/fonts';
+import messaging from '@react-native-firebase/messaging';
+
 import {
   GoogleSignin,
   GoogleSigninButton,
@@ -53,11 +55,55 @@ const Login = ({route, navigation}) => {
   useFocusEffect(
     React.useCallback(() => {
       setSoftinput(true);
+      checkPermission();
       // setEmailerror(false);
       // setPassworderror(false);
     }, []),
   );
+  const checkPermission = async () => {
+    console.log('check permission function call');
+    const enabled = await messaging().hasPermission();
+    messaging().notifi;
+    console.log('check permission function call enable', enabled);
+    if (enabled) {
+      getToken();
+    } else {
+      requestPermission();
+    }
+  };
+  const getToken = async () => {
+    console.log('get token call');
+    const fcmToken = await messaging().getToken();
+    console.log('check fcm token', fcmToken);
+    await AsyncStorage.setItem('Device_id', fcmToken);
+    const asyncFcmToken = await AsyncStorage.getItem('Device_id');
+    console.log('ASYNC FCM TOKEN=============', asyncFcmToken);
+  };
+  const requestPermission = async () => {
+    console.log('requestPermission call');
+    try {
+      await messaging().requestPermission();
+      getToken();
+    } catch (error) {}
+  };
 
+  const UpdateFcmToken = async myuserid => {
+    const myfcm = await AsyncStorage.getItem('Device_id');
+    var formdata = new FormData();
+    formdata.append('fcmToken', myfcm);
+    formdata.append('userId', myuserid);
+
+    var requestOptions = {
+      method: 'PUT',
+      body: formdata,
+      redirect: 'follow',
+    };
+
+    fetch(Base_URL + '/user/updateUserProfile', requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+  };
   const Validations = async () => {
     if (email == '') {
       setCheckemail(true);
@@ -115,7 +161,7 @@ const Login = ({route, navigation}) => {
                 response.data.Data.profileImage.userPicUrl,
               );
             }
-
+            UpdateFcmToken(response.data.Data._id);
             // await AsyncStorage.setItem('userid', response.data.Data._id);
             navigation.navigate('CheckUserImage');
             console.log('MY LOADER=======', loading);

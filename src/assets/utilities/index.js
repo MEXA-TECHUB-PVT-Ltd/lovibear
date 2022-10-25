@@ -81,6 +81,12 @@ const appImages = {
   gender: require(IMAGES_DIR + 'gender.png'),
   phone: require(IMAGES_DIR + 'phone.png'),
   profession: require(IMAGES_DIR + 'profession.png'),
+  forwardicon: require(IMAGES_DIR + 'forwardicon.png'),
+  fullscreenicon: require(IMAGES_DIR + 'fullscreenicon.png'),
+  fullscreenout: require(IMAGES_DIR + 'fullscreenout.png'),
+  pauseicon: require(IMAGES_DIR + 'pauseicon.png'),
+  playiconfinal: require(IMAGES_DIR + 'playiconfinal.png'),
+  rewindicon: require(IMAGES_DIR + 'rewindicon.png'),
 };
 const appColor = {
   appColorMain: '#FF0047',

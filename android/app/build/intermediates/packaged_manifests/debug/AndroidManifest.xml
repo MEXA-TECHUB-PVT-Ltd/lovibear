@@ -131,6 +131,15 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <provider
+            android:name="com.imagepicker.ImagePickerProvider"
+            android:authorities="com.lovibear.imagepickerprovider"
+            android:exported="false"
+            android:grantUriPermissions="true" >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/imagepicker_provider_paths" />
+        </provider>
+        <provider
             android:name="com.RNFetchBlob.Utils.FileProvider"
             android:authorities="com.lovibear.provider"
             android:exported="false"

@@ -14,6 +14,7 @@ import {
   VideoScreen,
   UpdatePasswordInApp,
   ImageChecker,
+  ViewMatchProfile,
 } from '../../screens';
 import {appColor, appImages} from '../../assets/utilities';
 import {StyleSheet, View, Text, Image} from 'react-native';
@@ -290,6 +291,7 @@ const App = () => {
         name={'UpdatePasswordInApp'}
         component={UpdatePasswordInApp}
       />
+      <AppStack.Screen name={'ViewMatchProfile'} component={ViewMatchProfile} />
     </AppStack.Navigator>
   );
 };

@@ -156,6 +156,7 @@ const Settings = props => {
         await AsyncStorage.setItem('signuptype', '');
         await AsyncStorage.setItem('password', '');
         await AsyncStorage.setItem('profileimage', '');
+        await AsyncStorage.setItem('Device_id', '');
         props.navigation.navigate('Auth', {screen: 'Splash'});
         setUserInfo(null);
         setLoading(false);
@@ -169,7 +170,7 @@ const Settings = props => {
       await AsyncStorage.setItem('signuptype', '');
       await AsyncStorage.setItem('password', '');
       await AsyncStorage.setItem('profileimage', '');
-
+      await AsyncStorage.setItem('Device_id', '');
       props.navigation.navigate('Auth', {screen: 'Splash'});
       setLoading(false);
     }

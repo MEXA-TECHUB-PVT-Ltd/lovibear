@@ -122,9 +122,10 @@ const UpdatePasswordInApp = ({route, navigation}) => {
       data: data,
     };
     axios(config)
-      .then(function (response) {
+      .then(async function (response) {
         console.log(JSON.stringify(response.data));
         if (response.data.success == true) {
+          await AsyncStorage.setItem('password', password);
           Toast.show('Password Updated', Toast.SHORT);
           setLoading(false);
           navigation.goBack();

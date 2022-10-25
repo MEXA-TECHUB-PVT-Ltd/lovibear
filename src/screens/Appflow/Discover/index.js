@@ -37,7 +37,7 @@ import {ActivityIndicator, Modal} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Discover = props => {
-  const [myradius, setMyRadius] = useState('100');
+  const [myradius, setMyRadius] = useState('10');
   const [radiusconfirm, setRadiusConfirm] = useState(false);
   const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
@@ -107,7 +107,7 @@ const Discover = props => {
       method: 'post',
       url:
         Base_URL +
-        '/user/usersInRadius/?page=1&limit=100000000&min_age=1&max_age=100',
+        '/user/usersInRadius/?page=1&limit=1000000&min_age=1&max_age=100',
       headers: {
         'Content-Type': 'application/json',
       },

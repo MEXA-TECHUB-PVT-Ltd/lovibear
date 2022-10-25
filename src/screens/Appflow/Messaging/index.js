@@ -51,25 +51,99 @@ import {MyButton} from '../../../components/MyButton';
 
 import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Base_URL} from '../../../Base_URL';
+import {Base_URL, Base_URL_Socket} from '../../../Base_URL';
+import RNFetchBlob from 'rn-fetch-blob';
 const Messaging = ({route, navigation}) => {
   const [myidstate, setMyIdState] = useState('');
   const [receiveridstate, setReceiverIdState] = useState('');
   const [myindex, setMyindex] = useState();
-  const [mychatid, setMyChatId] = useState();
+  const [mychatid, setMyChatId] = useState('');
   const [messageinput, setMessageinput] = useState('');
-  const {userids} = route.params;
+  const {userDetails} = route.params;
+  const [loading, setLoading] = useState(false);
+  const [longpresseditem, setLongPressedItem] = useState('');
   const messagesRef = useRef();
+
   const socket = useRef();
   const [trigger, setTrigger] = useState(false);
-
+  // console.log('the user details======', userDetails);
   const [messages, setMessages] = useState([]);
+
+  const DeleteMsg = async () => {
+    var axios = require('axios');
+
+    var config = {
+      method: 'delete',
+      url: Base_URL_Socket + '/message/' + longpresseditem,
+      headers: {},
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const GetAllMessages = async chatId => {
+    var axios = require('axios');
+
+    var config = {
+      method: 'get',
+      url: Base_URL_Socket + '/message/' + chatId,
+      headers: {},
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        setMessages(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const PostMedia = (myimg, customtype) => {
+    console.log('MY IMAGE========', myimg, customtype);
+
+    RNFetchBlob.fetch(
+      'post',
+      Base_URL + '/sendFile',
+
+      {
+        otherHeader: 'foo',
+        'Content-Type': 'multipart/form-data',
+      },
+      [myimg],
+    )
+      .then(async response => {
+        console.log('response:', response.data);
+        let myresponse = JSON.parse(response.data);
+        console.log('MY RESPONSE IMAGE FROM API ============', myresponse);
+        socket.current.emit('send-message', {
+          senderId: myidstate,
+          receiverId: receiveridstate,
+          text: myresponse.fileUrl,
+          chatId: mychatid,
+          msg_type: customtype,
+          public_id: myresponse.public_id,
+        });
+      })
+
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
   useEffect(() => {
     InitiateChat();
   }, []);
 
   const SetMessagesFunctions = () => {
-    socket.current = io('http://192.168.10.8:3000');
+    socket.current = io('http://192.168.18.27:3000');
     console.log('GETTING MESSAGE');
     socket.current.on('recieve-message', msg => {
       console.log('recieve-message', msg);
@@ -81,7 +155,6 @@ const Messaging = ({route, navigation}) => {
   };
   useEffect(() => {
     SetMessagesFunctions();
-
     return () => socket.current.close();
   }, []);
 
@@ -92,12 +165,10 @@ const Messaging = ({route, navigation}) => {
   // );
 
   const InitiateChat = async () => {
+    setLoading(true);
     console.log('INITIATING THE CHAT');
     const userid = await AsyncStorage.getItem('userid');
-    const filterreceiver = userids.filter(item => {
-      return item != userid;
-    });
-    const receiverid = filterreceiver[0];
+    const receiverid = userDetails._id;
     console.log('THE USER ID=======', userid);
     console.log('THE RECEIVER ID=====', receiverid);
     socket.current.emit('new-user-add', userid);
@@ -110,7 +181,9 @@ const Messaging = ({route, navigation}) => {
     });
     socket.current.on('chatId-receive', chatId => {
       console.log('CHAT ID============', chatId);
+      GetAllMessages(chatId);
       setMyChatId(chatId);
+      setLoading(false);
     });
     setMyIdState(userid);
     setReceiverIdState(receiverid);
@@ -121,25 +194,45 @@ const Messaging = ({route, navigation}) => {
     }).then(async image => {
       if (image.duration == undefined) {
         console.log('CHECKING DURATION', image);
+
         console.log(image.path);
         setMyimage(image.path);
+        const filename = image.path.substring(image.path.lastIndexOf('/') + 1);
+        let apiimage = {
+          name: 'file',
+          filename: filename,
+          type: image.mime,
+          data: RNFetchBlob.wrap(image.path),
+        };
+        let customtype = 'image';
+        PostMedia(apiimage, customtype);
         let myarr = [...messages];
         await myarr.push({
-          user: 0,
-          time: '12:31',
-          media: image.path,
+          senderId: myidstate,
+          chatId: mychatid,
+          text: image.path,
+          msg_type: 'image',
         });
         await setMessages(myarr);
       } else {
         console.log('CHECKING DURATION', image);
         console.log(image.path);
         setMyimage(image.path);
+        const filename = image.path.substring(image.path.lastIndexOf('/') + 1);
+        let apiimage = {
+          name: 'file',
+          filename: filename,
+          type: image.mime,
+          data: RNFetchBlob.wrap(image.path),
+        };
+        let customtype = 'video';
+        PostMedia(apiimage, customtype);
         let myarr = [...messages];
         await myarr.push({
-          user: 0,
-          time: '12:31',
-          media: image.path,
-          duration: image.duration,
+          senderId: myidstate,
+          chatId: mychatid,
+          text: image.path,
+          msg_type: 'video',
         });
         await setMessages(myarr);
       }
@@ -151,13 +244,24 @@ const Messaging = ({route, navigation}) => {
       width: 300,
       height: 400,
     }).then(async image => {
+      console.log('CHECKING DURATION', image);
       console.log(image.path);
       setMyimage(image.path);
+      const filename = image.path.substring(image.path.lastIndexOf('/') + 1);
+      let apiimage = {
+        name: 'file',
+        filename: filename,
+        type: image.mime,
+        data: RNFetchBlob.wrap(image.path),
+      };
+      let customtype = 'image';
+      PostMedia(apiimage, customtype);
       let myarr = [...messages];
       await myarr.push({
-        user: 0,
-        time: '12:31',
-        media: image.path,
+        senderId: myidstate,
+        chatId: mychatid,
+        text: image.path,
+        msg_type: 'image',
       });
       await setMessages(myarr);
     });
@@ -175,32 +279,22 @@ const Messaging = ({route, navigation}) => {
   const [myimage, setMyimage] = useState('');
   const [thename, setTheName] = useState('Kyo');
   const refContainer = useRef();
-
-  const handleSendMsg = async () => {
-    const userid = await AsyncStorage.getItem('Userid');
-    console.log('here', user, predata._id);
-    socket.current.emit('send-msg', {
-      to: predata._id,
-      from: user,
-      message,
-    });
-
-    const msgs = [...messages.reverse()];
-    msgs.push({fromSelf: true, message: message});
-    setMessages(msgs.reverse());
-  };
-
   const [selectedImage, setSelectedImage] = useState('');
   const images = [{uri: selectedImage}];
   const renderItemMessages = ({item, index}) => {
+    // console.log('THE TEXT DATA=========', item);
     return (
       <>
-        {item.media == undefined ? (
+        {item.msg_type == 'text' ? (
           <TouchableOpacity
+            onPress={() => {
+              console.log('THE TOUCHED ITEM=========', item._id);
+            }}
             activeOpacity={0.7}
             onLongPress={() => {
               if (item.senderId == myidstate) {
                 setMyindex(index);
+                setLongPressedItem(item._id);
                 refContainer.current.open();
               } else {
                 null;
@@ -223,6 +317,7 @@ const Messaging = ({route, navigation}) => {
             onLongPress={() => {
               if (item.senderId == myidstate) {
                 setMyindex(index);
+                setLongPressedItem(item._id);
                 refContainer.current.open();
               } else {
                 null;
@@ -235,26 +330,26 @@ const Messaging = ({route, navigation}) => {
                 : styles.leftcontent
             }
             onPress={() => {
-              if (item.duration == undefined) {
-                setSelectedImage(item.media);
+              if (item.msg_type == 'image') {
+                setSelectedImage(item.text);
                 setImagevisible(true);
                 console.log(selectedImage);
               } else {
-                props.navigation.navigate('VideoScreen', {
-                  mysource: item.media,
+                navigation.navigate('VideoScreen', {
+                  mysource: item.text,
                 });
               }
             }}>
-            <Image
-              source={{uri: item.media}}
+            <FastImage
+              source={{uri: item.text}}
               style={{
-                resizeMode: 'cover',
                 width: responsiveWidth(59),
                 height: responsiveWidth(71),
+                borderRadius: responsiveWidth(2),
               }}
-              borderRadius={responsiveWidth(2)}
+              resizeMode="cover"
             />
-            {item.duration == undefined ? null : (
+            {item.msg_type == 'text' ? null : item.msg_type == 'video' ? (
               <View
                 style={{
                   width: responsiveWidth(60.5),
@@ -281,7 +376,7 @@ const Messaging = ({route, navigation}) => {
                   />
                 </View>
               </View>
-            )}
+            ) : null}
           </TouchableOpacity>
         )}
       </>
@@ -345,14 +440,21 @@ const Messaging = ({route, navigation}) => {
               style={{width: responsiveWidth(5), height: responsiveWidth(5)}}
             />
           </TouchableOpacity>
-          <View
+          <TouchableOpacity
+            activeOpacity={0.65}
+            onPress={() =>
+              navigation.navigate('ViewMatchProfile', {
+                userid: userDetails._id,
+                name: userDetails.userName,
+              })
+            }
             style={{
               marginLeft: responsiveWidth(1),
               alignItems: 'center',
               flexDirection: 'row',
             }}>
             <Image
-              source={appImages.girlimg}
+              source={{uri: userDetails.profileImage.userPicUrl}}
               resizeMode="contain"
               style={{
                 width: responsiveWidth(16),
@@ -361,12 +463,12 @@ const Messaging = ({route, navigation}) => {
               }}
             />
             <View style={{marginLeft: responsiveWidth(2.5)}}>
-              <Text style={styles.txt1}>{thename}</Text>
-              <Text style={styles.txt2}>Art. Director, 21</Text>
+              <Text style={styles.txt1}>{userDetails.userName}</Text>
+              <Text style={styles.txt2}>{userDetails.profession}, 24</Text>
             </View>
-          </View>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           activeOpacity={0.7}
           style={{
             width: responsiveWidth(12),
@@ -384,7 +486,7 @@ const Messaging = ({route, navigation}) => {
               height: responsiveWidth(6),
             }}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <FlatList
         ref={messagesRef}
@@ -448,30 +550,30 @@ const Messaging = ({route, navigation}) => {
         </TouchableOpacity>
 
         <TouchableOpacity
+          disabled={loading ? true : false}
           activeOpacity={0.8}
           style={styles.sendcontainer}
           onPress={async () => {
             if (messageinput == null || messageinput == '') {
               null;
             } else {
-              // let thearr = [...messages];
-              // thearr.push({
-              //   senderId: myidstate,
-              //   receiverId: receiveridstate,
-              //   text: messageinput,
-              //   chatId: mychatid,
-              // });
-              // setMessages(thearr);
-
+              let thearr = [...messages];
+              thearr.push({
+                senderId: myidstate,
+                receiverId: receiveridstate,
+                text: messageinput,
+                chatId: mychatid,
+                msg_type: 'text',
+              });
+              setMessages(thearr);
               socket.current.emit('send-message', {
                 senderId: myidstate,
                 receiverId: receiveridstate,
                 text: messageinput,
                 chatId: mychatid,
+                msg_type: 'text',
               });
-
               setMessageinput('');
-              setTrigger(!trigger);
               // let myarr = [...messages];
               // await myarr.push({
               //   user: 0,
@@ -637,6 +739,7 @@ const Messaging = ({route, navigation}) => {
                 console.log(arr);
                 setMessages([...arr]);
                 refContainer.current.close();
+                DeleteMsg();
               }}
             />
             <MyButton
@@ -741,8 +844,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: responsiveHeight(1.5),
-    width: responsiveWidth(55),
-    height: responsiveWidth(70),
+    width: responsiveWidth(60.5),
+    height: responsiveWidth(72.5),
+    borderRadius: responsiveWidth(3),
+    backgroundColor: '#F5F5F5',
+    overflow: 'hidden',
   },
   righttxt: {
     color: '#fff',

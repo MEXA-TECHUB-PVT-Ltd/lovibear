@@ -390,7 +390,7 @@ const SignUpWithPhone = ({navigation, route}) => {
           ) : null}
           <View
             style={[
-              styles.emailparent,
+              styles.numberparent,
               {
                 borderColor:
                   myfocus == 'email' ? appColor.appColorMain : '#D7D7D7',
@@ -901,6 +901,17 @@ const styles = StyleSheet.create({
     borderWidth: responsiveWidth(0.3),
     borderColor: '#D7D7D7',
     marginTop: responsiveHeight(3),
+    paddingVertical: responsiveHeight(0.9),
+    width: responsiveWidth(85),
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  numberparent: {
+    borderRadius: responsiveWidth(3),
+    borderWidth: responsiveWidth(0.3),
+    borderColor: '#D7D7D7',
+    marginTop: responsiveHeight(3),
     // paddingVertical: responsiveHeight(0.9),
     width: responsiveWidth(85),
     alignSelf: 'center',
@@ -968,7 +979,6 @@ const styles = StyleSheet.create({
   },
   genderview: {
     paddingVertical: responsiveHeight(2),
-    // backgroundColor: 'red',
     width: responsiveWidth(65),
     alignSelf: 'center',
     textAlign: 'center',
@@ -982,20 +992,12 @@ const styles = StyleSheet.create({
   countrypick: {
     borderWidth: responsiveWidth(0.1),
     borderColor: '#E1E1E5',
-    // borderRadius: responsiveWidth(20),
-    // paddingHorizontal: responsiveWidth(4.5),
-    // marginTop: responsiveHeight(1.5),
-    // paddingVertical: responsiveHeight(2.7),
     justifyContent: 'center',
-    // borderTopLeftRadius: responsiveWidth(3),
-    // borderBottomLeftRadius: responsiveWidth(3),
     paddingLeft: responsiveWidth(1),
-    // paddingVertical: responsiveHeight(1),
     width: responsiveWidth(30),
     height: responsiveHeight(9),
-
     alignSelf: 'flex-start',
-    // alignItems: 'center',
-    // justifyContent: 'center',
+    borderTopLeftRadius: responsiveWidth(3),
+    borderBottomLeftRadius: responsiveWidth(3),
   },
 });

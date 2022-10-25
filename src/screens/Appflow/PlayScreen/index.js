@@ -316,8 +316,9 @@ const PlayScreen = ({route, navigation}) => {
           sendMatchNotification(
             response.data.result.result.swipedBy,
             response.data.result.result.swipedUser,
+            rightswipedid,
           );
-          // props.navigation.navigate('Bingo');
+          // navigation.navigate('Bingo', {userdata: response.data.result});
         }
         console.log(
           'API RESPONSE AFTER RIGHT SWIPING============',
@@ -406,7 +407,7 @@ const PlayScreen = ({route, navigation}) => {
       });
   };
 
-  const sendMatchNotification = async (myid, swipedid) => {
+  const sendMatchNotification = async (myid, swipedid, rightswipedid) => {
     var axios = require('axios');
     var data = JSON.stringify({
       senderId: myid,
@@ -421,6 +422,46 @@ const PlayScreen = ({route, navigation}) => {
       url: Base_URL + '/notification/createNotification',
       headers: {
         'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        console.log('SENDING NOTI MATCH ===============', response.data);
+        FirebaseMatch(rightswipedid, response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const FirebaseMatch = async (swipeduser, senderDetail) => {
+    console.log(
+      'SWIPED USER FCM TOKEN===================',
+      swipeduser[0].document.fcmToken,
+    );
+    var axios = require('axios');
+    var data = JSON.stringify({
+      registration_ids: [swipeduser[0].document.fcmToken],
+      notification: {
+        title: 'LoviBear',
+        body: 'You got a match with ' + senderDetail.name,
+        mutable_content: true,
+        sound: 'Tri-tone',
+        icon: 'ic_noti',
+        color: 'purple',
+      },
+    });
+
+    var config = {
+      method: 'post',
+      url: 'https://fcm.googleapis.com/fcm/send',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization:
+          'key=AAAAbAHNGv8:APA91bEt5KW6o-qgxKeb39lOIY3nIdsJP6FOj7hK0kBR_aeHQ2clJXa4g9ySbdKX1WzdZi78HXdJ5A2JXJXpHKYbcmwgv0E-KhNXKhNK0hLv6m3xlYMGy1jeFUvtsi55l4iv16OpJTJC',
       },
       data: data,
     };

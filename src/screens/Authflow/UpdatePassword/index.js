@@ -27,6 +27,7 @@ import FastImage from 'react-native-fast-image';
 import {MyButton} from '../../../components/MyButton';
 import {fontFamily} from '../../../constants/fonts';
 import {Base_URL} from '../../../Base_URL';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const UpdatePassword = ({route, navigation}) => {
   const [myfocus, setMyfocus] = useState('');
   const [securepassword, setSecurepassword] = useState(true);
@@ -81,10 +82,11 @@ const UpdatePassword = ({route, navigation}) => {
       },
       data: data,
     };
-    axios(config)
-      .then(function (response) {
+    await axios(config)
+      .then(async function (response) {
         console.log(JSON.stringify(response.data));
         if (response.data.success == true) {
+          await AsyncStorage.setItem('password', password);
           navigation.navigate('Login');
         }
       })

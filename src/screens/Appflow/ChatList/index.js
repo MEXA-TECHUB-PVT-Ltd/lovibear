@@ -24,15 +24,66 @@ import {
 } from 'react-native-responsive-dimensions';
 import Carousel from 'react-native-snap-carousel';
 import {fontFamily} from '../../../constants/fonts';
-import {Base_URL} from '../../../Base_URL';
+import {Base_URL, Base_URL_Socket} from '../../../Base_URL';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useFocusEffect} from '@react-navigation/native';
 const ChatList = props => {
-  useEffect(() => {
-    GetUserMatches();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      GetUserMatches();
+      GetChatList();
+    }, []),
+  );
+  const [empty, setEmpty] = useState(false);
+  const [chatempty, setChatEmpty] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const GetChatList = async () => {
+    const userid = await AsyncStorage.getItem('userid');
+    var axios = require('axios');
+
+    var config = {
+      method: 'get',
+      url: Base_URL_Socket + '/chat/' + userid,
+      headers: {},
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data.result));
+        console.log('THE RESULT========', response.data.result);
+        if (response.data.result != 0) {
+          let myfilter = response.data.result.map(item => {
+            console.log('USER IDS=========', item.users);
+            let filteruser = item.members.filter(item => {
+              return item != userid;
+            });
+            let detailsfilter = item.userDetails.filter(item => {
+              return item._id != userid;
+            });
+            return {
+              ...item,
+              members: filteruser[0],
+              userDetails: detailsfilter[0],
+            };
+          });
+          console.log(
+            'MY FILTER OF CHAT LIST===========',
+            JSON.stringify(myfilter),
+          );
+          setList(myfilter);
+          setChatEmpty(false);
+        } else {
+          setChatEmpty(true);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   const GetUserMatches = async () => {
     const userid = await AsyncStorage.getItem('userid');
+    console.log('MY USER ID============', userid);
     var axios = require('axios');
 
     var config = {
@@ -41,11 +92,30 @@ const ChatList = props => {
       headers: {},
     };
 
-    axios(config)
+    await axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
-        if (response.data.result.length != 0) {
-          setMatchesList(response.data.result);
+        console.log('USER DETAILS============', response.data);
+        if (response.data != 0) {
+          let myfilter = response.data.map(item => {
+            console.log('USER IDS=========', item.users);
+            let filteruser = item.users.filter(item => {
+              return item != userid;
+            });
+            let detailsfilter = item.userDetails.filter(item => {
+              return item._id != userid;
+            });
+            return {
+              ...item,
+              users: filteruser[0],
+              userDetails: detailsfilter[0],
+            };
+          });
+          console.log('MY FILTER===========', JSON.stringify(myfilter));
+          setMatchesList(myfilter);
+          setEmpty(false);
+        } else {
+          setEmpty(true);
         }
       })
       .catch(function (error) {
@@ -53,48 +123,16 @@ const ChatList = props => {
       });
   };
   const [matcheslist, setMatchesList] = useState([]);
-  const [list, setList] = useState([
-    {
-      id: 1,
-      img: appImages.img2,
-    },
-    {
-      id: 2,
-      img: appImages.img3,
-    },
-    {
-      id: 3,
-      img: appImages.img4,
-    },
-    {
-      id: 4,
-      img: appImages.img5,
-    },
-    {
-      id: 5,
-      img: appImages.img6,
-    },
-    {
-      id: 6,
-      img: appImages.img7,
-    },
-    {
-      id: 7,
-      img: appImages.img8,
-    },
-    {
-      id: 8,
-      img: appImages.img9,
-    },
-    {
-      id: 9,
-      img: appImages.img10,
-    },
-  ]);
+  const [list, setList] = useState([]);
   const renderItem = ({item}) => {
+    console.log('THE ITEMIN CHATLIST==============');
     return (
       <TouchableOpacity
-        onPress={() => props.navigation.navigate('Messaging')}
+        onPress={() =>
+          props.navigation.navigate('Messaging', {
+            userDetails: item.userDetails,
+          })
+        }
         activeOpacity={0.7}
         style={{
           marginTop: responsiveHeight(1.7),
@@ -107,7 +145,7 @@ const ChatList = props => {
             height: responsiveWidth(17),
             borderRadius: responsiveWidth(100),
           }}
-          source={item.img}
+          source={{uri: item.userDetails.profileImage.userPicUrl}}
           resizeMode="cover"
         />
 
@@ -126,11 +164,11 @@ const ChatList = props => {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.nametxt}>Lorem ipsum</Text>
-            <Text style={styles.timetxt}>3 hours</Text>
+            <Text style={styles.nametxt}>{item.userDetails.userName}</Text>
+            {/* <Text style={styles.timetxt}>3 hours</Text> */}
           </View>
           <View>
-            <Text style={styles.worktxt}>Lorem ipsum dolor sit amet</Text>
+            <Text style={styles.worktxt}>Hey, what are you upto ?</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -142,7 +180,7 @@ const ChatList = props => {
       <TouchableOpacity
         onPress={() => {
           props.navigation.navigate('Messaging', {
-            userids: item.users,
+            userDetails: item.userDetails,
           });
         }}
         activeOpacity={0.8}
@@ -161,14 +199,13 @@ const ChatList = props => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Text>{item._id}</Text>
           <Image
             style={{
               width: responsiveWidth(35),
               height: responsiveWidth(40),
               borderRadius: responsiveWidth(2),
             }}
-            source={item.img}
+            source={{uri: item.userDetails.profileImage.userPicUrl}}
             resizeMode="cover"
           />
         </View>
@@ -189,30 +226,71 @@ const ChatList = props => {
             marginBottom: responsiveHeight(1.5),
           }}>
           <Text style={styles.txt1}>Your Matches</Text>
-
-          <FlatList
-            data={matcheslist}
-            renderItem={renderItem2}
-            contentContainerStyle={{
-              flexGrow: 1,
-              paddingHorizontal: responsiveWidth(5),
-            }}
-            showsHorizontalScrollIndicator={false}
-            horizontal
-          />
+          {empty ? (
+            <View
+              style={{
+                flexGrow: 1,
+                width: responsiveWidth(80),
+                alignItems: 'center',
+                justifyContent: 'center',
+                alignSelf: 'center',
+                marginTop: responsiveHeight(4),
+              }}>
+              <Text
+                style={{
+                  fontFamily: fontFamily.Baskerville_Old_Face,
+                  color: appColor.appColorMain,
+                  fontSize: responsiveFontSize(2.2),
+                }}>
+                No Matches Found
+              </Text>
+            </View>
+          ) : (
+            <FlatList
+              data={matcheslist}
+              renderItem={renderItem2}
+              contentContainerStyle={{
+                flexGrow: 1,
+                paddingHorizontal: responsiveWidth(5),
+              }}
+              showsHorizontalScrollIndicator={false}
+              horizontal
+            />
+          )}
           <Text style={[styles.txt1, {marginTop: responsiveHeight(2)}]}>
             Messages
           </Text>
         </View>
-        <FlatList
-          data={list}
-          renderItem={renderItem}
-          contentContainerStyle={{
-            flexGrow: 1,
-            paddingHorizontal: responsiveWidth(5),
-          }}
-          showsVerticalScrollIndicator={false}
-        />
+        {chatempty ? (
+          <View
+            style={{
+              flexGrow: 1,
+              width: responsiveWidth(80),
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignSelf: 'center',
+              marginBottom: responsiveHeight(10),
+            }}>
+            <Text
+              style={{
+                fontFamily: fontFamily.Baskerville_Old_Face,
+                color: appColor.appColorMain,
+                fontSize: responsiveFontSize(3.2),
+              }}>
+              No Chats Found
+            </Text>
+          </View>
+        ) : (
+          <FlatList
+            data={list}
+            renderItem={renderItem}
+            contentContainerStyle={{
+              flexGrow: 1,
+              paddingHorizontal: responsiveWidth(5),
+            }}
+            showsVerticalScrollIndicator={false}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
