@@ -24,7 +24,7 @@ import EyeIcon from 'react-native-vector-icons/Ionicons';
 import MyHeart from '../../../components/MyHeart';
 import {useFocusEffect} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
-import {MyButton} from '../../../components/MyButton';
+import {MyButton, MyButtonLoader} from '../../../components/MyButton';
 import {fontFamily} from '../../../constants/fonts';
 import {Base_URL} from '../../../Base_URL';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -42,6 +42,7 @@ const UpdatePassword = ({route, navigation}) => {
   const [checkconfirmpassword, setCheckConfirmpassword] = useState(false);
   const [passworderror, setPassworderror] = useState('');
   const [confirmpassworderror, setConfirmPassworderror] = useState('');
+  const [loading, setLoading] = useState(false);
   useFocusEffect(
     React.useCallback(() => {
       setSoftinput(true);
@@ -68,6 +69,7 @@ const UpdatePassword = ({route, navigation}) => {
   };
 
   const UpdatePasswordApi = async () => {
+    setLoading(true);
     var axios = require('axios');
     var data = JSON.stringify({
       email: email,
@@ -88,6 +90,7 @@ const UpdatePassword = ({route, navigation}) => {
         if (response.data.success == true) {
           await AsyncStorage.setItem('password', password);
           navigation.navigate('Login');
+          setLoading(false);
         }
       })
       .catch(function (error) {
@@ -149,14 +152,6 @@ const UpdatePassword = ({route, navigation}) => {
             nonumy
           </Text>
 
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(-2.5),
-              bottom: responsiveHeight(-7),
-            }}
-            type={'red'}
-            // scaleX={1}
-          />
           <View
             style={[
               styles.passwordparent,
@@ -259,21 +254,6 @@ const UpdatePassword = ({route, navigation}) => {
             width: responsiveWidth(100),
           }}>
           <Text style={styles.headertxt}>LoviBear</Text>
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(4.5),
-              bottom: responsiveHeight(4.5),
-            }}
-          />
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(7),
-              top: responsiveHeight(4.5),
-            }}
-            width={responsiveWidth(5)}
-            height={responsiveWidth(5)}
-            shadow={false}
-          />
         </View>
         <View
           style={{
@@ -304,40 +284,19 @@ const UpdatePassword = ({route, navigation}) => {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <MyButton
-            title={'Update'}
-            onPress={() => {
-              Validations();
-            }}
-          />
-
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(7),
-              bottom: responsiveHeight(6),
-            }}
-            width={responsiveWidth(3.5)}
-            height={responsiveWidth(3.5)}
-            scaleX={1}
-            shadow={false}
-          />
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(-3),
-              top: responsiveHeight(-16),
-            }}
-            type={'red'}
-          />
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(3),
-              top: responsiveHeight(2),
-            }}
-            shadow={false}
-            width={responsiveWidth(13)}
-            height={responsiveWidth(13)}
-            scaleX={1}
-          />
+          {loading ? (
+            <MyButtonLoader
+              title={'Update'}
+              buttonColor={appColor.appColorMain}
+            />
+          ) : (
+            <MyButton
+              title={'Update'}
+              onPress={() => {
+                Validations();
+              }}
+            />
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>

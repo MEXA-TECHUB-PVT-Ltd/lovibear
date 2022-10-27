@@ -28,9 +28,39 @@ import {fontFamily} from '../../../constants/fonts';
 import {MyButton} from '../../../components/MyButton';
 import LinearGradient from 'react-native-linear-gradient';
 import MyHeart from '../../../components/MyHeart';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useFocusEffect} from '@react-navigation/native';
+import {Base_URL} from '../../../Base_URL';
 const Bingo = ({route, navigation}) => {
-  const {userdata} = route.params;
-  console.log('MY USER DATA==============', userdata);
+  const {myuserid, myimg, userdata} = route.params;
+  useFocusEffect(
+    React.useCallback(() => {
+      getotheruser();
+    }, []),
+  );
+  console.log('MY USER DATA==============', userdata, myimg, myuserid);
+  const [userimg, setUserImg] = useState('');
+  const [userDetails, setUserDetails] = useState();
+  const getotheruser = async () => {
+    var axios = require('axios');
+    console.log('SWIPED USER ID=============', userdata);
+    var config = {
+      method: 'get',
+      url: Base_URL + '/user/specificUser/' + userdata,
+      headers: {},
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        console.log('USER DETAILS FROM BINGO===========', response.data[0]);
+        setUserDetails(response.data[0]);
+        setUserImg(response.data[0].profileImage.userPicUrl);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
   return (
     <SafeAreaView style={[STYLES.container]}>
       <StatusBar
@@ -79,36 +109,8 @@ const Bingo = ({route, navigation}) => {
 
                   elevation: 12,
                 }}>
-                <MyHeart
-                  // scaleX={1}
-                  rotate={'25deg'}
-                  myStyles={{
-                    right: responsiveWidth(-14),
-                    top: responsiveHeight(9),
-                  }}
-                />
-                <MyHeart
-                  scaleX={1}
-                  rotate={'-10deg'}
-                  myStyles={{
-                    left: responsiveWidth(-6),
-                    top: responsiveHeight(11),
-                  }}
-                  width={responsiveWidth(4)}
-                  height={responsiveWidth(4)}
-                />
-                <MyHeart
-                  rotate={'25deg'}
-                  myStyles={{
-                    left: responsiveWidth(-6),
-                    bottom: responsiveHeight(-5),
-                  }}
-                  width={responsiveWidth(5)}
-                  height={responsiveWidth(5)}
-                />
-
                 <Image
-                  source={appImages.img10}
+                  source={{uri: myimg}}
                   style={{
                     width: responsiveWidth(54),
                     height: responsiveHeight(32),
@@ -138,45 +140,18 @@ const Bingo = ({route, navigation}) => {
 
                   elevation: 12,
                 }}>
-                <MyHeart
-                  scaleX={1}
-                  rotate={'-17deg'}
-                  myStyles={{
-                    left: responsiveWidth(-4),
-                    bottom: responsiveHeight(5),
-                  }}
-                  width={responsiveWidth(17)}
-                  height={responsiveWidth(17)}
-                />
-                <MyHeart
-                  rotate={'1deg'}
-                  myStyles={{
-                    right: responsiveWidth(-3),
-                    top: responsiveHeight(6),
-                  }}
-                  // width={responsiveWidth(17)}
-                  // height={responsiveWidth(17)}
-                />
-                <MyHeart
-                  scaleX={1}
-                  rotate={'-17deg'}
-                  myStyles={{
-                    right: responsiveWidth(0.01),
-                    bottom: responsiveHeight(6),
-                  }}
-                  width={responsiveWidth(5)}
-                  height={responsiveWidth(5)}
-                />
-                <Image
-                  source={appImages.img7}
-                  style={{
-                    width: responsiveWidth(54),
-                    height: responsiveHeight(32),
-                    resizeMode: 'cover',
-                    borderRadius: responsiveWidth(8),
-                    // backgroundColor: 'red',
-                  }}
-                />
+                {userimg != '' ? (
+                  <Image
+                    source={{uri: userimg}}
+                    style={{
+                      width: responsiveWidth(54),
+                      height: responsiveHeight(32),
+                      resizeMode: 'cover',
+                      borderRadius: responsiveWidth(8),
+                      // backgroundColor: 'red',
+                    }}
+                  />
+                ) : null}
               </View>
             </View>
             <View
@@ -240,7 +215,16 @@ const Bingo = ({route, navigation}) => {
               myStyles={styles.button1}
               title={'Send Message'}
               itsTextstyle={styles.txt3}
-              onPress={() => navigation.navigate('Messaging')}
+              disabled={
+                userDetails == null
+                  ? true
+                  : userDetails == undefined
+                  ? true
+                  : false
+              }
+              onPress={() =>
+                navigation.navigate('Messaging', {userDetails: userDetails})
+              }
             />
             <TouchableOpacity
               onPress={() => navigation.navigate('PlayScreen')}

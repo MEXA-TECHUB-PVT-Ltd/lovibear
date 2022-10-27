@@ -23,7 +23,7 @@ import EyeIcon from 'react-native-vector-icons/Ionicons';
 import MyHeart from '../../../components/MyHeart';
 import {useFocusEffect} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
-import {MyButton} from '../../../components/MyButton';
+import {MyButton, MyButtonLoader} from '../../../components/MyButton';
 import {fontFamily} from '../../../constants/fonts';
 import {Base_URL} from '../../../Base_URL';
 const ForgotPassword = props => {
@@ -35,6 +35,9 @@ const ForgotPassword = props => {
   const [softinput, setSoftinput] = useState(false);
   const [checkemail, setCheckemail] = useState(false);
   const [emailerror, setEmailerror] = useState(false);
+  const [loading, setLoading] = useState(false);
+  let reg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w\w+)+$/;
+
   useFocusEffect(
     React.useCallback(() => {
       setSoftinput(true);
@@ -58,6 +61,7 @@ const ForgotPassword = props => {
   };
 
   const ForgotPasswordApi = async () => {
+    setLoading(true);
     var axios = require('axios');
     var data = JSON.stringify({
       userEmailAddress: email.toLowerCase(),
@@ -75,11 +79,20 @@ const ForgotPassword = props => {
     await axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
-        if (response.data.message != 'No one found with This Email address')
+        if (response.data.message != 'No one found with This Email address') {
           props.navigation.navigate('EnterCode', {email: email.toLowerCase()});
+          setCheckemail(false);
+          setEmailerror('');
+          setLoading(false);
+        } else {
+          setCheckemail(true);
+          setEmailerror('No such email found');
+          setLoading(false);
+        }
       })
       .catch(function (error) {
         console.log(error);
+        setLoading(false);
       });
   };
   return (
@@ -134,22 +147,7 @@ const ForgotPassword = props => {
             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
             nonumy
           </Text>
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(-3.6),
-              top: responsiveHeight(24),
-            }}
-            type={'red'}
-            // scaleX={1}
-          />
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(-2.5),
-              bottom: responsiveHeight(-7),
-            }}
-            type={'red'}
-            // scaleX={1}
-          />
+
           <View
             style={[
               styles.emailparent,
@@ -180,6 +178,8 @@ const ForgotPassword = props => {
               onBlur={() => setMyfocus('')}
               onChangeText={text => {
                 setEmail(text);
+                setCheckemail(false);
+                setEmailerror('');
               }}
             />
           </View>
@@ -201,21 +201,6 @@ const ForgotPassword = props => {
             width: responsiveWidth(100),
           }}>
           <Text style={styles.headertxt}>LoviBear</Text>
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(4.5),
-              bottom: responsiveHeight(4.5),
-            }}
-          />
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(7),
-              top: responsiveHeight(4.5),
-            }}
-            width={responsiveWidth(5)}
-            height={responsiveWidth(5)}
-            shadow={false}
-          />
         </View>
         <View
           style={{
@@ -246,31 +231,19 @@ const ForgotPassword = props => {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <MyButton
-            title={'SEND CODE'}
-            onPress={() => {
-              Validations();
-            }}
-          />
-
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(7),
-              bottom: responsiveHeight(6),
-            }}
-            width={responsiveWidth(3.5)}
-            height={responsiveWidth(3.5)}
-            scaleX={1}
-            shadow={false}
-          />
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(4.5),
-              top: responsiveHeight(-13),
-            }}
-            type={'red'}
-            scaleX={1}
-          />
+          {loading ? (
+            <MyButtonLoader
+              title={'SEND CODE'}
+              buttonColor={appColor.appColorMain}
+            />
+          ) : (
+            <MyButton
+              title={'SEND CODE'}
+              onPress={() => {
+                Validations();
+              }}
+            />
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>

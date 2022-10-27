@@ -48,60 +48,6 @@ const Splash0 = ({navigation}) => {
         STYLES.container,
         {alignItems: 'center', justifyContent: 'center'},
       ]}>
-      <MyHeart
-        type={'red'}
-        myStyles={{
-          top: responsiveHeight(12),
-          left: responsiveWidth(4),
-        }}
-      />
-      <MyHeart
-        type={'red'}
-        myStyles={{
-          top: responsiveHeight(10),
-          right: responsiveWidth(-4.7),
-        }}
-        shadow={false}
-      />
-      <MyHeart
-        type={'red'}
-        myStyles={{
-          top: responsiveHeight(30),
-          left: responsiveWidth(-3),
-        }}
-      />
-      <MyHeart
-        type={'red'}
-        scaleX={1}
-        shadow={false}
-        myStyles={{
-          top: responsiveHeight(50),
-          left: responsiveWidth(4),
-        }}
-        width={responsiveWidth(4)}
-        height={responsiveWidth(4)}
-      />
-      <MyHeart
-        type={'red'}
-        // scaleX={1}
-        myStyles={{
-          bottom: responsiveHeight(5),
-          left: responsiveWidth(-1.4),
-        }}
-        shadow={false}
-        width={responsiveWidth(4)}
-        height={responsiveWidth(4)}
-      />
-      <MyHeart
-        type={'red'}
-        scaleX={1}
-        myStyles={{
-          bottom: responsiveHeight(3),
-          right: responsiveWidth(-6),
-        }}
-        width={responsiveWidth(13)}
-        height={responsiveWidth(13)}
-      />
       <StatusBar hidden={true} />
       <Image
         source={appImages.splashicon}

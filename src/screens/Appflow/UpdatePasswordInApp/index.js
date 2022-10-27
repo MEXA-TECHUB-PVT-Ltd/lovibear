@@ -192,14 +192,6 @@ const UpdatePasswordInApp = ({route, navigation}) => {
             nonumy
           </Text>
 
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(-2.5),
-              bottom: responsiveHeight(-7),
-            }}
-            type={'red'}
-            // scaleX={1}
-          />
           <View
             style={[
               styles.passwordparent,
@@ -347,21 +339,6 @@ const UpdatePasswordInApp = ({route, navigation}) => {
             width: responsiveWidth(100),
           }}>
           <Text style={styles.headertxt}>LoviBear</Text>
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(4.5),
-              bottom: responsiveHeight(4.5),
-            }}
-          />
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(7),
-              top: responsiveHeight(4.5),
-            }}
-            width={responsiveWidth(5)}
-            height={responsiveWidth(5)}
-            shadow={false}
-          />
         </View>
         <View
           style={{
@@ -405,34 +382,6 @@ const UpdatePasswordInApp = ({route, navigation}) => {
               }}
             />
           )}
-
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(7),
-              bottom: responsiveHeight(6),
-            }}
-            width={responsiveWidth(3.5)}
-            height={responsiveWidth(3.5)}
-            scaleX={1}
-            shadow={false}
-          />
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(-3),
-              top: responsiveHeight(-16),
-            }}
-            type={'red'}
-          />
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(3),
-              top: responsiveHeight(2),
-            }}
-            shadow={false}
-            width={responsiveWidth(13)}
-            height={responsiveWidth(13)}
-            scaleX={1}
-          />
         </View>
       </ScrollView>
     </SafeAreaView>

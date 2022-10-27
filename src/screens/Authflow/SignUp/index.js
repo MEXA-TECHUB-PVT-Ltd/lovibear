@@ -273,27 +273,27 @@ const SignUp = ({navigation, route}) => {
           setLoading(false);
         } else {
           setLoading(false);
-          // if (routeFrom == 'google') {
-          navigation.navigate('AddProfileImage', {
-            routeFrom: routeFrom,
-            userid: result.result._id,
-            mylong: result.result.location.coordinates[0],
-            mylat: result.result.location.coordinates[1],
-            email: userInfo.email,
-            password: userInfo.id,
-            screenFrom: 'signup',
-          });
-          // } else {
-          //   navigation.navigate('AddProfileImage', {
-          //     routeFrom: routeFrom,
-          //     userid: result.result._id,
-          //     mylong: result.result.location.coordinates[0],
-          //     mylat: result.result.location.coordinates[1],
-          //     email: result.result.email,
-          //     password: password,
-          //     screenFrom: 'signup',
-          //   });
-          // }
+          if (routeFrom == 'google') {
+            navigation.navigate('AddProfileImage', {
+              routeFrom: routeFrom,
+              userid: result.result._id,
+              mylong: result.result.location.coordinates[0],
+              mylat: result.result.location.coordinates[1],
+              email: userInfo.email,
+              password: userInfo.id,
+              screenFrom: 'signup',
+            });
+          } else {
+            navigation.navigate('AddProfileImage', {
+              routeFrom: routeFrom,
+              userid: result.result._id,
+              mylong: result.result.location.coordinates[0],
+              mylat: result.result.location.coordinates[1],
+              email: result.result.email,
+              password: password,
+              screenFrom: 'signup',
+            });
+          }
         }
       })
 
@@ -338,22 +338,7 @@ const SignUp = ({navigation, route}) => {
             />
           </View>
           <Text style={styles.maintxt}>Create Account</Text>
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(-3.6),
-              top: responsiveHeight(24),
-            }}
-            type={'red'}
-            // scaleX={1}
-          />
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(-2.5),
-              bottom: responsiveHeight(-7),
-            }}
-            type={'red'}
-            // scaleX={1}
-          />
+
           <View
             style={[
               styles.emailparent,
@@ -452,7 +437,7 @@ const SignUp = ({navigation, route}) => {
               },
             ]}>
             <Image
-              source={appImages.user}
+              source={appImages.gender}
               resizeMode="contain"
               style={{
                 width: responsiveWidth(5.5),
@@ -487,7 +472,7 @@ const SignUp = ({navigation, route}) => {
               },
             ]}>
             <Image
-              source={appImages.user}
+              source={appImages.profession}
               resizeMode="contain"
               style={{
                 width: responsiveWidth(5.5),
@@ -645,21 +630,6 @@ const SignUp = ({navigation, route}) => {
             width: responsiveWidth(100),
           }}>
           <Text style={styles.headertxt}>LoviBear</Text>
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(4.5),
-              bottom: responsiveHeight(4.5),
-            }}
-          />
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(7),
-              top: responsiveHeight(4.5),
-            }}
-            width={responsiveWidth(5)}
-            height={responsiveWidth(5)}
-            shadow={false}
-          />
         </View>
         <View
           style={{
@@ -709,29 +679,11 @@ const SignUp = ({navigation, route}) => {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => navigation.navigate('Login')}>
-              <Text style={styles.txt4}>Login</Text>
+              <Text style={[styles.txt4, {textDecorationLine: 'underline'}]}>
+                Login
+              </Text>
             </TouchableOpacity>
           </View>
-
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(2),
-              top: responsiveHeight(1),
-            }}
-            width={responsiveWidth(13)}
-            height={responsiveWidth(13)}
-            scaleX={1}
-          />
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(7),
-              bottom: responsiveHeight(6),
-            }}
-            width={responsiveWidth(3.5)}
-            height={responsiveWidth(3.5)}
-            scaleX={1}
-            shadow={false}
-          />
         </View>
       </ScrollView>
       <Modal visible={visible} onDismiss={hideModal}>
@@ -769,14 +721,26 @@ const SignUp = ({navigation, route}) => {
           <TouchableOpacity
             onPress={() => {
               setCheckgender(false);
-              setGender('Prefer not to say');
+              setGender('Trans-men');
               professionref.current.focus();
 
-              setApiGender('preferNotToSay');
+              setApiGender('transmen');
               hideModal();
             }}
             style={styles.genderview}>
-            <Text style={styles.genderselecttxt}>Prefer not to say</Text>
+            <Text style={styles.genderselecttxt}>Trans-men</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setCheckgender(false);
+              setGender('Trans-women');
+              professionref.current.focus();
+
+              setApiGender('transwomen');
+              hideModal();
+            }}
+            style={styles.genderview}>
+            <Text style={styles.genderselecttxt}>Trans-women</Text>
           </TouchableOpacity>
         </View>
       </Modal>

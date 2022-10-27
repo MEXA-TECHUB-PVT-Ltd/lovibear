@@ -63,12 +63,20 @@ const Messaging = ({route, navigation}) => {
   const [loading, setLoading] = useState(false);
   const [longpresseditem, setLongPressedItem] = useState('');
   const messagesRef = useRef();
-
+  // console.log('THE USER DETAILS ON MESSAGE SCREEN========', userDetails);
   const socket = useRef();
   const [trigger, setTrigger] = useState(false);
   // console.log('the user details======', userDetails);
   const [messages, setMessages] = useState([]);
 
+  useEffect(() => {
+    InitiateChat();
+    return () => socket.current.close();
+  }, []);
+  useEffect(() => {
+    SetMessagesFunctions();
+    return () => socket.current.close();
+  }, []);
   const DeleteMsg = async () => {
     var axios = require('axios');
 
@@ -138,25 +146,18 @@ const Messaging = ({route, navigation}) => {
       });
   };
 
-  useEffect(() => {
-    InitiateChat();
-  }, []);
-
   const SetMessagesFunctions = () => {
-    socket.current = io('http://192.168.18.27:3000');
-    console.log('GETTING MESSAGE');
-    socket.current.on('recieve-message', msg => {
-      console.log('recieve-message', msg);
-      let myvar = msg;
-      console.log('MY VAR===', myvar);
-      setTheName(msg.text);
-      msg && setMessages(prev => [...prev, msg]);
-    });
+    if (socket.current) {
+      console.log('GETTING MESSAGE');
+      socket.current.on('recieve-message', msg => {
+        console.log('recieve-message', msg);
+        let myvar = msg;
+        console.log('MY VAR===', myvar);
+        setTheName(msg.text);
+        msg && setMessages(prev => [...prev, msg]);
+      });
+    }
   };
-  useEffect(() => {
-    SetMessagesFunctions();
-    return () => socket.current.close();
-  }, []);
 
   // useFocusEffect(
   //   React.useCallback(() => {
@@ -165,25 +166,27 @@ const Messaging = ({route, navigation}) => {
   // );
 
   const InitiateChat = async () => {
+    socket.current = io(Base_URL_Socket);
+
     setLoading(true);
     console.log('INITIATING THE CHAT');
     const userid = await AsyncStorage.getItem('userid');
     const receiverid = userDetails._id;
     console.log('THE USER ID=======', userid);
-    console.log('THE RECEIVER ID=====', receiverid);
-    socket.current.emit('new-user-add', userid);
-    socket.current.emit('chat-start', {
+    await socket.current.emit('new-user-add', userid);
+    await socket.current.emit('chat-start', {
       senderId: userid,
       receiverId: receiverid,
     });
-    socket.current.on('get-users', data => {
+    await socket.current.on('get-users', data => {
       console.log('ALL USERS============', data);
     });
-    socket.current.on('chatId-receive', chatId => {
+    await socket.current.on('chatId-receive', chatId => {
       console.log('CHAT ID============', chatId);
-      GetAllMessages(chatId);
-      setMyChatId(chatId);
       setLoading(false);
+
+      setMyChatId(chatId);
+      GetAllMessages(chatId);
     });
     setMyIdState(userid);
     setReceiverIdState(receiverid);
@@ -403,6 +406,21 @@ const Messaging = ({route, navigation}) => {
       }
     }, [stateemoji]),
   );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        navigation.navigate('ChatListScreens');
+        return true;
+      };
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction,
+      );
+      return () => backHandler.remove();
+    }, []),
+  );
+
   return (
     <SafeAreaView style={STYLES.container}>
       <View

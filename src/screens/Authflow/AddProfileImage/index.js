@@ -46,12 +46,28 @@ const AddProfileImage = ({route, navigation}) => {
       return () => backHandler.remove();
     }, []),
   );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setMyimage('');
+    }, []),
+  );
+
   const [myimage, setMyimage] = useState('');
   const [apiarray, setApiArray] = useState([]);
   let myarr = [];
 
-  const {routeFrom, userid, mylat, mylong, email, password, screenFrom} =
-    route.params;
+  const {
+    routeFrom,
+    userid,
+    mylat,
+    mylong,
+    email,
+    password,
+    screenFrom,
+    phoneNumber,
+  } = route.params;
+
   const UpdateUserId = async () => {
     await myarr.push({
       name: 'userId',
@@ -67,12 +83,13 @@ const AddProfileImage = ({route, navigation}) => {
     });
     console.log('USER INFORMATION UPDATED');
   };
-  console.log(routeFrom, userid, mylat, mylong, email, password);
+  console.log(routeFrom, userid, mylat, mylong, email, password, phoneNumber);
   const [selectedImage, setSelectedImage] = useState();
   const [loading, setLoading] = useState(false);
   const imageTakeFromGallery = () => {
     ImagePicker.openPicker({
       cropping: false,
+      mediaType: 'photo',
       // compressImageQuality: 1,
     }).then(async image => {
       console.log(image);
@@ -98,6 +115,7 @@ const AddProfileImage = ({route, navigation}) => {
   const imageTakeFromCamera = () => {
     ImagePicker.openCamera({
       cropping: false,
+      mediaType: 'photo',
     }).then(image => {
       console.log(image.path);
       setMyimage(image.path);
@@ -164,13 +182,57 @@ const AddProfileImage = ({route, navigation}) => {
               'profileimage',
               myresponse.updatedResult.profileImage.userPicUrl,
             );
+
             if (screenFrom != 'signup') {
               navigation.navigate('App', {
                 screen: 'PlayScreenScreens',
               });
+              setLoading(false);
             } else if (routeFrom == 'emailorphone') {
               console.log('FROM SIMPLE EMAIL / PASSWORD');
-              navigation.navigate('Login');
+              var axios = require('axios');
+              if (email == undefined) {
+                var data = JSON.stringify({
+                  phoneNumber: phoneNumber,
+                  password: password,
+                });
+              } else {
+                var data = JSON.stringify({
+                  email: email,
+                  password: password,
+                });
+              }
+
+              var config = {
+                method: 'post',
+                url: Base_URL + '/user/login',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                data: data,
+              };
+
+              await axios(config)
+                .then(async function (response) {
+                  console.log(JSON.stringify(response.data));
+                  console.log('RESPONSE OF LOGIN=============', response.data);
+
+                  await AsyncStorage.setItem('userid', response.data.Data._id);
+                  await AsyncStorage.setItem(
+                    'signuptype',
+                    response.data.Data.signupType,
+                  );
+                  await AsyncStorage.setItem('password', password);
+
+                  navigation.navigate('App', {
+                    screen: 'PlayScreenScreens',
+                  });
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+
+              setLoading(false);
             } else if (routeFrom == 'google') {
               console.log('FROM GOOGLE');
 
@@ -284,80 +346,7 @@ const AddProfileImage = ({route, navigation}) => {
         backgroundColor={'#fff'}
         barStyle={'dark-content'}
       />
-      <MyHeart
-        type={'red'}
-        myStyles={{
-          top: responsiveHeight(8),
-          left: responsiveWidth(4),
-        }}
-      />
-      <MyHeart
-        type={'red'}
-        myStyles={{
-          top: responsiveHeight(2),
-          right: responsiveWidth(10),
-        }}
-        shadow={false}
-        width={responsiveWidth(5)}
-        height={responsiveWidth(5)}
-      />
-      <MyHeart
-        type={'red'}
-        myStyles={{
-          top: responsiveHeight(25),
-          left: responsiveWidth(-3),
-        }}
-      />
-      <MyHeart
-        type={'red'}
-        myStyles={{
-          top: responsiveHeight(2),
-          right: responsiveWidth(10),
-        }}
-        width={responsiveWidth(5)}
-        height={responsiveWidth(5)}
-      />
-      <MyHeart
-        type={'red'}
-        scaleX={1}
-        shadow={false}
-        myStyles={{
-          top: responsiveHeight(50),
-          left: responsiveWidth(4),
-        }}
-        width={responsiveWidth(4)}
-        height={responsiveWidth(4)}
-      />
-      <MyHeart
-        type={'red'}
-        myStyles={{
-          bottom: responsiveHeight(35),
-          right: responsiveWidth(-3),
-        }}
-      />
 
-      <MyHeart
-        type={'red'}
-        scaleX={1}
-        myStyles={{
-          bottom: responsiveHeight(5),
-          left: responsiveWidth(10),
-        }}
-        width={responsiveWidth(4)}
-        height={responsiveWidth(4)}
-      />
-
-      <MyHeart
-        type={'red'}
-        scaleX={1}
-        myStyles={{
-          bottom: responsiveHeight(3),
-          right: responsiveWidth(10),
-        }}
-        shadow={false}
-        width={responsiveWidth(13)}
-        height={responsiveWidth(13)}
-      />
       <View pointerEvents={loading ? 'none' : 'auto'}>
         <Text style={styles.maintxt}>Add Profile Image</Text>
         <TouchableOpacity

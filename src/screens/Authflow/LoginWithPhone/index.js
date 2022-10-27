@@ -54,7 +54,7 @@ const LoginWithPhone = ({route, navigation}) => {
   const [firstchar, setFirstChar] = useState('+');
   const [loading, setLoading] = useState(false);
   const [countryCode, setcountryCode] = useState('PK');
-  const [callingCode, setcallingCode] = useState('1');
+  const [callingCode, setcallingCode] = useState('92');
   const [countryname, setcountryname] = useState('Country');
   const OnSelect = country => {
     console.log('country', country);
@@ -204,22 +204,7 @@ const LoginWithPhone = ({route, navigation}) => {
             />
           </View>
           <Text style={styles.maintxt}>LOGIN WITH YOUR PHONE NUMBER</Text>
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(-3.6),
-              top: responsiveHeight(24),
-            }}
-            type={'red'}
-            // scaleX={1}
-          />
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(-2.5),
-              bottom: responsiveHeight(-7),
-            }}
-            type={'red'}
-            // scaleX={1}
-          />
+
           <View
             style={[
               styles.emailparent,
@@ -255,12 +240,13 @@ const LoginWithPhone = ({route, navigation}) => {
               <View
                 style={{
                   position: 'absolute',
-                  left: responsiveWidth(1.5),
+                  // left: responsiveWidth(1.5),
                   flexDirection: 'row',
                   alignItems: 'center',
+                  alignSelf: 'center',
                 }}
                 pointerEvents="none">
-                <Image
+                {/* <Image
                   source={appImages.phone}
                   resizeMode="contain"
                   style={{
@@ -269,7 +255,7 @@ const LoginWithPhone = ({route, navigation}) => {
                     // backgroundColor: 'red',
                     marginLeft: responsiveWidth(5),
                   }}
-                />
+                /> */}
                 <Text
                   style={{
                     paddingLeft: responsiveWidth(1.5),
@@ -288,6 +274,15 @@ const LoginWithPhone = ({route, navigation}) => {
                   }}>
                   {callingCode}
                 </Text>
+                <Image
+                  style={{
+                    width: responsiveWidth(2.5),
+                    height: responsiveWidth(2.5),
+                    resizeMode: 'contain',
+                    marginLeft: responsiveWidth(2),
+                  }}
+                  source={appImages.dropdown}
+                />
               </View>
             </View>
 
@@ -378,21 +373,6 @@ const LoginWithPhone = ({route, navigation}) => {
             width: responsiveWidth(100),
           }}>
           <Text style={styles.headertxt}>LoviBear</Text>
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(4.5),
-              bottom: responsiveHeight(4.5),
-            }}
-          />
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(7),
-              top: responsiveHeight(4.5),
-            }}
-            width={responsiveWidth(5)}
-            height={responsiveWidth(5)}
-            shadow={false}
-          />
         </View>
         <View
           style={{
@@ -448,7 +428,9 @@ const LoginWithPhone = ({route, navigation}) => {
                   userInfo: 'null',
                 })
               }>
-              <Text style={styles.txt4}>Sign up</Text>
+              <Text style={[styles.txt4, {textDecorationLine: 'underline'}]}>
+                Sign up
+              </Text>
             </TouchableOpacity>
           </View>
           <Text style={[styles.txt4, {marginVertical: responsiveHeight(0.4)}]}>
@@ -457,27 +439,10 @@ const LoginWithPhone = ({route, navigation}) => {
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => navigation.navigate('Login')}>
-            <Text style={styles.txt4}>Login with Email Address</Text>
+            <Text style={[styles.txt4, {textDecorationLine: 'underline'}]}>
+              Login with Email Address
+            </Text>
           </TouchableOpacity>
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(2),
-              top: responsiveHeight(1),
-            }}
-            width={responsiveWidth(13)}
-            height={responsiveWidth(13)}
-            scaleX={1}
-          />
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(7),
-              bottom: responsiveHeight(6),
-            }}
-            width={responsiveWidth(3.5)}
-            height={responsiveWidth(3.5)}
-            scaleX={1}
-            shadow={false}
-          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -576,7 +541,7 @@ const styles = StyleSheet.create({
     // borderBottomLeftRadius: responsiveWidth(3),
     paddingLeft: responsiveWidth(1),
     // paddingVertical: responsiveHeight(1),
-    width: responsiveWidth(30),
+    width: responsiveWidth(19),
     height: responsiveHeight(9),
 
     alignSelf: 'flex-start',

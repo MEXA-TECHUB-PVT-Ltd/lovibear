@@ -87,6 +87,7 @@ const appImages = {
   pauseicon: require(IMAGES_DIR + 'pauseicon.png'),
   playiconfinal: require(IMAGES_DIR + 'playiconfinal.png'),
   rewindicon: require(IMAGES_DIR + 'rewindicon.png'),
+  dropdown: require(IMAGES_DIR + 'dropdown.png'),
 };
 const appColor = {
   appColorMain: '#FF0047',

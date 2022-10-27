@@ -29,7 +29,7 @@ import EyeIcon from 'react-native-vector-icons/Ionicons';
 import MyHeart from '../../../components/MyHeart';
 import {useFocusEffect} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
-import {MyButton} from '../../../components/MyButton';
+import {MyButton, MyButtonLoader} from '../../../components/MyButton';
 import {fontFamily} from '../../../constants/fonts';
 import {Base_URL} from '../../../Base_URL';
 const CELL_COUNT = 4;
@@ -42,6 +42,7 @@ const EnterCode = ({route, navigation}) => {
   const {email} = route.params;
   const [value, setValue] = useState('');
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
+  const [loading, setLoading] = useState(false);
   const [props2, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue,
@@ -50,6 +51,7 @@ const EnterCode = ({route, navigation}) => {
   const [otperror, setOtpError] = useState(false);
 
   const VerifyOTPApi = async () => {
+    setLoading(true);
     var axios = require('axios');
     var data = JSON.stringify({
       userEmailAddress: email,
@@ -65,16 +67,20 @@ const EnterCode = ({route, navigation}) => {
       data: data,
     };
 
-    axios(config)
+    await axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
         if (response.data.status == false) {
           setOtpError(true);
+          setLoading(false);
         } else {
           navigation.navigate('UpdatePassword', {
             userid: response.data.data.userId,
             email: response.data.data.email,
           });
+          setOtpError(false);
+
+          setLoading(false);
         }
       })
       .catch(function (error) {
@@ -157,23 +163,6 @@ const EnterCode = ({route, navigation}) => {
               </View>
             )}
           />
-
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(-3.6),
-              top: responsiveHeight(24),
-            }}
-            type={'red'}
-            // scaleX={1}
-          />
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(-2.5),
-              bottom: responsiveHeight(-7),
-            }}
-            type={'red'}
-            // scaleX={1}
-          />
         </View>
 
         <View
@@ -188,21 +177,6 @@ const EnterCode = ({route, navigation}) => {
             width: responsiveWidth(100),
           }}>
           <Text style={styles.headertxt}>LoviBear</Text>
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(4.5),
-              bottom: responsiveHeight(4.5),
-            }}
-          />
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(7),
-              top: responsiveHeight(4.5),
-            }}
-            width={responsiveWidth(5)}
-            height={responsiveWidth(5)}
-            shadow={false}
-          />
         </View>
         <View
           style={{
@@ -236,27 +210,15 @@ const EnterCode = ({route, navigation}) => {
           <Text style={styles.errortxt}>
             {otperror == false ? '' : 'Wrong OTP'}
           </Text>
-          <MyButton title={'VERIFY CODE'} onPress={() => VerifyOTPApi()} />
-
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(7),
-              bottom: responsiveHeight(6),
-            }}
-            width={responsiveWidth(3.5)}
-            height={responsiveWidth(3.5)}
-            scaleX={1}
-            shadow={false}
-          />
+          {loading ? (
+            <MyButtonLoader
+              title={'VERIFY CODE'}
+              buttonColor={appColor.appColorMain}
+            />
+          ) : (
+            <MyButton title={'VERIFY CODE'} onPress={() => VerifyOTPApi()} />
+          )}
         </View>
-        <MyHeart
-          myStyles={{
-            left: responsiveWidth(4.5),
-            top: responsiveHeight(65),
-          }}
-          type={'red'}
-          scaleX={1}
-        />
       </ScrollView>
     </SafeAreaView>
   );

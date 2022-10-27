@@ -96,6 +96,7 @@ const EditProfile = props => {
   const imageTakeFromCamera = () => {
     ImagePicker.openCamera({
       cropping: false,
+      mediaType: 'photo',
     }).then(image => {
       console.log(image.path);
       setMyimage(image.path);
@@ -286,6 +287,8 @@ const EditProfile = props => {
           console.log('MY RESULT===========', result.updatedResult.email);
 
           Toast.show('Profile Updated', Toast.SHORT);
+          props.navigation.goBack();
+
           setLoading(false);
         }
       })
@@ -332,6 +335,7 @@ const EditProfile = props => {
             myresponse.updatedResult.profileImage.userPicUrl,
           );
           Toast.show('Profile Updated', Toast.SHORT);
+          props.navigation.goBack();
           setLoading(false);
         })
         .catch(error => {
@@ -646,7 +650,7 @@ const EditProfile = props => {
               },
             ]}>
             <Image
-              source={appImages.user}
+              source={appImages.gender}
               resizeMode="contain"
               style={{
                 width: responsiveWidth(5.5),
@@ -681,7 +685,7 @@ const EditProfile = props => {
               },
             ]}>
             <Image
-              source={appImages.user}
+              source={appImages.profession}
               resizeMode="contain"
               style={{
                 width: responsiveWidth(5.5),
@@ -980,14 +984,27 @@ const EditProfile = props => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
+                setApiGender('Trans-men');
+
                 setCheckgender(false);
-                setGender('Prefer not to say');
                 professionref.current.focus();
-                setApiGender('preferNotToSay');
+                setGender('transmen');
                 hideModal();
               }}
               style={styles.genderview}>
-              <Text style={styles.genderselecttxt}>Prefer not to say</Text>
+              <Text style={styles.genderselecttxt}>Trans-men</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setApiGender('Trans-women');
+
+                setCheckgender(false);
+                professionref.current.focus();
+                setGender('transwomen');
+                hideModal();
+              }}
+              style={styles.genderview}>
+              <Text style={styles.genderselecttxt}>Trans-women</Text>
             </TouchableOpacity>
           </View>
         </Modal>

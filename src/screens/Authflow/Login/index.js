@@ -227,22 +227,6 @@ const Login = ({route, navigation}) => {
           </View>
           <Text style={styles.maintxt}>LOGIN WITH YOUR EMAIL ADDRESS</Text>
 
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(-3.6),
-              top: responsiveHeight(24),
-            }}
-            type={'red'}
-            // scaleX={1}
-          />
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(-2.5),
-              bottom: responsiveHeight(-7),
-            }}
-            type={'red'}
-            // scaleX={1}
-          />
           <View
             style={[
               styles.emailparent,
@@ -347,21 +331,6 @@ const Login = ({route, navigation}) => {
             width: responsiveWidth(100),
           }}>
           <Text style={styles.headertxt}>LoviBear</Text>
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(4.5),
-              bottom: responsiveHeight(4.5),
-            }}
-          />
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(7),
-              top: responsiveHeight(4.5),
-            }}
-            width={responsiveWidth(5)}
-            height={responsiveWidth(5)}
-            shadow={false}
-          />
         </View>
         <View
           style={{
@@ -417,7 +386,9 @@ const Login = ({route, navigation}) => {
                   userInfo: 'null',
                 })
               }>
-              <Text style={styles.txt4}>Sign up</Text>
+              <Text style={[styles.txt4, {textDecorationLine: 'underline'}]}>
+                Sign up
+              </Text>
             </TouchableOpacity>
           </View>
           <Text style={[styles.txt4, {marginVertical: responsiveHeight(0.4)}]}>
@@ -426,27 +397,10 @@ const Login = ({route, navigation}) => {
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => navigation.navigate('LoginWithPhone')}>
-            <Text style={styles.txt4}>Login with Phone Number</Text>
+            <Text style={[styles.txt4, {textDecorationLine: 'underline'}]}>
+              Login with Phone Number
+            </Text>
           </TouchableOpacity>
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(2),
-              top: responsiveHeight(1),
-            }}
-            width={responsiveWidth(13)}
-            height={responsiveWidth(13)}
-            scaleX={1}
-          />
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(7),
-              bottom: responsiveHeight(6),
-            }}
-            width={responsiveWidth(3.5)}
-            height={responsiveWidth(3.5)}
-            scaleX={1}
-            shadow={false}
-          />
         </View>
       </ScrollView>
     </SafeAreaView>

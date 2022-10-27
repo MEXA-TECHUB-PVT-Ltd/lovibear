@@ -21,7 +21,12 @@ import {
 import FastImage from 'react-native-fast-image';
 import MyHeart from '../../../components/MyHeart';
 import {fontFamily} from '../../../constants/fonts';
+import {useState} from 'react';
+import CheckBox from '@react-native-community/checkbox';
+
 const Splash2 = props => {
+  const [toggleCheckBox, setToggleCheckBox] = useState(false);
+
   return (
     <SafeAreaView style={STYLES.containerJustify}>
       <StatusBar
@@ -29,21 +34,7 @@ const Splash2 = props => {
         backgroundColor={appColor.appColorMain}
         barStyle={'light-content'}
       />
-      <MyHeart
-        scaleX={1}
-        type={'red'}
-        myStyles={{
-          left: responsiveWidth(-1),
-          bottom: responsiveHeight(2.7),
-        }}
-      />
-      <MyHeart
-        type={'red'}
-        myStyles={{
-          right: responsiveWidth(-2.5),
-          bottom: responsiveHeight(33),
-        }}
-      />
+
       <ScrollView
         contentContainerStyle={{flexGrow: 1, justifyContent: 'space-between'}}>
         <View
@@ -58,38 +49,6 @@ const Splash2 = props => {
             // transform: [{rotate: '2deg'}],
             // backgroundColor: appColor.appColorMain,
           }}>
-          <MyHeart
-            myStyles={{
-              left: responsiveWidth(4),
-              top: responsiveHeight(8),
-            }}
-          />
-          <MyHeart
-            type={'red'}
-            myStyles={{
-              left: responsiveWidth(-2),
-              top: responsiveHeight(25),
-            }}
-          />
-          <MyHeart
-            myStyles={{
-              right: responsiveWidth(10),
-              top: responsiveHeight(8),
-            }}
-            width={responsiveWidth(4)}
-            height={responsiveWidth(4)}
-            shadow={false}
-          />
-          <MyHeart
-            scaleX={1}
-            myStyles={{
-              left: responsiveWidth(5),
-              bottom: responsiveHeight(9),
-            }}
-            width={responsiveWidth(3)}
-            height={responsiveWidth(3)}
-            shadow={false}
-          />
           <Image
             source={appImages.first}
             style={{
@@ -124,12 +83,14 @@ const Splash2 = props => {
           <TouchableOpacity
             style={styles.button1}
             activeOpacity={0.8}
-            onPress={() =>
-              props.navigation.navigate('SignUp', {
-                routeFrom: 'emailorphone',
-                userInfo: 'null',
-              })
-            }>
+            onPress={() => {
+              if (toggleCheckBox) {
+                props.navigation.navigate('SignUp', {
+                  routeFrom: 'emailorphone',
+                  userInfo: 'null',
+                });
+              }
+            }}>
             <FastImage
               source={appImages.signupphone}
               resizeMode="contain"
@@ -145,12 +106,14 @@ const Splash2 = props => {
           <TouchableOpacity
             style={styles.button1}
             activeOpacity={0.8}
-            onPress={() =>
-              props.navigation.navigate('SignUpWithPhone', {
-                routeFrom: 'emailorphone',
-                userInfo: 'null',
-              })
-            }>
+            onPress={() => {
+              if (toggleCheckBox) {
+                props.navigation.navigate('SignUpWithPhone', {
+                  routeFrom: 'emailorphone',
+                  userInfo: 'null',
+                });
+              }
+            }}>
             <FastImage
               source={appImages.signupphone}
               resizeMode="contain"
@@ -198,7 +161,7 @@ const Splash2 = props => {
           <View
             style={{
               flexDirection: 'row',
-              width: responsiveWidth(85),
+              width: responsiveWidth(95),
               alignSelf: 'center',
               flexWrap: 'wrap',
               // backgroundColor: 'red',
@@ -206,6 +169,11 @@ const Splash2 = props => {
               justifyContent: 'center',
               marginTop: responsiveHeight(3.5),
             }}>
+            <CheckBox
+              disabled={false}
+              value={toggleCheckBox}
+              onValueChange={newValue => setToggleCheckBox(newValue)}
+            />
             <Text style={styles.txt4}>
               By tapping Log In, you agree with our{' '}
             </Text>
@@ -223,7 +191,7 @@ const Splash2 = props => {
               flexDirection: 'row',
               alignSelf: 'center',
             }}>
-            <Text style={[styles.txt4]}>Already Have an Account ?</Text>
+            <Text style={[styles.txt4]}>Already Have an Account ? </Text>
             <TouchableOpacity
               onPress={() => props.navigation.navigate('Login')}>
               <Text
@@ -232,8 +200,8 @@ const Splash2 = props => {
                   fontSize: responsiveFontSize(1.8),
 
                   fontFamily: fontFamily.Baskerville_Old_Face,
+                  textDecorationLine: 'underline',
                 }}>
-                {' '}
                 Login Now
               </Text>
             </TouchableOpacity>

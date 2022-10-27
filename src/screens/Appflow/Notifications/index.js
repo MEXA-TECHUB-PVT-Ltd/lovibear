@@ -77,6 +77,39 @@ const Notifications = props => {
     }
   };
 
+  const MarkAllAsRead = async () => {
+    const userid = await AsyncStorage.getItem('userid');
+    const newData = list.map(item => {
+      return {
+        ...item,
+        readStatus: true,
+      };
+    });
+    setList(newData);
+    var axios = require('axios');
+    var data = JSON.stringify({
+      userId: userid,
+      readStatus: true,
+    });
+
+    var config = {
+      method: 'put',
+      url: Base_URL + '/notification/markAllAsRead/',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   const GetNotifications = async () => {
     setLoading(true);
     const userid = await AsyncStorage.getItem('userid');
@@ -115,12 +148,23 @@ const Notifications = props => {
 
   const [list, setList] = useState([]);
   const renderItem = ({item, index}) => {
+    console.log('ITEM==========', item.senderId._id);
     return (
       <TouchableOpacity
         // onPress={() => props.navigation.navigate('Messaging')}
 
-        onPress={() => {
+        onPress={async () => {
           ChangeStatus(item, index);
+          if (item.body.includes('You found a match with')) {
+            const myuserid = await AsyncStorage.getItem('userid');
+            const myimg = await AsyncStorage.getItem('profileimage');
+
+            props.navigation.navigate('Bingo', {
+              myuserid: myuserid,
+              myimg: myimg,
+              userdata: item.senderId._id,
+            });
+          }
           // item.id == 1 ? props.navigation.navigate('Bingo') : null;
         }}
         activeOpacity={0.7}
@@ -192,7 +236,12 @@ const Notifications = props => {
               />
             ) : null}
 
-            <TouchableOpacity activeOpacity={0.7}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              disabled={list.length == 0 ? true : false}
+              onPress={() => {
+                MarkAllAsRead();
+              }}>
               <Text
                 style={{
                   color: appColor.appColorMain,
@@ -200,7 +249,7 @@ const Notifications = props => {
                   fontSize: responsiveFontSize(1.8),
                   opacity: 0.5,
                 }}>
-                Mark as read
+                Mark all as read
               </Text>
             </TouchableOpacity>
           </View>

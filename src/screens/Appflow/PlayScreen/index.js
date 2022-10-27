@@ -205,7 +205,7 @@ const PlayScreen = ({route, navigation}) => {
         Base_URL +
         '/user/usersInRadius/?page=' +
         pagination +
-        '&limit=6' +
+        '&limit=5' +
         '&gender=' +
         gender +
         '&byPosts=' +
@@ -255,7 +255,7 @@ const PlayScreen = ({route, navigation}) => {
         console.log(error.response.data);
         if (error.response.data.message == 'No user found with this query') {
           console.log('No Results Found');
-          setPagination(1);
+          setPagination(pagination - 1);
           setEmpty(true);
           setLoading(false);
         }
@@ -307,7 +307,7 @@ const PlayScreen = ({route, navigation}) => {
     };
 
     await axios(config)
-      .then(function (response) {
+      .then(async function (response) {
         console.log(JSON.stringify(response.data));
         console.log('THE CARD INDEX======', cardIndex);
         console.log('THE LIST LENGTH=====', CardsList.length);
@@ -318,7 +318,14 @@ const PlayScreen = ({route, navigation}) => {
             response.data.result.result.swipedUser,
             rightswipedid,
           );
-          // navigation.navigate('Bingo', {userdata: response.data.result});
+          const myuserid = await AsyncStorage.getItem('userid');
+          const myimg = await AsyncStorage.getItem('profileimage');
+
+          navigation.navigate('Bingo', {
+            myuserid: myuserid,
+            myimg: myimg,
+            userdata: response.data.result.result.swipedUser,
+          });
         }
         console.log(
           'API RESPONSE AFTER RIGHT SWIPING============',
@@ -998,9 +1005,11 @@ const PlayScreen = ({route, navigation}) => {
           </TouchableOpacity>
           <TouchableOpacity
             disabled={
-              processing == true || loading == true || undostatus == false
-                ? //     ||  cardIndex == 0
-                  true
+              processing == true ||
+              loading == true ||
+              undostatus == false ||
+              cardIndex == 0
+                ? true
                 : false
             }
             style={styles.buttonview3}
@@ -1129,10 +1138,12 @@ const PlayScreen = ({route, navigation}) => {
                 }}>
                 <TouchableOpacity
                   onPress={() => {
-                    // setPagination(0);
+                    setPagination(1);
+                    setPaginationRef(!paginationref);
                     hideModal();
 
                     setByPost(true);
+
                     // postreference = true;
                   }}>
                   <Text
@@ -1146,7 +1157,8 @@ const PlayScreen = ({route, navigation}) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    // setPagination(0);
+                    setPagination(1);
+                    setPaginationRef(!paginationref);
                     hideModal();
 
                     setByPost('');
@@ -1190,7 +1202,8 @@ const PlayScreen = ({route, navigation}) => {
                 <TouchableOpacity
                   onPress={() => {
                     hideModal();
-
+                    setPagination(1);
+                    setPaginationRef(!paginationref);
                     setGender('male');
                   }}
                   style={{
@@ -1208,7 +1221,8 @@ const PlayScreen = ({route, navigation}) => {
                 <TouchableOpacity
                   onPress={() => {
                     hideModal();
-
+                    setPagination(1);
+                    setPaginationRef(!paginationref);
                     setGender('female');
                   }}
                   style={{}}>
@@ -1224,7 +1238,8 @@ const PlayScreen = ({route, navigation}) => {
                 <TouchableOpacity
                   onPress={() => {
                     hideModal();
-
+                    setPagination(1);
+                    setPaginationRef(!paginationref);
                     setGender('');
                   }}
                   style={{
@@ -1292,6 +1307,8 @@ const PlayScreen = ({route, navigation}) => {
               <TouchableOpacity
                 onPress={() => {
                   hideModal();
+                  setPagination(1);
+                  setPaginationRef(!paginationref);
                   setRadiusConfirm(!radiusconfirm);
                 }}>
                 <Text
@@ -1368,6 +1385,8 @@ const PlayScreen = ({route, navigation}) => {
               <TouchableOpacity
                 onPress={() => {
                   hideModal();
+                  setPagination(1);
+                  setPaginationRef(!paginationref);
                   setConfirmAge(!confirmage);
                 }}
                 style={{alignSelf: 'center'}}>

@@ -87,79 +87,7 @@ const SubscribeInApp = props => {
           backgroundColor={'#fff'}
           barStyle={'dark-content'}
         />
-        <MyHeart
-          type={'red'}
-          myStyles={{
-            top: responsiveHeight(2),
-            left: responsiveWidth(4),
-          }}
-        />
-        <MyHeart
-          type={'red'}
-          myStyles={{
-            top: responsiveHeight(2),
-            right: responsiveWidth(10),
-          }}
-          shadow={false}
-          width={responsiveWidth(5)}
-          height={responsiveWidth(5)}
-        />
-        <MyHeart
-          type={'red'}
-          myStyles={{
-            top: responsiveHeight(25),
-            left: responsiveWidth(-3),
-          }}
-        />
-        <MyHeart
-          type={'red'}
-          myStyles={{
-            top: responsiveHeight(2),
-            right: responsiveWidth(10),
-          }}
-          width={responsiveWidth(5)}
-          height={responsiveWidth(5)}
-        />
-        <MyHeart
-          type={'red'}
-          scaleX={1}
-          shadow={false}
-          myStyles={{
-            top: responsiveHeight(50),
-            left: responsiveWidth(2.5),
-          }}
-          width={responsiveWidth(3.4)}
-          height={responsiveWidth(3.4)}
-        />
-        <MyHeart
-          type={'red'}
-          myStyles={{
-            bottom: responsiveHeight(35),
-            right: responsiveWidth(-3),
-          }}
-        />
-        <MyHeart
-          type={'red'}
-          scaleX={1}
-          myStyles={{
-            bottom: responsiveHeight(5),
-            left: responsiveWidth(10),
-          }}
-          width={responsiveWidth(4)}
-          height={responsiveWidth(4)}
-        />
 
-        <MyHeart
-          type={'red'}
-          scaleX={1}
-          shadow={false}
-          myStyles={{
-            bottom: responsiveHeight(3),
-            right: responsiveWidth(10),
-          }}
-          width={responsiveWidth(13)}
-          height={responsiveWidth(13)}
-        />
         <View>
           <Text style={styles.maintxt}>Subscribe to Lovi Bear</Text>
           <View style={styles.packageview}>

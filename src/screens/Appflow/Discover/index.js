@@ -166,17 +166,16 @@ const Discover = props => {
           }}
         />
 
-        <LinearGradient
-          colors={['rgba(80, 80, 80,0.01)', 'rgba(234, 51, 77, 1)']}
+        <View
           style={{
             // alignItems: 'center',
             paddingLeft: responsiveWidth(3),
             position: 'absolute',
             bottom: responsiveWidth(-0.1),
             width: responsiveWidth(42),
-
+            backgroundColor: '#fff',
             paddingBottom: responsiveHeight(2),
-            paddingTop: responsiveHeight(3),
+            paddingTop: responsiveHeight(1.5),
           }}>
           <Text style={styles.info1}>
             {item.document.userName}, {parseInt(item.Age)}
@@ -188,7 +187,7 @@ const Discover = props => {
 
             {item.document.profession}
           </Text>
-        </LinearGradient>
+        </View>
       </TouchableOpacity>
     );
   };
@@ -407,12 +406,12 @@ const styles = StyleSheet.create({
     height: responsiveWidth(5.5),
   },
   info1: {
-    color: '#fff',
+    color: '#000',
     fontSize: responsiveFontSize(2.7),
     fontFamily: fontFamily.Baskerville_Old_Face,
   },
   info2: {
-    color: '#fff',
+    color: '#000',
     fontSize: responsiveFontSize(1.6),
     fontFamily: fontFamily.Baskerville_Old_Face,
   },
